@@ -191,4 +191,5 @@ Key points: This example combines all the features of the system.
 5. Support nested _if_ expressions; logical connectives can be implemented in this way. (Examples 7, 9)
 6. Support user-defined predicates. (Examples 8, 12)
 7. Support refinement of types of parts of compound objects. (Examples 10, 11, 12)
-8. Extend the above to multi-way conditionals. (Example 13)
+
+~8. Extend the above to multi-way conditionals. (Example 13)~ (can encode `cond` with support for `if` (key features 1 and 5))
