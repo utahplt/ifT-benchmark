@@ -6,7 +6,7 @@ Start with examples from ICFP'10 paper.
 
 ### Example 1
 
-```scheme
+```racket
 (if (number? x) (add1 x) 0)
 ```
 
@@ -16,7 +16,7 @@ Key points: _x_ should have type **Number** in the _then_ branch regardless of i
 
 ### Example 2
 The following function f always produces a number:
-```scheme
+```racket
 (define: (f [x : (⋃ String Number)])
   (if (number? x) (add1 x) (string-length x)))
 ```
@@ -26,7 +26,7 @@ Key points: The type system must be able to reason about the negation of a predi
 
 ### Example 3
 
-```scheme
+```racket
 ... (let ([x (member v l)]) 
       (if x  
           — compute with x —
@@ -41,7 +41,7 @@ Key points: Being able to reason about `let`-bindings.
 
 > Logical connectives can combine the results of predicates:
 
-```scheme
+```racket
 ... (if (or (number? x) (string? x)) (f x) 0) ...
 ```
 
@@ -52,7 +52,7 @@ Key points: Being able to reason about logical connectives, _or_ in this case in
 ### Example 5
 > For and, there is no such neat connection:
 
-```scheme
+```racket
 ... (if (and (number? x) (string? y)) 
         (+ x (string-length y))
         0) ...
@@ -65,7 +65,7 @@ Key points: Being able to reason about logical connectives, _and_ in this case i
 ### Example 6
 > In contrast, the next example shows how little we know when a conjunction evaluates to false:
 
-```scheme
+```racket
 ;; x is either a Number or a String
 ... (if (and (number? x) (string? y)) 
         (+ x (string-length y)) 
@@ -80,7 +80,7 @@ Key points: First note that this example is not safe (i.e. a failing example). I
 
 > Finally, and is expressible using nested _if_ expressions, a pattern that is often macro-generated:
 
-```scheme
+```racket
 ... (if (if (number? x) (string? y) #f)
         (+ x (string-length y)) 
         0) ...
@@ -93,7 +93,7 @@ Key points: Being able to reason about nested if expressions, which can be seen 
 ### Example 8
 > So far, we have seen how programmers can use predefined predicates. It is important, however, that programmers can also abstract over existing predicates:
 
-```scheme
+```racket
 (define: (strnum? [x : ⊤]) ;; ⊤ is the top type 
   (or (string? x) (number? x)))
 ```
@@ -105,7 +105,7 @@ Key points: The ability to let users define their own predicates.
 ### Example 9
 > In example 4, we saw the use of _or_ to test for disjunctions. Like _and_, _or_ is directly expressible using _if_:
 
-```scheme
+```racket
 (if (let ([tmp (number? x)]) 
       (if tmp tmp (string? x)))
     (f x) 
@@ -119,7 +119,7 @@ Key points: This example shows that the semantics of _or_ can also be expressed 
 ### Example 10 (Selectors)
 > All of the tests thus far only involve variables. It is also useful to subject the result of arbitrary expressions to type tests:
 
-```scheme
+```racket
 ... (if (number? (car p)) (add1 (car p)) 7) ...
 ```
 
@@ -129,7 +129,7 @@ Key points: The ability to refine the type of parts of compound objects.
 
 ### Example 11 (Selectors)
 
-```scheme
+```racket
 (λ: ([p : 〈⊤, ⊤〉]) 
   (if (and (number? (car p)) (number? (cdr p))) 
     (g p) 
@@ -143,7 +143,7 @@ Key points: The same as the previous example.
 ### Example 12 (Selectors)
 > Example 12 shows how programmers can simultaneously abstract over the use of both predicates and selectors:
 
-```scheme
+```racket
 (define carnum? 
   (λ: ([x : 〈⊤, ⊤〉]) (number? (car x))))
 ```
@@ -156,7 +156,7 @@ Key points: This example combines the ability to define predicates and refine th
 
 > Of course, we do learn something when conjunctions such as those in examples 5 and 6 are false. When a conjunction is false, we know that one of the conjuncts is false, and thus when all but one are true, the remaining one must be false. This reasoning principle is used in multi-way conditionals, which is a common idiom extensively illustrated in _How to Design Programs_ [Felleisen et al. 2001]:
 
-```scheme
+```racket
 ... (cond
       [(and (number? x) (string? y)) — 1 —]
       [(number? x) — 2 —] 
@@ -170,7 +170,7 @@ Key points: The ability to reason about logical connectives and multi-way condit
 ### Example 14 (Putting It All Together)
 > Our type system correctly handles all of the preceding examples. Finally, we combine these features into an example that demonstrates all aspects of our system:
 
-```scheme
+```racket
 (λ: ([input : (⋃ Number String)]
      [extra : 〈⊤, ⊤〉])
   (cond
