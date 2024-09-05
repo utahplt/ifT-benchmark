@@ -71,9 +71,14 @@
       0))
 
 ;; Example 8
-(: strnum? (-> Any Boolean))
+(: strnum? (-> Any Boolean : (U String Number)))
 (define (strnum? x)
   (or (string? x) (number? x)))
+
+(let ([x 1])
+  (if (strnum? x)
+      (f x)
+      0))
 
 ;; Example 9
 (let ([x 5])
