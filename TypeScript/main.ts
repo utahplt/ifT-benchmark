@@ -76,7 +76,7 @@ function example6(x: unknown, y: unknown): number {
     if (typeof x === "number" && typeof y === "string") {
         return x + y.length;
     } else {
-        return x.length
+        return x.length;
     }
 }
 
@@ -213,7 +213,7 @@ console.log("Example 10");
 function example10(p: [unknown, unknown]): number {
     if (typeof p[0] === "number") {
         console.log(typeof p[0]); // fails to refine the type of p[0] here at compile time; works at runtime
-        return p[0] + 1;
+        return ((_p: [number, mixed]) => _p[0] + 1)(p);
     } else {
         return 0;
     }
@@ -222,7 +222,10 @@ function example10(p: [unknown, unknown]): number {
 console.log(example10([1, 2])); // 2
 
 class Pair {
-    constructor(public x: unknown, public y: unknown) { }
+    constructor(public x: unknown, public y: unknown) { 
+        this.x = x;
+        this.y = y;
+    }
 }
 
 function example10_2nd_try(p: Pair): number {
