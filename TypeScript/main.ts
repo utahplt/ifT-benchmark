@@ -1,12 +1,11 @@
 // Example 1
 console.log("Example 1");
-function example1(x: any): number {
+function example1(x: unknown): number {
     if (typeof x === "number") {
-        x = x + 1;
+        return x + 1;
     } else {
-        x = 0;
+        return 0;
     }
-    return x;
 }
 
 console.log(example1(1)); // 2
@@ -45,13 +44,12 @@ console.log(example3([1, 2, 3, 4], 1)) // 1
 
 // Example 4
 console.log("Example 4");
-function example4(x: any): number {
+function example4(x: unknown): number {
     if (typeof x === "number" || typeof x === "string") {
-        x = example2(x);
+        return example2(x);
     } else {
-        x = 0;
+        return 0;
     }
-    return x;
 }
 
 console.log(example4(1)); // 2
@@ -60,7 +58,7 @@ console.log(example4(Symbol('sym'))); // 0
 
 // Example 5
 console.log("Example 5");
-function example5(x: any, y: any): number {
+function example5(x: unknown, y: unknown): number {
     if (typeof x === "number" && typeof y === "string") {
         return x + y.length;
     } else {
@@ -70,9 +68,11 @@ function example5(x: any, y: any): number {
 
 console.log(example5(5, "str")); // 8
 
-// Example 6
+// Example 6 (this should fail)
+// https://effectivetypescript.com/2024/02/27/type-guards/ (what if you return false? part)
+// add examples (maybe 6b) from the blog post
 console.log("Example 6");
-function example6(x: any, y: any): number {
+function example6(x: unknown, y: unknown): number {
     if (typeof x === "number" && typeof y === "string") {
         return x + y.length;
     } else {
@@ -87,7 +87,7 @@ console.log(example6(5, 5)); // undefined
 console.log("Example 7");
 
 // this failed to refine the type of x and y
-function example7(x: any, y: any): number {
+function example7(x: unknown, y: unknown): number {
     if (typeof x === "number" ? typeof y === "string" : false) {
         return x + y.length;
     } else {
@@ -96,8 +96,11 @@ function example7(x: any, y: any): number {
 }
 
 // this failed to refine the type of x and y
-function example7_2nd_try(x: any, y: any): number {
-    if ((() => {
+// nested functions would need to refine the type of x and y simultimeously
+// isn't currently possible in typescript
+// https://github.com/microsoft/TypeScript/issues/26916
+function example7_2nd_try(x: unknown, y: unknown): number {
+    if ((() /* : x is number and y is string */ => {
         if (typeof x === "number") {
             return typeof y === "string";
         } else {
@@ -111,12 +114,12 @@ function example7_2nd_try(x: any, y: any): number {
 }
 
 // this failed to refine the type of x and y
-function example7_3rd_try(x: any, y: any): number {
+function example7_3rd_try(x: unknown, y: unknown): number {
     return (typeof x === "number" ? typeof y === "string" : false) ? x + y.length : 0;
 }
 
 // this works
-function example7_4th_try(x: any, y: any): number {
+function example7_4th_try(x: unknown, y: unknown): number {
     if (typeof x === "number") {
         if (typeof y === "string") {
             return x + y.length;
@@ -129,7 +132,7 @@ function example7_4th_try(x: any, y: any): number {
 }
 
 // this works
-function example7_5th_try(x: any, y: any): number {
+function example7_5th_try(x: unknown, y: unknown): number {
     return typeof x === "number" ? (typeof y === "string" ? x + y.length : 0) : 0;
 }
 
@@ -176,29 +179,29 @@ console.log("Example 9");
 // }
 
 // this fails because typescript cannot track aliasing of test results
-// function example9_2nd_try(x: unknown): number {
-//     let tmp = typeof x === "number";
-//     if (tmp) {
-//         return example2(x);
-//     } else if (typeof x === "string") {
-//         return example2(x);
-//     }
-//     return 0;
-// }
+function example9_2nd_try(x: unknown): number {
+    let tmp = typeof x === "number";
+    if (tmp) {
+        return example2(x);
+    } else if (typeof x === "string") {
+        return example2(x);
+    }
+    return 0;
+}
 
 // this fails because of the same reason as 2nd try,
 // but if use the test_fun(x) directly in the if condition, it works
-// function example9_3rd_try(x: unknown): number {
-//     let test_fun = (t): t is number => typeof t === "number";
-//     let tmp = test_fun(x);
-//     if (tmp) {
-//         return example2(x);
-//     } else if (typeof x === "string") {
-//         return example2(x);
-//     } else {
-//         return 0;
-//     }
-// }
+function example9_3rd_try(x: unknown): number {
+    let test_fun = (t): t is number => typeof t === "number";
+    let tmp = test_fun(x);
+    if (tmp) {
+        return example2(x);
+    } else if (typeof x === "string") {
+        return example2(x);
+    } else {
+        return 0;
+    }
+}
 
 function example9_4th_try(x: unknown): number {
     return (typeof x === "number" ? example2(x) : typeof x === "string" ? example2(x) : 0);
@@ -233,6 +236,8 @@ function example10_2nd_try(p: Pair): number {
 // Example 11
 console.log("Example 11");
 
+// check inconsistency between this and 3rd try
+// seems to be working; if we got more errors, check tsc
 function example11(p: [unknown, unknown]): number {
     if (typeof p[0] === "number" && typeof p[1] === "number") {
         console.log(typeof p[0]); // fails to refine the type of p[0] here at compile time; works at runtime
@@ -247,6 +252,15 @@ console.log(example11([1, 2])); // 1
 function example11_2nd_try(p: Pair): number {
     if (typeof p.x === "number" && typeof p.y === "number") {
         return p.x; // succeeds to refine the type of p.x here at compile time
+    } else {
+        return 0;
+    }
+}
+
+// weird type: [unknown, unknown] & number[]
+function example11_3rd_try(p: [unknown, unknown]): number {
+    if (p.every((x) => typeof x === "number")) {
+        return p[0];
     } else {
         return 0;
     }
