@@ -272,6 +272,7 @@ function example11_3rd_try(p: [unknown, unknown]): number {
 // Example 12
 console.log("Example 12");
 
+// give more examples on readonly data structures
 function example12(x: [unknown, unknown]): x is [number, unknown] {
     return typeof x[0] === "number";
 }

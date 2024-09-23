@@ -224,6 +224,7 @@ function example9_4th_try(x: mixed): number {
 }
 
 // Example 10
+// check if it refines successfully if using immutable data structures
 console.log("Example 10")
 function example10(p: [mixed, mixed]): number {
     if (typeof p[0] === "number") {
@@ -285,6 +286,7 @@ function example11_3rd_try(p: [mixed, mixed]): number {
 console.log("Example 12");
 
 // flow failed to refine the type of x[0] here, a difference to TypeScript!
+// give more examples on readonly data structures
 function example12(x: [mixed, mixed]): x is [number, mixed] {
     return typeof x[0] === "number";
 }
