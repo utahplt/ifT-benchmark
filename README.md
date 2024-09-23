@@ -1,11 +1,71 @@
-# Benchmark for Occurrence Typing (and Similar Techniques)
+# ot-benchmark
 
-Start with examples from ICFP'10 paper.
+Benchmark for Occurrence Typing (and Similar Techniques).
+
+On what is Occurrence Typing, check the following paper
+
+``` bibtex
+@inproceedings{tobin-hochstadtLogicalTypesUntyped2010,
+  title = {Logical Types for Untyped Languages},
+  booktitle = {Proceedings of the 15th {{ACM SIGPLAN}} International Conference on {{Functional}} Programming},
+  author = {Tobin-Hochstadt, Sam and Felleisen, Matthias},
+  date = {2010-09-27},
+  pages = {117--128},
+  publisher = {Association for Computing Machinery},
+  doi = {10.1145/1863543.1863561},
+}
+```
+
+and also [Typed Racket Guide on Occurrence Typing](https://docs.racket-lang.org/ts-guide/occurrence-typing.html).
+
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+
+## Table of Contents
+
+  - [Start with Examples from ICFP'10 Paper](#start-with-examples-from-icfp10-paper)
+    - [Extracted Key Features from the Examples](#extracted-key-features-from-the-examples)
+    - [Examples from ICFP'10 paper](#examples-from-icfp10-paper)
+      - [Example 1](#example-1)
+      - [Example 2](#example-2)
+      - [Example 3](#example-3)
+      - [Example 4](#example-4)
+      - [Example 5](#example-5)
+      - [Example 6](#example-6)
+      - [Example 7](#example-7)
+      - [Example 8](#example-8)
+      - [Example 9](#example-9)
+      - [Example 10 (Selectors)](#example-10-selectors)
+      - [Example 11 (Selectors)](#example-11-selectors)
+      - [Example 12 (Selectors)](#example-12-selectors)
+      - [Example 13 (Reasoning Logically)](#example-13-reasoning-logically)
+      - [Example 14 (Putting It All Together)](#example-14-putting-it-all-together)
+  - [The Benchmark](#the-benchmark)
+  - [Benchmark Results](#benchmark-results)
+
+<!-- markdown-toc end -->
 
 
-## Examples from ICFP'10 paper
+## Start with Examples from ICFP'10 Paper
 
-### Example 1
+Those examples describe what a language that implements Occurrence Typing should be able to do.
+
+### Extracted Key Features from the Examples
+
+1.  Being able to refine types using predicates, and show it in the _then_ branch of an _if_ expression. (Example 1)
+2.  Being able to reason about the negation of the predicate, and show this information in the _else_ branch of an _if_ expression. (Examples 2, 6)
+3.  Being able to reason about `let`-bindings, i.e. aliases of variables. (Examples 3, 9)
+4.  Being able to reason about logical connectives; for example, _or_ indicates a union type, _and_ indicates a conjunction of types. (Examples 4, 5)
+5.  Support nested _if_ expressions; logical connectives can be implemented in this way. (Examples 7, 9)
+6.  Support user-defined predicates. (Examples 8, 12)
+7.  Support refinement of types of parts of compound objects. (Examples 10, 11, 12)
+
+~8.  Extend the above to multi-way conditionals. (Example 13)~ (can encode `cond` with support for `if` (key features 1 and 5))
+
+For more details for each example, check the section below. Quoted content are from the paper.
+
+### Examples from ICFP'10 paper
+
+#### Example 1
 
 ```racket
 (if (number? x) (add1 x) 0)
@@ -15,7 +75,7 @@ Start with examples from ICFP'10 paper.
 
 Key points: _x_ should have type **Number** in the _then_ branch regardless of its type in the outer context; its type in the _else_ branch is not mentioned in this example.
 
-### Example 2
+#### Example 2
 
 The following function f always produces a number:
 ```racket
@@ -26,7 +86,7 @@ The following function f always produces a number:
 
 Key points: The type system must be able to reason about the negation of a predicate, and apply this information to the _else_ branch.
 
-### Example 3
+#### Example 3
 
 ```racket
 ... (let ([x (member v l)])
@@ -39,7 +99,7 @@ Key points: The type system must be able to reason about the negation of a predi
 
 Key points: Being able to reason about `let`-bindings.
 
-### Example 4
+#### Example 4
 
 > Logical connectives can combine the results of predicates:
 
@@ -51,7 +111,7 @@ Key points: Being able to reason about `let`-bindings.
 
 Key points: Being able to reason about logical connectives, _or_ in this case indicates that _x_ has a union type.
 
-### Example 5
+#### Example 5
 
 > For and, there is no such neat connection:
 
@@ -65,7 +125,7 @@ Key points: Being able to reason about logical connectives, _or_ in this case in
 
 Key points: Being able to reason about logical connectives, _and_ in this case indicates the type of _x_ and _y_ in the same time. Worth noting that this and the previous example both focus on the _then_ branch only.
 
-### Example 6
+#### Example 6
 
 > In contrast, the next example shows how little we know when a conjunction evaluates to false:
 
@@ -80,7 +140,7 @@ Key points: Being able to reason about logical connectives, _and_ in this case i
 
 Key points: First note that this example is not safe (i.e. a failing example). It points out that the ability to handle the _else_ branch is important. However, the negation of a conjunction is not so informative.
 
-### Example 7
+#### Example 7
 
 > Finally, and is expressible using nested _if_ expressions, a pattern that is often macro-generated:
 
@@ -94,7 +154,7 @@ Key points: First note that this example is not safe (i.e. a failing example). I
 
 Key points: Being able to reason about nested if expressions, which can be seen as a way to express logical connectives.
 
-### Example 8
+#### Example 8
 
 > So far, we have seen how programmers can use predefined predicates. It is important, however, that programmers can also abstract over existing predicates:
 
@@ -107,7 +167,7 @@ Key points: Being able to reason about nested if expressions, which can be seen 
 
 Key points: The ability to let users define their own predicates.
 
-### Example 9
+#### Example 9
 
 > In example 4, we saw the use of _or_ to test for disjunctions. Like _and_, _or_ is directly expressible using _if_:
 
@@ -122,7 +182,7 @@ Key points: The ability to let users define their own predicates.
 
 Key points: This example shows that the semantics of _or_ can also be expressed through combination of reasoning about _if_ and _let_.
 
-### Example 10 (Selectors)
+#### Example 10 (Selectors)
 
 > All of the tests thus far only involve variables. It is also useful to subject the result of arbitrary expressions to type tests:
 
@@ -134,7 +194,7 @@ Key points: This example shows that the semantics of _or_ can also be expressed 
 
 Key points: The ability to refine the type of parts of compound objects.
 
-### Example 11 (Selectors)
+#### Example 11 (Selectors)
 
 ```racket
 (λ: ([p : 〈⊤, ⊤〉])
@@ -147,7 +207,7 @@ Key points: The ability to refine the type of parts of compound objects.
 
 Key points: The same as the previous example.
 
-### Example 12 (Selectors)
+#### Example 12 (Selectors)
 
 > Example 12 shows how programmers can simultaneously abstract over the use of both predicates and selectors:
 
@@ -160,7 +220,7 @@ Key points: The same as the previous example.
 
 Key points: This example combines the ability to define predicates and refine the type of parts of compound objects.
 
-### Example 13 (Reasoning Logically)
+#### Example 13 (Reasoning Logically)
 
 > Of course, we do learn something when conjunctions such as those in examples 5 and 6 are false. When a conjunction is false, we know that one of the conjuncts is false, and thus when all but one are true, the remaining one must be false. This reasoning principle is used in multi-way conditionals, which is a common idiom extensively illustrated in _How to Design Programs_ [Felleisen et al. 2001]:
 
@@ -175,7 +235,7 @@ Key points: This example combines the ability to define predicates and refine th
 
 Key points: The ability to reason about logical connectives and multi-way conditionals: latter branches imply negations of previous branches.
 
-### Example 14 (Putting It All Together)
+#### Example 14 (Putting It All Together)
 
 > Our type system correctly handles all of the preceding examples. Finally, we combine these features into an example that demonstrates all aspects of our system:
 
@@ -192,14 +252,58 @@ Key points: The ability to reason about logical connectives and multi-way condit
 
 Key points: This example combines all the features of the system.
 
-## Extracted Key Features from the Examples
+## The Benchmark
 
-1. Being able to refine types using predicates, and show it in the _then_ branch of an _if_ expression. (Example 1)
-2. Being able to reason about the negation of the predicate, and show this information in the _else_ branch of an _if_ expression. (Examples 2, 6)
-3. Being able to reason about `let`-bindings, i.e. aliases of variables. (Examples 3, 9)
-4. Being able to reason about logical connectives; for example, _or_ indicates a union type, _and_ indicates a conjunction of types. (Examples 4, 5)
-5. Support nested _if_ expressions; logical connectives can be implemented in this way. (Examples 7, 9)
-6. Support user-defined predicates. (Examples 8, 12)
-7. Support refinement of types of parts of compound objects. (Examples 10, 11, 12)
+According to the [extracted key features](#extracted-key-features-from-the-examples), the following benchmark items are proposed.
 
-~8. Extend the above to multi-way conditionals. (Example 13)~ (can encode `cond` with support for `if` (key features 1 and 5))
+| Benchmark            | Description                                              |
+|:---------------------|----------------------------------------------------------|
+| positive             | refine when condition is true                            |
+| negative             | refine when condition is false                           |
+| alias                | track test results assigned to variables                 |
+| connectives          | handle logic connectives                                 |
+| nesting_condition    | nested conditionals with nesting happening in condition  |
+| nesting_body         | nested conditionals with nesting happening in body       |
+| custom_predicates    | allow programmers define their own predicates            |
+| predicate_2way       | custom predicates refines both positively and negatively |
+| predicate_strict     | perform strict type checks on custom predicates          |
+| predicate_multi_args | predicates can have more than one arguments              |
+| object_properties    | refine types of properties of objects                    |
+| tuple_whole          | refine types of the whole tuple                          |
+| tuple_elements       | refine types of tuple elements                           |
+| subtyping            | refine supertypes to subtypes                            |
+| subtyping_structural | refine structural subtyping                              |
+
+(NOTE: it may be better to group some benchmark items and give a x/y looking score for the group)
+
+## Benchmark Results
+
+The benchmark is performed on the following gradual type checker implements.
+
+*   Typed Racket
+*   TypeScript
+*   Flow
+*   mypy
+*   Pyright
+
+The result is as follows.
+
+| Benchmark            | Typed Racket | TypeScript | Flow | mypy | Pyright |
+|:---------------------|--------------|------------|------|------|---------|
+| positive             |              |            |      |      |         |
+| negative             |              |            |      |      |         |
+| alias                |              |            |      |      |         |
+| connectives          |              |            |      |      |         |
+| nesting_condition    |              |            |      |      |         |
+| nesting_body         |              |            |      |      |         |
+| custom_predicates    |              |            |      |      |         |
+| predicate_2way       |              |            |      |      |         |
+| predicate_strict     |              |            |      |      |         |
+| predicate_multi_args |              |            |      |      |         |
+| object_properties    |              |            |      |      |         |
+| tuple_whole          |              |            |      |      |         |
+| tuple_elements       |              |            |      |      |         |
+| subtyping            |              |            |      |      |         |
+| subtyping_structural |              |            |      |      |         |
+
+`●` means passed, `○` means not passed, and `◉` means partially passed (always with notes).
