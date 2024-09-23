@@ -2,6 +2,7 @@
 
 Start with examples from ICFP'10 paper.
 
+
 ## Examples from ICFP'10 paper
 
 ### Example 1
@@ -15,6 +16,7 @@ Start with examples from ICFP'10 paper.
 Key points: _x_ should have type **Number** in the _then_ branch regardless of its type in the outer context; its type in the _else_ branch is not mentioned in this example.
 
 ### Example 2
+
 The following function f always produces a number:
 ```racket
 (define: (f [x : (⋃ String Number)])
@@ -27,8 +29,8 @@ Key points: The type system must be able to reason about the negation of a predi
 ### Example 3
 
 ```racket
-... (let ([x (member v l)]) 
-      (if x  
+... (let ([x (member v l)])
+      (if x
           — compute with x —
           (error ’fail))) ...
 ```
@@ -50,10 +52,11 @@ Key points: Being able to reason about `let`-bindings.
 Key points: Being able to reason about logical connectives, _or_ in this case indicates that _x_ has a union type.
 
 ### Example 5
+
 > For and, there is no such neat connection:
 
 ```racket
-... (if (and (number? x) (string? y)) 
+... (if (and (number? x) (string? y))
         (+ x (string-length y))
         0) ...
 ```
@@ -63,12 +66,13 @@ Key points: Being able to reason about logical connectives, _or_ in this case in
 Key points: Being able to reason about logical connectives, _and_ in this case indicates the type of _x_ and _y_ in the same time. Worth noting that this and the previous example both focus on the _then_ branch only.
 
 ### Example 6
+
 > In contrast, the next example shows how little we know when a conjunction evaluates to false:
 
 ```racket
 ;; x is either a Number or a String
-... (if (and (number? x) (string? y)) 
-        (+ x (string-length y)) 
+... (if (and (number? x) (string? y))
+        (+ x (string-length y))
         (string-length x)) ...
 ```
 
@@ -82,7 +86,7 @@ Key points: First note that this example is not safe (i.e. a failing example). I
 
 ```racket
 ... (if (if (number? x) (string? y) #f)
-        (+ x (string-length y)) 
+        (+ x (string-length y))
         0) ...
 ```
 
@@ -91,10 +95,11 @@ Key points: First note that this example is not safe (i.e. a failing example). I
 Key points: Being able to reason about nested if expressions, which can be seen as a way to express logical connectives.
 
 ### Example 8
+
 > So far, we have seen how programmers can use predefined predicates. It is important, however, that programmers can also abstract over existing predicates:
 
 ```racket
-(define: (strnum? [x : ⊤]) ;; ⊤ is the top type 
+(define: (strnum? [x : ⊤]) ;; ⊤ is the top type
   (or (string? x) (number? x)))
 ```
 
@@ -103,12 +108,13 @@ Key points: Being able to reason about nested if expressions, which can be seen 
 Key points: The ability to let users define their own predicates.
 
 ### Example 9
+
 > In example 4, we saw the use of _or_ to test for disjunctions. Like _and_, _or_ is directly expressible using _if_:
 
 ```racket
-(if (let ([tmp (number? x)]) 
+(if (let ([tmp (number? x)])
       (if tmp tmp (string? x)))
-    (f x) 
+    (f x)
     0)
 ```
 
@@ -117,6 +123,7 @@ Key points: The ability to let users define their own predicates.
 Key points: This example shows that the semantics of _or_ can also be expressed through combination of reasoning about _if_ and _let_.
 
 ### Example 10 (Selectors)
+
 > All of the tests thus far only involve variables. It is also useful to subject the result of arbitrary expressions to type tests:
 
 ```racket
@@ -130,9 +137,9 @@ Key points: The ability to refine the type of parts of compound objects.
 ### Example 11 (Selectors)
 
 ```racket
-(λ: ([p : 〈⊤, ⊤〉]) 
-  (if (and (number? (car p)) (number? (cdr p))) 
-    (g p) 
+(λ: ([p : 〈⊤, ⊤〉])
+  (if (and (number? (car p)) (number? (cdr p)))
+    (g p)
     'no))
 ```
 
@@ -141,10 +148,11 @@ Key points: The ability to refine the type of parts of compound objects.
 Key points: The same as the previous example.
 
 ### Example 12 (Selectors)
+
 > Example 12 shows how programmers can simultaneously abstract over the use of both predicates and selectors:
 
 ```racket
-(define carnum? 
+(define carnum?
   (λ: ([x : 〈⊤, ⊤〉]) (number? (car x))))
 ```
 
@@ -159,7 +167,7 @@ Key points: This example combines the ability to define predicates and refine th
 ```racket
 ... (cond
       [(and (number? x) (string? y)) — 1 —]
-      [(number? x) — 2 —] 
+      [(number? x) — 2 —]
       [else — 3 —]) ...
 ```
 
@@ -168,6 +176,7 @@ Key points: This example combines the ability to define predicates and refine th
 Key points: The ability to reason about logical connectives and multi-way conditionals: latter branches imply negations of previous branches.
 
 ### Example 14 (Putting It All Together)
+
 > Our type system correctly handles all of the preceding examples. Finally, we combine these features into an example that demonstrates all aspects of our system:
 
 ```racket
@@ -175,15 +184,16 @@ Key points: The ability to reason about logical connectives and multi-way condit
      [extra : 〈⊤, ⊤〉])
   (cond
     [(and (number? input) (number? (car extra)))
-     (+ input (car extra))] 
-    [(number? (car extra)) 
-     (+ (string-length input) (car extra))] 
+     (+ input (car extra))]
+    [(number? (car extra))
+     (+ (string-length input) (car extra))]
     [else 0]))
 ```
 
 Key points: This example combines all the features of the system.
 
 ## Extracted Key Features from the Examples
+
 1. Being able to refine types using predicates, and show it in the _then_ branch of an _if_ expression. (Example 1)
 2. Being able to reason about the negation of the predicate, and show this information in the _else_ branch of an _if_ expression. (Examples 2, 6)
 3. Being able to reason about `let`-bindings, i.e. aliases of variables. (Examples 3, 9)
