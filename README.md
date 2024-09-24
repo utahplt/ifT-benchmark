@@ -7,11 +7,11 @@ On what is Occurrence Typing, check the following paper
 ``` bibtex
 @inproceedings{tobin-hochstadtLogicalTypesUntyped2010,
   title = {Logical Types for Untyped Languages},
-  booktitle = {Proceedings of the 15th {{ACM SIGPLAN}} International Conference on {{Functional}} Programming},
+  booktitle = {{ICFP}},
   author = {Tobin-Hochstadt, Sam and Felleisen, Matthias},
   date = {2010-09-27},
   pages = {117--128},
-  publisher = {Association for Computing Machinery},
+  publisher = {{ACM}},
   doi = {10.1145/1863543.1863561},
 }
 ```
