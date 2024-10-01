@@ -1,8 +1,8 @@
 from typing import Any, Literal, Set, TypeGuard, TypeVar
-from typing_extensions import TypeIs
+from typing_extensions import TypeIs, reveal_type
 
-
-# Example 1
+### Code:
+## Example 1
 print("Example 1")
 def example1(x: object) -> int:
     if type(x) is int:
@@ -13,7 +13,7 @@ def example1(x: object) -> int:
 print(example1(1)) # 2
 print(example1("1")) # 0
 
-# Example 2
+## Example 2
 print("\nExample 2")
 def example2(x: str | int) -> int:
     if isinstance(x, int):
@@ -23,7 +23,7 @@ def example2(x: str | int) -> int:
 
 print(example2(1)) # 2
 
-# Example 3
+## Example 3
 print("\nExample 3")
 def member(l: list[int], v: int) -> list[int] | Literal[False]:
     if v in l:
@@ -39,7 +39,7 @@ def example3(l: list[int], v: int) -> int:
 
 print(example3([1, 2, 3, 4], 1)) # 1
 
-# Example 4
+## Example 4
 print("\nExample 4")
 def example4(x: object) -> int:
     if type(x) == int or type(x) is str:
@@ -51,7 +51,7 @@ print(example4(1)) # 2
 print(example4("str")) # 3
 print(example4(1.0)) # 0
 
-# Example 5
+## Example 5
 print("\nExample 5")
 def example5(x: object, y: object) -> int:
     if type(x) == int and type(y) is str:
@@ -61,7 +61,7 @@ def example5(x: object, y: object) -> int:
 
 print(example5(5, "str")) # 8
 
-# Example 6 (this should fail)
+## Example 6 (this should fail)
 print("\nExample 6")
 def example6(x: object, y: object) -> int:
     if type(x) == int and type(y) is str:
@@ -75,7 +75,7 @@ try:
 except Exception as e:
     print(e)
 
-# Example 7
+## Example 7
 print("\nExample 7")
 # this failed to refine the type of x and y
 def example7(x: object, y: object) -> int:
@@ -100,7 +100,7 @@ def example7_3rd_try(x: object, y: object) -> int:
 def example7_4th_try(x: object, y: object) -> int:
     return (x + len(y) if type(y) is str else 0) if type(x) is int else 0
 
-# Example 8
+## Example 8
 print("\nExample 8")
 
 # user-defined type guard
@@ -140,7 +140,7 @@ def is_set_of(val: set[Any], type: type[_T]) -> TypeGuard[Set[_T]]:
 def f(value: int) -> TypeGuard[str]:
     return True
 
-# Example 9
+## Example 9
 print("\nExample 9")
 
 # this fails due to the same reason as example 7
@@ -181,7 +181,7 @@ def example9_3rd_try(x: object) -> int:
 def example9_4th_try(x: object) -> int:
     return example2(x) if type(x) is int else example2(x) if type(x) is str else 0
 
-# Example 10
+## Example 10
 print("\nExample 10")
 
 def example10(p: tuple[object, object]) -> int:
@@ -206,7 +206,7 @@ def example10_2nd_ver(p: Pair) -> int:
     else:
         return 0
 
-# Example 11
+## Example 11
 print("\nExample 11")
 
 def example11(p: tuple[object, object]) -> int:
@@ -235,7 +235,7 @@ def example11_3rd_ver(p: Pair) -> int:
         reveal_type(p.y)
         return p.x
 
-# Example 12
+## Example 12
 print("\nExample 12")
 
 def example12(p: tuple[object, object]) -> TypeIs[tuple[int, object]]:
@@ -250,7 +250,7 @@ if (example12(p)):
     reveal_type(p[0])
     reveal_type(p[1])
 
-# Example 13
+## Example 13
 print("\nExample 13")
 
 def example13(x: object, y: object) -> int:
@@ -267,7 +267,7 @@ def example13(x: object, y: object) -> int:
         reveal_type(y)
         return 0
 
-# Example 14
+## Example 14
 print("\nExample 14")
 
 def example14(input: int | str, extra: tuple[object, object]) -> int:
@@ -283,3 +283,5 @@ def example14(input: int | str, extra: tuple[object, object]) -> int:
         reveal_type(input)
         reveal_type(extra[0])
         return 0
+
+### End
