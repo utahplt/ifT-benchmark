@@ -39,6 +39,8 @@ and also [Typed Racket Guide on Occurrence Typing](https://docs.racket-lang.org/
       - [Example 12 (Selectors)](#example-12-selectors)
       - [Example 13 (Reasoning Logically)](#example-13-reasoning-logically)
       - [Example 14 (Putting It All Together)](#example-14-putting-it-all-together)
+    - [More examples](#more-examples)
+      - [Example 15 (Unions vs Joins)](#example-15-unions-vs-joins)
   - [The Benchmark](#the-benchmark)
   - [Benchmark Results](#benchmark-results)
 
@@ -58,6 +60,7 @@ Those examples describe what a language that implements Occurrence Typing should
 5.  Support nested _if_ expressions; logical connectives can be implemented in this way. (Examples 7, 9)
 6.  Support user-defined predicates. (Examples 8, 12)
 7.  Support refinement of types of parts of compound objects. (Examples 10, 11, 12)
+8.  Merge types into union types, not joint types. (Examples 15)
 
 ~8.  Extend the above to multi-way conditionals. (Example 13)~ (can encode `cond` with support for `if` (key features 1 and 5))
 
@@ -252,6 +255,37 @@ Key points: The ability to reason about logical connectives and multi-way condit
 
 Key points: This example combines all the features of the system.
 
+### More examples
+
+These are examples that also make difference, but not in the ICFP'10 paper.
+
+#### Example 15 (Unions vs Joins)
+
+Taken from [the document of Pyright](https://microsoft.github.io/pyright/#/mypy-comparison?id=unions-vs-joins).
+
+``` python
+def func1(val: object):
+    if isinstance(val, str):
+        pass
+    elif isinstance(val, int):
+        pass
+    else:
+        return
+    reveal_type(val) # mypy: object, pyright: str | int
+
+def func2(condition: bool, val1: str, val2: int):
+    x = val1 if condition else val2
+    reveal_type(x) # mypy: object, pyright: str | int
+
+    y = val1 or val2
+    # In this case, mypy uses a union instead of a join
+    reveal_type(y) # mypy: str | int, pyright: str | int
+```
+
+> When merging two types during code flow analysis or widening types during constraint solving, pyright always uses a union operation. Mypy typically (but not always) uses a “join” operation, which merges types by finding a common supertype. The use of joins discards valuable type information and leads to many false positive errors that are [well documented within the mypy issue tracker](https://github.com/python/mypy/issues?q=is%3Aissue+is%3Aopen+label%3Atopic-join-v-union).
+
+Key points: Merge types with union types, not common supertype.
+
 ## The Benchmark
 
 According to the [extracted key features](#extracted-key-features-from-the-examples), the following benchmark items are proposed.
@@ -305,5 +339,6 @@ The result is as follows.
 | tuple_elements       |              |            |      |      |         |
 | subtyping            |              |            |      |      |         |
 | subtyping_structural |              |            |      |      |         |
+| merge_union          |              |            |      |      |         |
 
 `●` means passed, `○` means not passed, and `◉` means partially passed (always with notes).
