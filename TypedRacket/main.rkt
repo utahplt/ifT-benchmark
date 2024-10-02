@@ -109,13 +109,11 @@
 (define (example-13-aux-1 [x : Number] [y : String]) : Number
   x)
 
-(: example-13-aux-2 (-> ([x : Number] [y : Any])
-                        #:pre (y) (! y String)
-                        Number))
+(: example-13-aux-2 (-> ([x : Number] [y : Number]) Number))
 (define (example-13-aux-2 x y) : Number
-  x)
+  y)
 
-(define (example-13 [x : Any] [y : Any])
+(define (example-13 [x : Any] [y : (U Number String)])
   (cond
     [(and (number? x) (string? y)) (example-13-aux-1 x y)]
     [(number? x) (example-13-aux-2 x y)]
@@ -131,4 +129,4 @@
      (+ (string-length input) (car extra))]
     [else 0]))
 
-;; End
+;;; End
