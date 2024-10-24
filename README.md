@@ -22,273 +22,723 @@ and also [Typed Racket Guide on Occurrence Typing](https://docs.racket-lang.org/
 
 ## Table of Contents
 
-  - [Start with Examples from ICFP'10 Paper](#start-with-examples-from-icfp10-paper)
-    - [Extracted Key Features from the Examples](#extracted-key-features-from-the-examples)
-    - [Examples from ICFP'10 paper](#examples-from-icfp10-paper)
-      - [Example 1](#example-1)
-      - [Example 2](#example-2)
-      - [Example 3](#example-3)
-      - [Example 4](#example-4)
-      - [Example 5](#example-5)
-      - [Example 6](#example-6)
-      - [Example 7](#example-7)
-      - [Example 8](#example-8)
-      - [Example 9](#example-9)
-      - [Example 10 (Selectors)](#example-10-selectors)
-      - [Example 11 (Selectors)](#example-11-selectors)
-      - [Example 12 (Selectors)](#example-12-selectors)
-      - [Example 13 (Reasoning Logically)](#example-13-reasoning-logically)
-      - [Example 14 (Putting It All Together)](#example-14-putting-it-all-together)
-    - [More examples](#more-examples)
-      - [Example 15 (Unions vs Joins)](#example-15-unions-vs-joins)
   - [The Benchmark](#the-benchmark)
   - [Benchmark Results](#benchmark-results)
 
 <!-- markdown-toc end -->
 
+## Examples
 
-## Start with Examples from ICFP'10 Paper
-
-Those examples describe what a language that implements Occurrence Typing should be able to do.
-
-### Extracted Key Features from the Examples
-
-1.  Being able to refine types using predicates, and show it in the _then_ branch of an _if_ expression. (Example 1)
-2.  Being able to reason about the negation of the predicate, and show this information in the _else_ branch of an _if_ expression. (Examples 2, 6)
-3.  Being able to reason about `let`-bindings, i.e. aliases of variables. (Examples 3, 9)
-4.  Being able to reason about logical connectives; for example, _or_ indicates a union type, _and_ indicates a conjunction of types. (Examples 4, 5)
-5.  Support nested _if_ expressions; logical connectives can be implemented in this way. (Examples 7, 9)
-6.  Support user-defined predicates. (Examples 8, 12)
-7.  Support refinement of types of parts of compound objects. (Examples 10, 11, 12)
-8.  Merge types into union types, not joint types. (Examples 15)
-
-~8.  Extend the above to multi-way conditionals. (Example 13)~ (can encode `cond` with support for `if` (key features 1 and 5))
-
-For more details for each example, check the section below. Quoted content are from the paper.
-
-### Examples from ICFP'10 paper
-
-#### Example 1
-
-```racket
-(if (number? x) (add1 x) 0)
-```
-
-> Regardless of the value of _x_, this program fragment always produces a number. Thus, our type system should accept this fragment, regardless of the type assigned to _x_, even if the type is not legitimate for _add1_. The key to typing this program is to assign the second occurrence of _x_ a different, more precise type than it has in the outer context. Fortunately, we know that for any value of type **Number**, _number?_ returns **#t**; otherwise, it returns **#f**. Therefore, it is safe to use **Number** as the type of _x_ in the then branch.
-
-Key points: _x_ should have type **Number** in the _then_ branch regardless of its type in the outer context; its type in the _else_ branch is not mentioned in this example.
-
-#### Example 2
-
-The following function f always produces a number:
-```racket
-(define: (f [x : (⋃ String Number)])
-  (if (number? x) (add1 x) (string-length x)))
-```
-> If _(number? x)_ produces **#t**, _x_ is an appropriate input for _add1_. If it produces **#f**, _x_ must be a **String** by process of elimination; it is therefore an acceptable input to _string-length_. To handle this program, the type system must take into account not only when predicates hold, but also when they fail to hold.
-
-Key points: The type system must be able to reason about the negation of a predicate, and apply this information to the _else_ branch.
-
-#### Example 3
-
-```racket
-... (let ([x (member v l)])
-      (if x
-          — compute with x —
-          (error ’fail))) ...
-```
-
-> This idiom, seen here in _member_, uses arbitrary non-**#f** values as true and uses **#f** as a marker for missing results, analogous to ML’s `NONE`. The type for _member_ specifies this behavior with an appropriate type signature. It can thus infer that in the _then_ branch, _x_ has the type of the desired result and is not **#f**.
-
-Key points: Being able to reason about `let`-bindings.
-
-#### Example 4
-
-> Logical connectives can combine the results of predicates:
-
-```racket
-... (if (or (number? x) (string? x)) (f x) 0) ...
-```
-
-> For this fragment to typecheck, the type system must recognize that (**or** (_number?_ _x_) (_string?_ _x_)) ensures that _x_ has type (⋃ **String** **Number**) in the _then_ branch, the domain of _f_ from example 2.
-
-Key points: Being able to reason about logical connectives, _or_ in this case indicates that _x_ has a union type.
-
-#### Example 5
-
-> For and, there is no such neat connection:
-
-```racket
-... (if (and (number? x) (string? y))
-        (+ x (string-length y))
-        0) ...
-```
-
-> Example 5 is perfectly safe, regardless of the values of x and y.
-
-Key points: Being able to reason about logical connectives, _and_ in this case indicates the type of _x_ and _y_ in the same time. Worth noting that this and the previous example both focus on the _then_ branch only.
-
-#### Example 6
-
-> In contrast, the next example shows how little we know when a conjunction evaluates to false:
-
-```racket
-;; x is either a Number or a String
-... (if (and (number? x) (string? y))
-        (+ x (string-length y))
-        (string-length x)) ...
-```
-
-> Here a programmer falsely assumes _x_ to be a **String** when the test fails. But, the test may produce **#f** because _x_ is actually a **String**, or because _y_ is not a **String** while _x_ is a **Number**. In the latter case, (_string-length_ _x_) fails. In general, when a conjunction is false, we do not know which conjunct is false.
-
-Key points: First note that this example is not safe (i.e. a failing example). It points out that the ability to handle the _else_ branch is important. However, the negation of a conjunction is not so informative.
-
-#### Example 7
-
-> Finally, and is expressible using nested _if_ expressions, a pattern that is often macro-generated:
-
-```racket
-... (if (if (number? x) (string? y) #f)
-        (+ x (string-length y))
-        0) ...
-```
-
-> One way for the type system to deal with this pattern is to reason that it is equivalent to the conjunction of the two predicates.
-
-Key points: Being able to reason about nested if expressions, which can be seen as a way to express logical connectives.
-
-#### Example 8
-
-> So far, we have seen how programmers can use predefined predicates. It is important, however, that programmers can also abstract over existing predicates:
-
-```racket
-(define: (strnum? [x : ⊤]) ;; ⊤ is the top type
-  (or (string? x) (number? x)))
-```
-
-> Take the previous example of a test for (⋃ **String** **Number**). A programmer can use the test to create the function _strnum?_, which behaves as a predicate for that type. This means the type system must represent the fact that _strnum?_ is a predicate for this type, so that it can be exploited for conditionals.
-
-Key points: The ability to let users define their own predicates.
-
-#### Example 9
-
-> In example 4, we saw the use of _or_ to test for disjunctions. Like _and_, _or_ is directly expressible using _if_:
-
-```racket
-(if (let ([tmp (number? x)])
-      (if tmp tmp (string? x)))
-    (f x)
-    0)
-```
-
-> The expansion is analyzed as follows: if (_number?_ _x_) is **#t**, then so is _tmp_, and thus the result of the inner _if_ is also **#t**. Otherwise, the result of the inner _if_ is (_string?_ _x_). This code presents a new challenge for the type system, however. Since the expression tested in the inner _if_ is the variable reference _tmp_, but the system must also learn about (_number?_ _x_) from the test of _tmp_.
-
-Key points: This example shows that the semantics of _or_ can also be expressed through combination of reasoning about _if_ and _let_.
-
-#### Example 10 (Selectors)
-
-> All of the tests thus far only involve variables. It is also useful to subject the result of arbitrary expressions to type tests:
-
-```racket
-... (if (number? (car p)) (add1 (car p)) 7) ...
-```
-
-> Even if _p_ has the pair type 〈⊤, ⊤〉, then example 10 should produce a number. Of course, simply accommodating repeated applications of _car_ is insufficient for real programs. Instead, the relevant portions of the type of _p_ must be refined in the _then_ and _else_ branches of the _if_.
-
-Key points: The ability to refine the type of parts of compound objects.
-
-#### Example 11 (Selectors)
-
-```racket
-(λ: ([p : 〈⊤, ⊤〉])
-  (if (and (number? (car p)) (number? (cdr p)))
-    (g p)
-    'no))
-```
-
-> The test expression refines the type of _p_ from the declared 〈⊤, ⊤〉 to the required 〈**Number**, **Number**〉. This is the expected result of the conjunction of tests on the _car_ and _cdr_ fields.
-
-Key points: The same as the previous example.
-
-#### Example 12 (Selectors)
-
-> Example 12 shows how programmers can simultaneously abstract over the use of both predicates and selectors:
-
-```racket
-(define carnum?
-  (λ: ([x : 〈⊤, ⊤〉]) (number? (car x))))
-```
-
-> The _carnum?_ predicate tests if the _car_ of its argument is a **Number**, and its type must capture this fact.
-
-Key points: This example combines the ability to define predicates and refine the type of parts of compound objects.
-
-#### Example 13 (Reasoning Logically)
-
-> Of course, we do learn something when conjunctions such as those in examples 5 and 6 are false. When a conjunction is false, we know that one of the conjuncts is false, and thus when all but one are true, the remaining one must be false. This reasoning principle is used in multi-way conditionals, which is a common idiom extensively illustrated in _How to Design Programs_ [Felleisen et al. 2001]:
-
-```racket
-... (cond
-      [(and (number? x) (string? y)) — 1 —]
-      [(number? x) — 2 —]
-      [else — 3 —]) ...
-```
-
-> This program represents a common idiom. In clause 1, we obviously know that _x_ is a **Number** and _y_ is a **String**. In clause 2, _x_ is again a **Number**. But we also know that _y_ cannot be a **String**. To effectively typecheck such programs, the type system must be able to follow this reasoning.
-
-Key points: The ability to reason about logical connectives and multi-way conditionals: latter branches imply negations of previous branches.
-
-#### Example 14 (Putting It All Together)
-
-> Our type system correctly handles all of the preceding examples. Finally, we combine these features into an example that demonstrates all aspects of our system:
-
-```racket
-(λ: ([input : (⋃ Number String)]
-     [extra : 〈⊤, ⊤〉])
-  (cond
-    [(and (number? input) (number? (car extra)))
-     (+ input (car extra))]
-    [(number? (car extra))
-     (+ (string-length input) (car extra))]
-    [else 0]))
-```
-
-Key points: This example combines all the features of the system.
-
-### More examples
-
-These are examples that also make difference, but not in the ICFP'10 paper.
-
-#### Example 15 (Unions vs Joins)
-
-Taken from [the document of Pyright](https://microsoft.github.io/pyright/#/mypy-comparison?id=unions-vs-joins).
-
-``` python
-def func1(val: object):
-    if isinstance(val, str):
-        pass
-    elif isinstance(val, int):
-        pass
-    else:
-        return
-    reveal_type(val) # mypy: object, pyright: str | int
-
-def func2(condition: bool, val1: str, val2: int):
-    x = val1 if condition else val2
-    reveal_type(x) # mypy: object, pyright: str | int
-
-    y = val1 or val2
-    # In this case, mypy uses a union instead of a join
-    reveal_type(y) # mypy: str | int, pyright: str | int
-```
-
-> When merging two types during code flow analysis or widening types during constraint solving, pyright always uses a union operation. Mypy typically (but not always) uses a “join” operation, which merges types by finding a common supertype. The use of joins discards valuable type information and leads to many false positive errors that are [well documented within the mypy issue tracker](https://github.com/python/mypy/issues?q=is%3Aissue+is%3Aopen+label%3Atopic-join-v-union).
-
-Key points: Merge types with union types, not common supertype.
+For a set of code examples that demonstrate the features of occurrence typing, see [Examples.md](Examples.md)
 
 ## The Benchmark
 
-According to the [extracted key features](#extracted-key-features-from-the-examples), the following benchmark items are proposed.
+From the examples, we can summarize the common features or "API"s that one would expect from a gradual type checker that supports occurrence typing. Each feature, with a brief description, the guarantee it provides, and the examples that demonstrate it, forms a benchmark item. All the benchmark items are listed below.
+
+### `refine_true`
+
+#### Description
+
+Refine the type of a variable when a predicate is true.
+
+#### Guarantee
+
+If the predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: Any) -> Any:
+    if x is String:
+        return String.length(x) // type of x is refined to String
+    else:
+        return x
+```
+
+##### Failure Expected
+
+```text
+define f(x: Any) -> Any:
+    if x is String:
+        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
+    else:
+        return x
+```
+
+### `refine_false`
+
+#### Description
+
+Refine the type of a variable when a predicate is false.
+
+#### Guarantee
+
+If the predicate is false, the type of the variable is refined to a more specific type with the information that the negation of the predicate holds.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: String | Number) -> Number:
+    if x is String:
+        return String.length(x)
+    else:
+        return x // type of x is refined to Number, namely (String | Number) - String
+```
+
+##### Failure Expected
+
+```text
+define f(x: String | Number | Boolean) -> Number:
+    if x is String:
+        return String.length(x)
+    else:
+        return x + 1 // type of x is refined to Number | Boolean, thus not allowing addition
+```
+
+### `alias`
+
+#### Description
+
+Track test results assigned to variables.
+
+#### Guarantee
+
+When the result of a predicate test is bound to an immutable variable, that variable can also be used as a type guard. When the result of a predicate test is bound to a mutable variable, that variable can be used as a type guard only if it is not updated.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: Any) -> Any:
+    let y = x is String
+    if y:
+        return String.length(x) // type of x is refined to String
+    else:
+        return x
+```
+
+##### Failure Expected
+
+```text
+define f(x: Any) -> Any:
+    let y = x is String
+    if y:
+        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
+    else:
+        return x
+```
+
+```text
+define f(x: Any) -> Any:
+    var y = x is String // y is mutable
+    y = true
+    if y:
+        return String.length(x) // since y is updated, type of x is not refined
+    else:
+        return x
+```
+
+### `connectives`
+
+#### Description
+
+Handle logic connectives, such as `and`, `or`, and `not`.
+
+#### Guarantee
+
+When a predicate is a conjunction of multiple predicates, the type of the variable is refined to the intersection of the types refined by each predicate. When a predicate is a disjunction of multiple predicates, the type of the variable is refined to the union of the types refined by each predicate. When a predicate is a negation of another predicate, the type of the variable is refined to the complement of the type refined by the negated predicate.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: String | Number) -> Number:
+    if not (x is Number):
+        return String.length(x)
+    else:
+        return 0
+
+define g(x: Any) -> Number:
+    if x is String or x is Number:
+        return f(x) // type of x is refined to String | Number, thus allowing the call to f
+    else:
+        return 0
+
+define h(x: String | Number | Boolean) -> Number:
+    if not (x is Boolean) and not (x is Number):
+        return String.length(x)
+    else:
+        return 0
+```
+
+##### Failure Expected
+
+```text
+define f(x: String | Number) -> Number:
+    if not (x is Number):
+        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
+    else:
+        return 0
+
+define g(x: Any) -> Number:
+    if x is String or x is Number:
+        return x + 1 // type of x is refined to String | Number, thus not allowing addition
+    else:
+        return 0
+
+define h(x: String | Number | Boolean) -> Number:
+    if not (x is Boolean) and not (x is Number):
+        return x + 1 // type of x is refined to String | Boolean, thus not allowing addition
+    else:
+        return 0
+```
+
+### `nesting_body`
+
+#### Description
+
+Handle nested conditionals with nesting happening in the body.
+
+#### Guarantee
+
+When a conditional statement is nested inside the body of another conditional statement, the type of the variable is refined to the intersection of the types refined by each conditional statement.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: String | Number | Boolean) -> Number:
+    if not (x is String):
+        if not (x is Boolean):
+            return x + 1 // type of x is refined to Number
+        else:
+            return 0
+    else:
+        return 0
+```
+
+##### Failure Expected
+
+```text
+define f(x: String | Number | Boolean) -> Number:
+    if x is String:
+        if x is Number:
+            return x + 1 // type of x is empty / bottom type, thus not allowing any operation
+        else:
+            return 0
+    else:
+        return 0
+```
+
+### `nesting_condition`
+
+#### Description
+
+Handle nested conditionals with nesting happening in the condition.
+
+#### Guarantee
+
+When a conditional statement is nested inside the condition of another conditional statement, the type of the variable is refined to the intersection of the types refined by each conditional statement.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: Any, y: Any) -> Number:
+    if (if x is Number: y is String else: false)
+        x + String.length(y) // type of x is refined to Number, type of y is refined to String
+    else
+        0
+```
+
+##### Failure Expected
+
+```text
+define f(x: Any, y: Any) -> Number:
+    if (if x is Number: y is String else: y is String)
+        x + String.length(y) // type of x is not clear here, thus not allowing addition
+    else
+        0
+```
+
+### `predicate_2way`
+
+#### Description
+
+Custom predicates refine both positively and negatively.
+
+#### Guarantee
+
+When a custom predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds. When a custom predicate is false, the type of the variable is refined to a more specific type with the information that the negation of the predicate holds.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: String | Number) -> x is String:
+    return x is String
+
+define g(x: String | Number) -> Number:
+    if f(x):
+        return String.length(x) // type of x is refined to String
+    else:
+        return x // type of x is refined to Number, namely (String | Number) - String
+```
+
+##### Failure Expected
+
+```text
+define f(x: String | Number) -> x is String:
+    return x is Number
+
+define g(x: String | Number) -> Number:
+    if f(x):
+        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
+    else:
+        return x // type of x is refined to Number, namely (String | Number) - String
+```
+
+### `predicate_1way`
+
+#### Description
+
+Custom predicates refine only positively. This can be used to model predicates that are not total.
+
+#### Guarantee
+
+When a custom predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds. When a custom predicate is false, the type of the variable is not refined.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: String | Number) -> implies x is Number:
+    return x is Number and x > 0
+
+define g(x: String | Number) -> Number:
+    if f(x):
+        return x + 1 // type of x is refined to Number
+    else:
+        return 0
+```
+
+##### Failure Expected
+
+```text
+define f(x: String | Number) -> implies x is Number:
+    return x is Number and x > 0
+
+define g(x: String | Number) -> Number:
+    if f(x):
+        return x + 1 // type of x is refined to Number
+    else:
+        return x // type of x is not refined, thus not compatible with the return type
+```
+
+### `predicate_strict`
+
+#### Description
+
+Perform strict type checks on custom predicates.
+
+#### Guarantee
+
+The type checker checks that the assertion made by a custom predicate is compatible with the type of the variable, instead of just accepting what the programmer asserts.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: String | Number) -> x is String:
+    return x is String
+
+define g(x: String | Number) -> Number:
+    if f(x):
+        return String.length(x) // type of x is refined to String
+    else:
+        return x // type of x is refined to Number, namely (String | Number) - String
+```
+
+##### Failure Expected
+
+```text
+define f(x: String | Number) -> x is Boolean: // should not type check
+    return x is Boolean
+
+define g(x: String | Number) -> Number:
+    return true // not really checking the type of x, should not type check
+```
+
+### `predicate_loose`
+
+#### Description
+
+Do not perform strict type checks on custom predicates. This can be used in some cases where the type checker is not able to infer the type of the variable, yet the programmer is sure about the type.
+
+#### Guarantee
+
+The type checker does not check that the assertion made by a custom predicate is compatible with the type of the variable, instead just accepting what the programmer asserts.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: Listof(String | Number)) -> assert x is Listof(Number):
+    return true // bad example, but should type check
+
+define g(x: Listof(String | Number)) -> Number:
+    if f(x):
+        return x[0]
+    else:
+        return 0
+```
+
+##### Failure Expected
+
+```text
+define f(x: Listof(String | Number)) -> assert x is Listof(Number):
+    return true
+
+define g(x: Listof(String | Number)) -> String:
+    if f(x):
+        return x[0] // type of x is refined to Listof(Number)
+    else:
+        return 0
+```
+
+### `predicate_multi_args`
+
+#### Description
+
+Predicates can refine on more than one arguments.
+
+#### Guarantee
+
+When a custom predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds. When a custom predicate is false, the type of the variable is refined to a more specific type with the information that the negation of the predicate holds.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: String | Number, y: String | Number) -> x is String and y is Number:
+    return x is String and y is Number
+
+define g(x: String | Number, y: String | Number) -> Number:
+    if f(x, y):
+        return String.length(x) + y // type of x is refined to String, type of y is refined to Number
+    else:
+        return 0 // a problem would be that, here we know little about x and y
+```
+
+##### Failure Expected
+
+```text
+define f(x: String | Number, y: String | Number) -> x is String and y is Number:
+    return x is Number and y is String
+
+define g(x: String | Number, y: String | Number) -> Number:
+    if f(x, y):
+        return String.length(x) + y // type of x is refined to Number, type of y is refined to String
+    else:
+        return 0
+```
+
+### `predicate_extra_args`
+
+#### Description
+
+Predicates can take extra args (not being refined).
+
+#### Guarantee
+
+A custom predicate can take extra arguments that are not refined, but helps in refining the type of the variable.
+
+#### Examples
+
+##### Success Expected
+
+TODO: come up with an example that do not rely on other features or extra features
+
+``` text
+define f(x: Pairof(Any, Any), b: Boolean) -> case->
+ (-> _ #true A)
+ (-> _ #false B)
+```
+
+##### Failure Expected
+
+TODO: come up with an example that do not rely on other features or extra features
+
+### `object_properties`
+
+#### Description
+
+Refine types of properties of objects.
+
+#### Guarantee
+
+Partially refine the type of objects, that is, when the predicate is applied to an object property, refine the type of the object property.
+
+#### Examples
+
+##### Success Expected
+
+```text
+struct Apple:
+    a: Any
+
+define f(x: Apple) -> Number:
+    if x.a is Number:
+        return x.a // type of x.a is refined to Number
+    else:
+        return 0
+```
+
+##### Failure Expected
+
+```text
+struct Apple:
+    a: Any
+
+define f(x: Apple) -> Number:
+    if x.a is String:
+        return x.a // type of x.a is refined to String, thus not allowing the return
+    else:
+        return 0
+```
+
+### `tuple_whole`
+
+#### Description
+
+Refine types of the whole tuple.
+
+#### Guarantee
+
+When appropriate predicates are applied to the whole tuple, refine the type of the whole tuple. Note that the type of a tuple usually include both the type of the elements and the length of the tuple.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: Any) -> Number:
+    if x is Tupleof(Number, Number):
+        return x[0] + x[1] // type of x is refined to Tupleof(Number, Number)
+    else:
+        return 0
+```
+
+##### Failure Expected
+
+```text
+define f(x: Any) -> Number:
+    if x is Tupleof(Number, Number):
+        return x[0] + x[1] + x[2] // type of x is refined to Tupleof(Number, Number), thus no third element
+    else:
+        return 0
+```
+
+### `tuple_elements`
+
+#### Description
+
+Refine types of single tuple elements, that is, partially refine the type of the tuple.
+
+#### Guarantee
+
+When appropriate predicates are applied to the elements of a tuple, refine the type of the elements of the tuple.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: Tuple(Any, Any)) -> Number:
+    if x[0] is Number:
+        return x[0] // type of x[0] is refined to Number, type of x is refined to Tuple(Number, Any)
+    else:
+        return 0
+```
+
+##### Failure Expected
+
+``` text
+define f(x: Tuple(Any, Any)) -> Number:
+    if x[0] is Number:
+        return x[0] + x[1] // type of x[0] is refined to Number, but type of x[1] is not clear
+    else:
+        return 0
+```
+
+### `tuple_length`
+
+#### Description
+
+Refine union of tuple types by their length.
+
+#### Guarantee
+
+When refining a variable with the type as a union of tuple types, refine the type of the variable by the length of the tuple.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: Tupleof(Number, Number) | Tupleof(String, String, String)) -> Number:
+    if Tuple.length(x) is 2:
+        return x[0] + x[1] // type of x is refined to Tupleof(Number, Number)
+    else:
+        return String.length(x[0]) // type of x is refined to Tupleof(String, String, String)
+```
+
+##### Failure Expected
+
+```text
+define f(x: Tupleof(Number, Number) | Tupleof(String, String, String)) -> Number:
+    if Tuple.length(x) is 2:
+        return x[0] + x[1] // type of x is refined to Tupleof(Number, Number)
+    else:
+        return x[0] + x[1] // type of x is refined to Tupleof(String, String, String), thus not allowing addition
+```
+
+### `subtyping_nominal`
+
+#### Description
+
+Refine types with nominal subtyping.
+
+#### Guarantee
+
+Refine supertypes to subtypes in a nominal subtyping scheme.
+
+#### Examples
+
+##### Success Expected
+
+```text
+struct A:
+    a: Number
+
+struct B extends A:
+    b: Number
+
+define f(x: A) -> Number:
+    if x is B:
+        return x.b // type of x is refined to B
+    else:
+        return x.a // type of x is refined to A
+```
+
+##### Failure Expected
+
+```text
+struct A:
+    a: Number
+
+struct B extends A:
+    b: Number
+
+define f(x: A) -> Number:
+    if x is B:
+        return x.a
+    else:
+        return x.b // type of x is refined to A which does not have a property b
+```
+
+### `subtyping_structural`
+
+#### Description
+
+Refine types with structural subtyping.
+
+#### Guarantee
+
+Refine supertypes to subtypes in a structural subtyping scheme.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: Any) -> String:
+    return "hello"
+
+define g(f: Number -> String | Boolean) -> String:
+    if f(0) is String:
+        return f(0) // type of f(0) is refined to String
+    else:
+        return "world"
+
+g(f) // this should type check
+```
+
+##### Failure Expected
+
+```text
+define f(x: Number) -> String:
+    return "hello"
+
+define g(f: Any -> String | Boolean) -> String:
+    if f(0) is String:
+        return f(0) // type of f(0) is refined to String
+    else:
+        return "world"
+
+g(f) // this should not type check
+```
+
+### `merge_with_union`
+
+#### Description
+
+Merge several types with union instead of joining.
+
+#### Guarantee
+
+When multiple branches where the type of a variable is refined to different types are merged, the type of the variable is refined to the union of the types refined by each branch, instead of joining the types, that is, taking the common supertype.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: Any) -> String | Number:
+    if x is String:
+        String.append(x, "hello") // type of x is refined to String
+    else if x is Number:
+        x = x + 1 // type of x is refined to Number
+    else:
+        return 0
+    return x // type of x is refined to String | Number; a bad implementation will refine to Any
+```
+
+##### Failure Expected
+
+```text
+define f(x: Any) -> String | Number:
+    if x is String:
+        String.append(x, "hello") // type of x is refined to String
+    else if x is Number:
+        x = x + 1 // type of x is refined to Number
+    else:
+        return 0
+    return x + 1 // type of x is refined to String | Number
+```
 
 | Benchmark            | Description                                              |
 |:---------------------|----------------------------------------------------------|
@@ -298,17 +748,19 @@ According to the [extracted key features](#extracted-key-features-from-the-examp
 | connectives          | handle logic connectives                                 |
 | nesting_condition    | nested conditionals with nesting happening in condition  |
 | nesting_body         | nested conditionals with nesting happening in body       |
-| custom_predicates    | allow programmers define their own predicates            |
 | predicate_2way       | custom predicates refines both positively and negatively |
+| predicate_1way       | custom predicates refines only positively                |
 | predicate_strict     | perform strict type checks on custom predicates          |
-| predicate_multi_args | predicates can have more than one arguments              |
+| predicate_loose      | do not perform strict type checks on custom predicates   |
+| predicate_multi_args | predicates can refine on more than one arguments         |
+| predicate_extra_args | predicates can take extra args (not being refined)       |
 | object_properties    | refine types of properties of objects                    |
 | tuple_whole          | refine types of the whole tuple                          |
 | tuple_elements       | refine types of tuple elements                           |
-| subtyping            | refine supertypes to subtypes                            |
+| tuple_length         | refine union of tuple types by their length              |
+| subtyping_nominal    | refine nominal subtyping                                 |
 | subtyping_structural | refine structural subtyping                              |
-
-(NOTE: it may be better to group some benchmark items and give a x/y looking score for the group)
+| merge_with_union     | merge several types with union instead of joining        |
 
 ## Benchmark Results
 
@@ -330,16 +782,19 @@ The result is as follows.
 | connectives          |              |            |      |      |         |
 | nesting_condition    |              |            |      |      |         |
 | nesting_body         |              |            |      |      |         |
-| custom_predicates    |              |            |      |      |         |
 | predicate_2way       |              |            |      |      |         |
+| predicate_1way       |              |            |      |      |         |
 | predicate_strict     |              |            |      |      |         |
+| predicate_loose      |              |            |      |      |         |
 | predicate_multi_args |              |            |      |      |         |
+| predicate_extra_args |              |            |      |      |         |
 | object_properties    |              |            |      |      |         |
 | tuple_whole          |              |            |      |      |         |
 | tuple_elements       |              |            |      |      |         |
-| subtyping            |              |            |      |      |         |
+| tuple_length         |              |            |      |      |         |
+| subtyping_nominal    |              |            |      |      |         |
 | subtyping_structural |              |            |      |      |         |
-| merge_union          |              |            |      |      |         |
+| merge_with_union     |              |            |      |      |         |
 
 `●` means passed, `○` means not passed, and `◉` means partially passed (always with notes).
 
