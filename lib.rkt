@@ -74,9 +74,11 @@
 
 (define (shell-command pre-exe pre-arguments pre-cmd)
   (define exe (find-exe pre-exe))
-  (define cmd* (append
-                pre-arguments
-                (map path-string->string (if (path-string? pre-cmd) (list pre-cmd) pre-cmd))))
+  (define cmd* (if (procedure? (car pre-arguments))
+                   (apply (car pre-arguments) `(,pre-cmd))
+                   (append
+                    pre-arguments
+                    (map path-string->string (if (path-string? pre-cmd) (list pre-cmd) pre-cmd)))))
   (parameterize ([current-output-port (open-output-nowhere)]
                  [current-error-port (open-output-nowhere)])
     (apply system* exe cmd*)))
