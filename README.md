@@ -345,6 +345,6 @@ The result is as follows.
 
 ## Other Discusstions
 
-### issue #7
+### refinement invalidation
 
-also see [flow document](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations).
+see issue #7, also see [flow document](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations).
