@@ -342,3 +342,9 @@ The result is as follows.
 | merge_union          |              |            |      |      |         |
 
 `●` means passed, `○` means not passed, and `◉` means partially passed (always with notes).
+
+## Other Discusstions
+
+### issue #7
+
+also see [flow document](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations).
