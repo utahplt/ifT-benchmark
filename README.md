@@ -470,17 +470,17 @@ A custom predicate can take extra arguments that are not refined, but helps in r
 
 ##### Success Expected
 
-TODO: come up with an example that do not rely on other features or extra features
-
-``` text
-define f(x: Pairof(Any, Any), b: Boolean) -> case->
- (-> _ #true A)
- (-> _ #false B)
+```text
+define f(x: Listof(Any), t: Type) -> x is Listof(t):
+    return x.all(lambda y: y is t)
 ```
 
 ##### Failure Expected
 
-TODO: come up with an example that do not rely on other features or extra features
+```text
+define f(x: Listof(Any), t: Type) -> x is Listof(t):
+    return x.all(lambda y: y is Number) // should not type check
+```
 
 ### `object_properties`
 
