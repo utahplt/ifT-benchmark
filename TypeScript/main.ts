@@ -1,128 +1,139 @@
 /// Code:
-// Example 1
-function example1(x: unknown): number {
-  if (typeof x === "number") {
+// Example positive
+// success
+function positive_success_f(x: unknown): unknown {
+  if (typeof x === "string") {
+    return x.length;
+  } else {
+    return x
+  }
+}
+// failure
+function positive_failure_f(x: unknown): unknown {
+  if (typeof x === "string") {
+    return x.isNaN();
+  } else {
+    return x;
+  }
+}
+
+// Example negative
+// success
+function negative_success_f(x: string | number): number {
+  if (typeof x === "string") {
+    return x.length;
+  } else {
+    return x + 1;
+  }
+}
+// failure
+function negative_failure_f(x: string | number | boolean): number {
+  if (typeof x === "string") {
+    return x.length;
+  } else {
+    return x + 1;
+  }
+}
+
+// Example alias
+// success
+function alias_success_f(x: unknown): unknown {
+  const y = typeof x === "string";
+  if (y) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+// failure
+function alias_failure_f(x: unknown): unknown {
+  const y = typeof x === "string";
+  if (y) {
+    return x.isNaN();
+  } else {
+    return x;
+  }
+}
+
+function alias_failure_g(x: unknown): unknown {
+  let y = typeof x === "string";
+  y = true;
+  if (y) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+
+// Example connectives
+// success
+function connectives_success_f(x: string | number): number {
+  if (typeof x !== "number") {
+    return x.length;
+  } else {
+    return 0;
+  }
+}
+
+function connectives_success_g(x: unknown): number {
+  if (typeof x === "string" || typeof x === "number") {
+    return connectives_success_f(x);
+  } else {
+    return 0;
+  }
+}
+
+function connectives_success_h(x: string | number | boolean): number {
+  if (typeof x !== "boolean" && typeof x !== "number") {
+    return x.length;
+  } else {
+    return 0;
+  }
+}
+
+// failure
+function connectives_failure_f(x: string | number): number {
+  if (typeof x !== "number") {
     return x + 1;
   } else {
     return 0;
   }
 }
 
-console.log(example1(1)); // 2
-console.log(example1("str")); // 0
-
-// Example 2
-console.log("Example 2");
-function example2(x: string | number): number {
-  if (typeof x === "number") {
+function connectives_failure_g(x: unknown): number {
+  if (typeof x === "string" || typeof x === "number") {
     return x + 1;
   } else {
-    return x.length;
+    return 0;
   }
 }
 
-// Example 3
-console.log("Example 3");
-function member(l: number[], v: number): number[] | false {
-  if (l.includes(v)) {
-    return l.slice(l.indexOf(v));
-  } else {
-    return false;
-  }
-}
-
-function example3(l: number[], v: number): number {
-  let x = member(l, v);
-  if (x != false) {
-    return x[0];
-  } else {
-    throw new Error('fail');
-  }
-}
-
-console.log(example3([1, 2, 3, 4], 1)) // 1
-
-// Example 4
-console.log("Example 4");
-function example4(x: unknown): number {
-  if (typeof x === "number" || typeof x === "string") {
-    return example2(x);
+function connectives_failure_h(x: string | number | boolean): number {
+  if (typeof x !== "boolean" && typeof x !== "number") {
+    return x + 1;
   } else {
     return 0;
   }
 }
 
-console.log(example4(1)); // 2
-console.log(example4("str")); // 3
-console.log(example4(Symbol('sym'))); // 0
-
-// Example 5
-console.log("Example 5");
-function example5(x: unknown, y: unknown): number {
-  if (typeof x === "number" && typeof y === "string") {
-    return x + y.length;
-  } else {
-    return 0;
-  }
-}
-
-console.log(example5(5, "str")); // 8
-
-// Example 6 (this should fail)
-// https://effectivetypescript.com/2024/02/27/type-guards/ (what if you return false? part)
-// add examples (maybe 6b) from the blog post
-console.log("Example 6");
-function example6(x: unknown, y: unknown): number {
-  if (typeof x === "number" && typeof y === "string") {
-    return x + y.length;
-  } else {
-    return x.length;
-  }
-}
-
-console.log(example6(5, "str")); // 8
-console.log(example6(5, 5)); // undefined
-
-// Example 7
-console.log("Example 7");
-
-// this failed to refine the type of x and y
-function example7(x: unknown, y: unknown): number {
-  if (typeof x === "number" ? typeof y === "string" : false) {
-    return x + y.length;
-  } else {
-    return 0;
-  }
-}
-
-// this failed to refine the type of x and y
-// nested functions would need to refine the type of x and y simultimeously
-// isn't currently possible in typescript
-// https://github.com/microsoft/TypeScript/issues/26916
-function example7_2nd_try(x: unknown, y: unknown): number {
-  if ((() /* : x is number and y is string */ => {
-    if (typeof x === "number") {
-      return typeof y === "string";
+// Example nesting_body
+// success
+function nesting_body_success_f(x: string | number | boolean): number {
+  if (!(typeof x === "string")) {
+    if (!(typeof x === "boolean")) {
+      return x + 1;
     } else {
-      return false;
+      return 0;
     }
-  })()) {
-    return x + y.length;
   } else {
     return 0;
   }
 }
-
-// this failed to refine the type of x and y
-function example7_3rd_try(x: unknown, y: unknown): number {
-  return (typeof x === "number" ? typeof y === "string" : false) ? x + y.length : 0;
-}
-
-// this works
-function example7_4th_try(x: unknown, y: unknown): number {
-  if (typeof x === "number") {
-    if (typeof y === "string") {
-      return x + y.length;
+// failure
+function nesting_body_failure_f(x: string | number | boolean): number {
+  if (typeof x === "string" || typeof x === "number") {
+    if (typeof x === "number" || typeof x === "boolean") {
+      return x.length;
     } else {
       return 0;
     }
@@ -131,164 +142,271 @@ function example7_4th_try(x: unknown, y: unknown): number {
   }
 }
 
-// this works
-function example7_5th_try(x: unknown, y: unknown): number {
-  return typeof x === "number" ? (typeof y === "string" ? x + y.length : 0) : 0;
-}
-
-// conclusion: typescript is not able to refine types in nested conditionals when
-// the nesting happens in the condition part of the outer conditional statement,
-// but it is able to refine types in nested conditionals when the nesting happens
-// in the body
-
-console.log(example7(5, "str")); // 8
-console.log(example7_2nd_try(5, "str")); // 8
-console.log(example7_3rd_try(5, "str")); // 8
-console.log(example7_4th_try(5, "str")); // 8
-console.log(example7_5th_try(5, "str")); // 8
-
-// Example 8
-console.log("Example 8");
-
-// user-defined predicates
-function example8(x: unknown): x is string | number {
-  if (typeof x === "number" || typeof x === "string") {
-    return true;
+// Example nesting_condition
+// success
+function nesting_condition_success_f(x: unknown, y: unknown): number {
+  if (typeof x === "number" ? typeof y === "string" : false) {
+    return x + (y as string).length; // TypeScript fails to refine type of x here
   } else {
-    return false;
+    return 0;
   }
 }
-
-let x: unknown = 1;
-
-if (example8(x)) {
-  example2(x);
-}
-
-// Example 9
-console.log("Example 9");
-
-// this fails due to the same reason as example 7
-// function example9(x: unknown): number {
-//     let tmp = typeof x === "number";
-//     if (tmp ? tmp : typeof x === "string") {
-//         return example2(x);
-//     } else {
-//         return 0;
-//     }
-// }
-
-// this fails because typescript cannot track aliasing of test results
-function example9_2nd_try(x: unknown): number {
-  let tmp = typeof x === "number";
-  if (tmp) {
-    return example2(x);
-  } else if (typeof x === "string") {
-    return example2(x);
-  }
-  return 0;
-}
-
-// this fails because of the same reason as 2nd try,
-// but if use the test_fun(x) directly in the if condition, it works
-function example9_3rd_try(x: unknown): number {
-  let test_fun = (t): t is number => typeof t === "number";
-  let tmp = test_fun(x);
-  if (tmp) {
-    return example2(x);
-  } else if (typeof x === "string") {
-    return example2(x);
+// failure
+function nesting_condition_failure_f(x: unknown, y: unknown): number {
+  if (typeof x === "number" ? typeof y === "string" : typeof y === "string") {
+    return x + (y as string).length;
   } else {
     return 0;
   }
 }
 
-function example9_4th_try(x: unknown): number {
-  return (typeof x === "number" ? example2(x) : typeof x === "string" ? example2(x) : 0);
+// Example predicate_2way
+// success
+function predicate_2way_success_f(x: string | number): x is string {
+  return typeof x === "string";
 }
 
-// Example 10
-console.log("Example 10");
+function predicate_2way_success_g(x: string | number): number {
+  if (predicate_2way_success_f(x)) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
 
-function example10(p: [unknown, unknown]): number {
-  if (typeof p[0] === "number") {
-    console.log(typeof p[0]); // fails to refine the type of p[0] here at compile time; works at runtime
-    return ((_p: [number, mixed]) => _p[0] + 1)(p);
+// failure
+function predicate_2way_failure_f(x: string | number): x is string {
+  return typeof x === "number";
+}
+
+function predicate_2way_failure_g(x: string | number): number {
+  if (predicate_2way_failure_f(x)) {
+    return x + 1;
+  } else {
+    return x;
+  }
+}
+
+// Example predicate_1way
+// success
+function predicate_1way_success_f(x: string | number): x is number {
+  return typeof x === "number" && x > 0;
+}
+
+function predicate_1way_success_g(x: string | number): number {
+  if (predicate_1way_success_f(x)) {
+    return x + 1;
   } else {
     return 0;
   }
 }
 
-console.log(example10([1, 2])); // 2
+// failure
+function predicate_1way_failure_f(x: string | number): x is number {
+  return typeof x === "number" && x > 0;
+}
 
-class Pair {
-  constructor(public x: unknown, public y: unknown) {
-    this.x = x;
-    this.y = y;
+function predicate_1way_failure_g(x: string | number): number {
+  if (predicate_1way_failure_f(x)) {
+    return x + 1;
+  } else {
+    return x.length;
   }
 }
 
-function example10_2nd_try(p: Pair): number {
-  if (typeof p.x === "number") {
-    return p.x + 1; // succeeds to refine the type of p.x here at compile time
+// Example predicate_checked
+// success
+function predicate_checked_success_f(x: string | number): x is string {
+  return typeof x === "string";
+}
+
+function predicate_checked_success_g(x: string | number): number {
+  if (predicate_checked_success_f(x)) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+
+// failure
+function predicate_checked_failure_f(x: string | number): x is boolean {
+  return typeof x === "boolean";
+}
+
+function predicate_checked_failure_g(x: string | number): number {
+  return true;
+}
+
+// Example predicate_multi_args
+// success
+function predicate_multi_args_success_f(x: string | number, y: string | number): x is string & y is number {
+  // unfortunately, TypeScript does not really has such syntax, so this would not pass
+  return typeof x === "string" && typeof y === "number";
+}
+
+function predicate_multi_args_success_g(x: string | number, y: string | number): number {
+  if (predicate_multi_args_success_f(x, y)) {
+    return x.length + y;
   } else {
     return 0;
   }
 }
 
-// Example 11
-console.log("Example 11");
+// failure
+function predicate_multi_args_failure_f(x: string | number, y: string | number): x is string & y is number {
+  return typeof x === "number" && typeof y === "string";
+}
 
-// check inconsistency between this and 3rd try
-// seems to be working; if we got more errors, check tsc
-function example11(p: [unknown, unknown]): number {
-  if (typeof p[0] === "number" && typeof p[1] === "number") {
-    console.log(typeof p[0]); // fails to refine the type of p[0] here at compile time; works at runtime
-    return p[0];
+function predicate_multi_args_failure_g(x: string | number, y: string | number): number {
+  if (predicate_multi_args_failure_f(x, y)) {
+    return x.length + y;
   } else {
     return 0;
   }
 }
 
-console.log(example11([1, 2])); // 1
+// Example predicate_extra_args
+// success
+function predicate_extra_args_success_f(x: unknown[], t: unknown): x is t[] { // not very sure TypeScript can do that, maybe a better example?
+  return x.every(y => typeof y === typeof t);
+}
+// failure
+function predicate_extra_args_failure_f(x: unknown[], t: unknown): x is t[] {
+  return x.every(y => typeof y === "number");
+}
 
-function example11_2nd_try(p: Pair): number {
-  if (typeof p.x === "number" && typeof p.y === "number") {
-    return p.x; // succeeds to refine the type of p.x here at compile time
+// Example object_properties
+// success
+function object_properties_success_f(x: { a: unknown }): number {
+  if (typeof x.a === "number") {
+    return x.a;
+  } else {
+    return 0;
+  }
+}
+// failure
+function object_properties_failure_f(x: { a: unknown }): number {
+  if (typeof x.a === "string") {
+    return x.a;
   } else {
     return 0;
   }
 }
 
-// weird type: [unknown, unknown] & number[]
-function example11_3rd_try(p: [unknown, unknown]): number {
-  if (p.every((x) => typeof x === "number")) {
-    return p[0];
+// Example tuple_elements
+// success
+function tuple_elements_success_f(x: [unknown, unknown]): number {
+  if (typeof x[0] === "number") {
+    return x[0];
+  } else {
+    return 0;
+  }
+}
+// failure
+function tuple_elements_failure_f(x: [unknown, unknown]): number {
+  if (typeof x[0] === "number") {
+    return x[0] + x[1];
   } else {
     return 0;
   }
 }
 
-// Example 12
-console.log("Example 12");
-
-// give more examples on readonly data structures
-function example12(x: [unknown, unknown]): x is [number, unknown] {
-  return typeof x[0] === "number";
+// Example tuple_length
+// success
+function tuple_length_success_f(x: [number, number] | [string, string, string]): number {
+  if (x.length === 2) {
+    return x[0] + x[1];
+  } else {
+    return x[0].length;
+  }
+}
+// failure
+function tuple_length_failure_f(x: [number, number] | [string, string, string]): number {
+  if (x.length === 2) {
+    return x[0] + x[1];
+  } else {
+    return x[0] + x[1];
+  }
 }
 
-console.log(example12([1, 2])); // true
-console.log(example12(["str", 2])); // false
-
-let p: [unknown, unknown] = [1, 2];
-if (example12(p)) {
-  p;
-  console.log(typeof p[0]);
-  console.log(p[0] + 1);
+// Example subtyping_nominal
+// success
+class A {
+  a: number;
 }
 
-// Example 13
-console.log("Example 13");
+class B extends A {
+  b: number;
+}
 
-// as far as I know, typescript do not have multi-way conditionals directly
-/// End
+function subtyping_nominal_success_f(x: A): number {
+  if (x instanceof B) {
+    return x.b;
+  } else {
+    return x.a;
+  }
+}
+// failure
+function subtyping_nominal_failure_f(x: A): number {
+  if (x instanceof B) {
+    return x.a;
+  } else {
+    return x.b;
+  }
+}
+
+// Example subtyping_structural
+// success
+function subtyping_structural_success_f(x: unknown): string {
+  return "hello";
+}
+
+function subtyping_structural_success_g(f: (n: number) => string | boolean): string {
+  const r = f(0);
+  if (typeof r === "string") {
+    return r;
+  } else {
+    return "world";
+  }
+}
+
+subtyping_structural_success_g(subtyping_structural_success_f);
+
+// failure
+function subtyping_structural_failure_f(x: number): string {
+  return "hello";
+}
+
+function subtyping_structural_failure_g(f: (x: unknown) => string | boolean): string {
+  if (typeof f(0) === "string") {
+    return f(0);
+  } else {
+    return "world";
+  }
+}
+
+subtyping_structural_failure_g(subtyping_structural_failure_f);
+
+// Example merge_with_union
+// success
+function merge_with_union_success_f(x: unknown): string | number {
+  if (typeof x === "string") {
+    x += "hello";
+  } else if (typeof x === "number") {
+    x += 1;
+  } else {
+    return 0;
+  }
+  return x;
+}
+// failure
+function merge_with_union_failure_f(x: unknown): string | number {
+  if (typeof x === "string") {
+    x += "hello";
+  } else if (typeof x === "number") {
+    x += 1;
+  } else {
+    return 0;
+  }
+  return x + 1;
+}
