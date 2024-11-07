@@ -456,34 +456,6 @@ define f(x: Apple) -> Number:
         return 0
 ```
 
-### `tuple_whole`
-
-#### Description
-
-When appropriate predicates are applied to the whole tuple, refine the type of the whole tuple. Note that the type of a tuple usually include both the type of the elements and the length of the tuple.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: Top) -> Number:
-    if x is Tupleof(Number, Number):
-        return x[0] + x[1] // type of x is refined to Tupleof(Number, Number)
-    else:
-        return 0
-```
-
-##### Failure Expected
-
-```text
-define f(x: Top) -> Number:
-    if x is Tupleof(Number, Number):
-        return x[0] + x[1] + x[2] // type of x is refined to Tupleof(Number, Number), thus no third element
-    else:
-        return 0
-```
-
 ### `tuple_elements`
 
 #### Description
