@@ -47,20 +47,54 @@
     (let-values ([(body-lines footer-lines) (split-body (cdr body-lines) comment-char)])
       (values header-lines body-lines footer-lines))))
 
-(define (split-test-cases body-lines comment-char)
+(define (split-test-cases-pre body-lines comment-char)
   (let ([test-case-start (string-append-immutable (make-string 2 comment-char) " Example")])
-    (let loop ([test-cases '()] [test-case '()] [lines body-lines] [prev-should-not-fail #t])
+    (let loop ([test-cases '()] [test-case '()] [lines body-lines])
       (if (null? lines)
-          (reverse (cons (cons (reverse test-case) prev-should-not-fail) test-cases))
+          (reverse (cons (reverse test-case) test-cases))
           (if (string-prefix? (car lines) test-case-start)
               (loop
                (if (not (null? test-case))
-                   (cons (cons (reverse test-case) prev-should-not-fail) test-cases)
+                   (cons (reverse test-case) test-cases)
                    test-cases)
                (list (car lines))
-               (cdr lines)
-               (not (string-contains? (car lines) "fail")))
-              (loop test-cases (cons (car lines) test-case) (cdr lines) prev-should-not-fail))))))
+               (cdr lines))
+              (loop test-cases (cons (car lines) test-case) (cdr lines)))))))
+
+(define (split-test-case test-case-pre comment-char)
+  (let ([first-line (car test-case-pre)]
+        [following-lines (cdr test-case-pre)])
+    (define comment-start (make-string 2 comment-char))
+    (define test-case-name
+      (cadr (regexp-match
+             (regexp
+              (string-append-immutable
+               comment-start
+               " Example ([0-9a-zA-Z_]+)"))
+             first-line)))
+    (define (split-by-marker lst)
+      (define (helper lst selector res-lists)
+        (cond
+          [(null? lst) (cons (reverse (car res-lists)) (reverse (cdr res-lists)))]
+          [(regexp-match (regexp (string-append-immutable comment-start " success"))
+                         (car lst))
+           (helper (cdr lst) 'success res-lists)]
+          [(regexp-match (regexp (string-append-immutable comment-start " failure"))
+                         (car lst))
+           (helper (cdr lst) 'failure res-lists)]
+          [else (helper
+                 (cdr lst) selector
+                 (if (eq? selector 'success)
+                     (cons (cons (car lst) (car res-lists))
+                           (cdr res-lists))
+                     (cons (car res-lists)
+                           (cons (car lst) (cdr res-lists)))))]))
+      (helper lst 'whatever (cons '() '())))
+    `(,test-case-name ,@(split-by-marker following-lines))))
+
+(define (split-test-cases body-lines comment-char)
+  (let ([test-cases-pre (split-test-cases-pre body-lines comment-char)])
+    (map (lambda (tcp) (split-test-case tcp comment-char)) test-cases-pre)))
 
 (define (join-lines lines)
   (string-join lines "\n"))
@@ -84,13 +118,23 @@
     (apply system* exe cmd*)))
 
 (define (run-test-case test-case header-lines footer-lines command arguments extension)
-  (let ([input (join-lines (append header-lines (car test-case) footer-lines))]
-        [should-not-fail (cdr test-case)])
-    (eq? should-not-fail
-         (with-temp-file input
-           (lambda (input-file)
-             (shell-command command arguments input-file))
-           extension))))
+  (let ([test-case-name (car test-case)]
+        [success-input (join-lines (append header-lines (cadr test-case) footer-lines))]
+        [failure-input (join-lines (append header-lines (cddr test-case) footer-lines))])
+    (displayln (format "Running test case ~a ..." test-case-name))
+    (define succeeded (eq? #t
+                           (with-temp-file success-input
+                             (lambda (input-file)
+                               (shell-command command arguments input-file))
+                             extension)))
+    (define failed (eq? #f
+                        (with-temp-file failure-input
+                          (lambda (input-file)
+                            (shell-command command arguments input-file))
+                          extension)))
+    (list test-case-name
+          succeeded
+          failed)))
 
 (define (run-test-cases test-cases header-lines footer-lines command arguments extension)
   (map (lambda (test-case)
