@@ -2,7 +2,7 @@
 
 Benchmark for Occurrence Typing (and Similar Techniques).
 
-On what is Occurrence Typing, check the following paper
+Occurrence typing is more widely known as "type narrowing" or "type refinement" these days. In one word, it is a technique that refines the type of a variable based on the occurrence of certain predicates. It is originally proposed by Tobin-Hochstadt and Felleisen in their paper "Logical Types for Untyped Languages" at ICFP 2010:
 
 ``` bibtex
 @inproceedings{tobin-hochstadtLogicalTypesUntyped2010,
@@ -16,7 +16,12 @@ On what is Occurrence Typing, check the following paper
 }
 ```
 
-and also [Typed Racket Guide on Occurrence Typing](https://docs.racket-lang.org/ts-guide/occurrence-typing.html).
+For some instances, see
+- [Typed Racket guide on occurrence typing](https://docs.racket-lang.org/ts-guide/occurrence-typing.html)
+- [TypeScript documentation on narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
+- [Flow documentation on type refinements](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations)
+- [Mypy documentation on type narrowing](https://mypy.readthedocs.io/en/stable/type_narrowing.html#typeguards-with-parameters)
+- [https://github.com/microsoft/pyright/blob/main/docs/type-concepts-advanced.md#type-narrowing](Pyright documentation on type narrowing)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 
