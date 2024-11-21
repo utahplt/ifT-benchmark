@@ -142,10 +142,8 @@ define f(x: Top) -> Top:
         return x + 1 // type of x is refined to String, adding a number to a string is not allowed
     else:
         return x
-```
 
-```text
-define f(x: Top) -> Top:
+define g(x: Top) -> Top:
     var y = x is String // y is mutable
     y = true
     if y:
@@ -231,9 +229,9 @@ define f(x: String | Number | Boolean) -> Number:
 
 ```text
 define f(x: String | Number | Boolean) -> Number:
-    if x is String:
-        if x is Number:
-            return x + 1 // type of x is empty type, thus not allowing any operation
+    if x is String | Number:
+        if x is Number | Boolean:
+            return String.length(x) // type of x is Number
         else:
             return 0
     else:
@@ -333,7 +331,7 @@ define g(x: String | Number) -> Number:
     if f(x):
         return x + 1 // type of x is refined to Number
     else:
-        return x // type of x is not refined, thus not compatible with the return type
+        return String.length(x) // type of x is not refined, thus not compatible with the return type
 ```
 
 ### `predicate_checked`
