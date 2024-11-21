@@ -33,19 +33,20 @@ and also [Typed Racket Guide on Occurrence Typing](https://docs.racket-lang.org/
     - [`predicate_2way`](#predicate_2way)
     - [`predicate_1way`](#predicate_1way)
     - [`predicate_checked`](#predicate_checked)
-    - [`predicate_multi_args`](#predicate_multi_args)
-    - [`predicate_extra_args`](#predicate_extra_args)
     - [`object_properties`](#object_properties)
-    - [`tuple_whole`](#tuple_whole)
     - [`tuple_elements`](#tuple_elements)
     - [`tuple_length`](#tuple_length)
     - [`subtyping_nominal`](#subtyping_nominal)
     - [`subtyping_structural`](#subtyping_structural)
     - [`merge_with_union`](#merge_with_union)
   - [Benchmark Results](#benchmark-results)
-  - [Other Discusstions](#other-discusstions)
+  - [Uncertain Benchmark Items](#uncertain-benchmark-items)
+    - [`predicate_extra_args`](#predicate_extra_args)
+    - [`predicate_multi_args`](#predicate_multi_args)
+  - [Other Discussions](#other-discussions)
     - [refinement invalidation](#refinement-invalidation)
     - [unknown to known length](#unknown-to-known-length)
+  - [Acknowledge](#acknowledge)
 
 <!-- markdown-toc end -->
 
@@ -366,62 +367,6 @@ define g(x: String | Number) -> Number:
     return true // not really checking the type of x, should not type check
 ```
 
-### `predicate_multi_args`
-
-#### Description
-
-When a custom predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds. When a custom predicate is false, the type of the variable is refined to a more specific type with the information that the negation of the predicate holds.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: String | Number, y: String | Number) -> x is String and y is Number:
-    return x is String and y is Number
-
-define g(x: String | Number, y: String | Number) -> Number:
-    if f(x, y):
-        return String.length(x) + y // type of x is refined to String, type of y is refined to Number
-    else:
-        return 0 // a problem would be that, here we know little about x and y
-```
-
-##### Failure Expected
-
-```text
-define f(x: String | Number, y: String | Number) -> x is String and y is Number:
-    return x is Number and y is String
-
-define g(x: String | Number, y: String | Number) -> Number:
-    if f(x, y):
-        return String.length(x) + y // type of x is refined to Number, type of y is refined to String
-    else:
-        return 0
-```
-
-### `predicate_extra_args`
-
-#### Description
-
-A custom predicate can take extra arguments that are not refined, but helps in refining the type of the variable.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: Listof(Top), t: Type) -> x is Listof(t):
-    return x.all(lambda y: y is t)
-```
-
-##### Failure Expected
-
-```text
-define f(x: Listof(Top), t: Type) -> x is Listof(t):
-    return x.all(lambda y: y is Number) // should not type check
-```
-
 ### `object_properties`
 
 #### Description
@@ -635,8 +580,6 @@ define f(x: Top) -> String | Number:
 | predicate_2way       | custom predicates refines both positively and negatively |
 | predicate_1way       | custom predicates refines only positively                |
 | predicate_checked    | perform strict type checks on custom predicates          |
-| predicate_multi_args | predicates can refine on more than one arguments         |
-| predicate_extra_args | predicates can take extra args (not being refined)       |
 | object_properties    | refine types of properties of objects                    |
 | tuple_whole          | refine types of the whole tuple                          |
 | tuple_elements       | refine types of tuple elements                           |
@@ -668,8 +611,6 @@ The result is as follows.
 | predicate_2way       |              |            |      |      |         |
 | predicate_1way       |              |            |      |      |         |
 | predicate_checked    |              |            |      |      |         |
-| predicate_multi_args |              |            |      |      |         |
-| predicate_extra_args |              |            |      |      |         |
 | object_properties    |              |            |      |      |         |
 | tuple_whole          |              |            |      |      |         |
 | tuple_elements       |              |            |      |      |         |
@@ -680,7 +621,84 @@ The result is as follows.
 
 `V` means passed, `X` means not passed, and `O` means partially passed (always with notes).
 
-## Other Discusstions
+## Uncertain Benchmark Items
+
+### `predicate_extra_args`
+
+The following is a benchmark item extracted from [an example from mypy](https://mypy.readthedocs.io/en/stable/type_narrowing.html#typeguards-with-parameters). Original code:
+
+``` python
+from typing import TypeGuard  # use `typing_extensions` for `python<3.10`
+
+def is_set_of[T](val: set[Any], type: type[T]) -> TypeGuard[set[T]]:
+    return all(isinstance(x, type) for x in val)
+
+items: set[Any]
+if is_set_of(items, str):
+    reveal_type(items)  # set[str]
+```
+
+["Official" docs on what type(T) means as an annotation](https://docs.python.org/3/library/typing.html#type-of-class-objects), here argument must be a class. And this pattern works because classes are values and types in Python. It may be impossible in TypeScript because types are erased before runtime.
+
+#### Description
+
+A custom predicate can take extra arguments that are not refined, but helps in refining the type of the variable.
+
+#### Examples
+
+##### Success Expected
+
+TODO: use isinstanceof(x, type(b))
+
+```text
+define f(x: Listof(Top), t: Type) -> x is Listof(t):
+    return x.all(lambda y: y is t)
+```
+
+##### Failure Expected
+
+```text
+define f(x: Listof(Top), t: Type) -> x is Listof(t):
+    return x.all(lambda y: y is Number) // should not type check
+```
+
+### `predicate_multi_args`
+
+This would be a convenient feature to have, but it is not clear if any existing gradual type checker supports this.
+
+#### Description
+
+When a custom predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds. When a custom predicate is false, the type of the variable is refined to a more specific type with the information that the negation of the predicate holds.
+
+#### Examples
+
+##### Success Expected
+
+```text
+define f(x: String | Number, y: String | Number) -> x is String and y is Number:
+    return x is String and y is Number
+
+define g(x: String | Number, y: String | Number) -> Number:
+    if f(x, y):
+        return String.length(x) + y // type of x is refined to String, type of y is refined to Number
+    else:
+        return 0 // a problem would be that, here we know little about x and y
+```
+
+##### Failure Expected
+
+```text
+define f(x: String | Number, y: String | Number) -> x is String and y is Number:
+    return x is Number and y is String
+
+define g(x: String | Number, y: String | Number) -> Number:
+    if f(x, y):
+        return String.length(x) + y // type of x is refined to Number, type of y is refined to String
+    else:
+        return 0
+```
+
+## Other Discussions
 
 ### refinement invalidation
 
@@ -691,3 +709,7 @@ see issue #7, also see [flow document](https://flow.org/en/docs/lang/refinements
 In Typed Racket, `Listof(T)` has unknown length, while `List(T ...)` has known length. A length test should narrow `Listof` to `List`.
 
 This does not make sense without known length types. Do any migratory languages besides TR have these?
+
+## Acknowledge
+
+Thanks to Eric Traut for pointing out [an issue concerning narrowing and subclass of primitive types in Python](https://github.com/microsoft/pyright/issues/9395).
