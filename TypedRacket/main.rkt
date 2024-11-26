@@ -1,132 +1,296 @@
 #lang typed/racket
 
 ;;; Code:
-;; Example 1
-(: example-1 (-> Any Number))
-(define (example-1 [x : Any])
-  (if (number? x)
-      (add1 x)
+;; Example positive
+;; success
+(define (positive-success-f [x : Any]) : Any
+  (if (string? x)
+      (string-length x)
+      x))
+
+;; failure
+(define (positive-failure-f [x : Any]) : Any
+  (if (string? x)
+      (+ 1 x)
+      x))
+
+
+;; Example negative
+;; success
+(define (negative-success-f [x : (U String Number)]) : Number
+  (if (string? x)
+      (string-length x)
+      (+ 1 x)))
+
+;; failure
+(define (negative-failure-f [x : (U String Number Boolean)]) : Number
+  (if (string? x)
+      (string-length x)
+      (+ 1 x)))
+
+
+;; Example alias
+;; success
+(define (alias-success-f [x : Any]) : Any
+  (let ([y (string? x)])
+    (if y
+        (string-length x)
+        x)))
+
+;; failure
+(define (alias-failure-f [x : Any]) : Any
+  (let ([y (string? x)])
+    (if y
+        (+ 1 x)
+        x)))
+
+(define (alias-failure-g [x : Any]) : Any
+  (let ([y (box (string? x))])
+    (set-box! y #t)
+    (if (unbox y)
+        (string-length x)
+        x)))
+
+
+;; Example connectives
+;; success
+(define (connectives-success-f [x : (U String Number)]) : Number
+  (if (not (number? x))
+      (string-length x)
       0))
 
-;; Example 2
-(: example-2 (-> (U String Number) Number))
-(define (example-2 x)
-  (if (number? x)
-      (add1 x)
+(define (connectives-success-g [x : Any]) : Number
+  (if (or (string? x) (number? x))
+      (connectives-success-f x)
+      0))
+
+(define (connectives-success-h [x : (U String Number Boolean)]) : Number
+  (if (and (not (boolean? x)) (not (number? x)))
+      (string-length x)
+      0))
+
+;; failure
+(define (connectives-failure-f [x : (U String Number)]) : Number
+  (if (not (number? x))
+      (+ 1 x)
+      0))
+
+(define (connectives-failure-g [x : Any]) : Number
+  (if (or (string? x) (number? x))
+      (+ 1 x)
+      0))
+
+(define (connectives-failure-h [x : (U String Number Boolean)]) : Number
+  (if (and (not (boolean? x)) (not (number? x)))
+      (+ 1 x)
+      0))
+
+;; Example nesting_body
+;; success
+(define (nesting-body-success-f [x : (U String Number Boolean)]) : Number
+  (if (not (string? x))
+      (if (not (boolean? x))
+          (+ 1 x)
+          0)
+      0))
+
+;; failure
+(define (nesting-body-failure-f [x : (U String Number Boolean)]) : Number
+  (if (or (string? x) (number? x))
+      (if (or (number? x) (boolean? x))
+          (string-length x)
+          0)
+      0))
+
+
+;; Example nesting_condition
+;; success
+(define (nesting-condition-success-f [x : Any] [y : Any]) : Number
+  (if (if (number? x)
+          (string? y)
+          #f)
+      (+ x (string-length y))
+      0))
+
+;; failure
+(define (nesting-condition-failure-f [x : Any] [y : Any]) : Number
+  (if (if (number? x)
+          (string? y)
+          (string? y))
+      (+ x (string-length y))
+      0))
+
+
+;; Example predicate_2way
+;; success
+(: predicate-2way-success-f (-> (U String Number) Boolean : String))
+(define (predicate-2way-success-f x)
+  (string? x))
+
+(define (predicate-2way-success-g [x : (U String Number)]) : Number
+  (if (predicate-2way-success-f x)
+      (string-length x)
+      x))
+
+;; failure
+(: predicate-2way-failure-f (-> (U String Number) Boolean : String))
+(define (predicate-2way-failure-f x)
+  (string? x))
+
+(define (predicate-2way-failure-g [x : (U String Number)]) : Number
+  (if (predicate-2way-failure-f x)
+      (+ 1 x)
+      x))
+
+
+
+;; Example predicate_1way
+;; success
+(: predicate-1way-success-f (-> (U String Integer) Boolean : #:+ Integer))
+(define (predicate-1way-success-f x)
+  (and (number? x) (> x 0)))
+
+(define (predicate-1way-success-g [x : (U String Integer)]) : Integer
+  (if (predicate-1way-success-f x)
+      (+ 1 x)
+      0))
+
+;; failure
+(: predicate-1way-failure-f (-> (U String Integer) Boolean : #:+ Integer))
+(define (predicate-1way-failure-f x)
+  (and (number? x) (> x 0)))
+
+(define (predicate-1way-failure-g [x : (U String Integer)]) : Integer
+  (if (predicate-1way-failure-f x)
+      (+ 1 x)
       (string-length x)))
 
-;; Example 3
-(: example-3 (-> (Listof Number) Number Number))
-(define (example-3 l v)
-  (let ([x (member v l)])
-    (if x
-        (first x)
-        (error 'fail))))
 
-;; Example 4
-(: example-4 (-> Any Number))
-(define (example-4 x)
-  (if (or (number? x) (string? x))
-      ((lambda ([x : (U String Number)]) : Number
-         (if (number? x)
-             (add1 x)
-             (string-length x))) x)
+;; Example predicate_checked
+;; success
+(: predicate-checked-success-f (-> (U String Number) Boolean : String))
+(define (predicate-checked-success-f x)
+  (string? x))
+
+(define (predicate-checked-success-g [x : (U String Number)]) : Number
+  (if (predicate-checked-success-f x)
+      (string-length x)
+      x))
+
+;; failure
+(: predicate-checked-failure-f (-> (U String Number) Boolean : String))
+(define (predicate-checked-failure-f x)
+  (boolean? x))
+
+(define (predicate-checked-failure-g [x : (U String Number)]) : Number
+  (if (predicate-checked-failure-f x)
+      1
       0))
 
-;; Example 5
-(: example-5 (-> Any Any Number))
-(define (example-5 x y)
-  (if (and (number? x) (string? y))
-      (+ x (string-length y))
+;; Example object_properties
+;; success
+(struct ObjectPropertiesSuccessApple ([a : Any]))
+
+(define (object-properties-success-f [x : ObjectPropertiesSuccessApple]) : Number
+  (if (number? (ObjectPropertiesSuccessApple-a x))
+      (ObjectPropertiesSuccessApple-a x)
       0))
 
-;; Example 6 (fail)
-(: example-6 (-> Any Any Number))
-(define (example-6 x y)
-  (if (and (number? x) (string? y))
-      (+ x (string-length y))
-      (string-length x)))
+;; failure
+(struct ObjectPropertiesFailureApple ([a : Any]))
 
-;; Example 7
-(: example-7 (-> Any Any Number))
-(define (example-7 x y)
-  (if (if (number? x) (string? y) #f)
-      (+ x (string-length y))
+(define (object-properties-failure-f [x : ObjectPropertiesFailureApple]) : Number
+  (if (string? (ObjectPropertiesFailureApple-a x))
+      (ObjectPropertiesFailureApple-a x)
       0))
 
-;; Example 8
-(: example-8 (-> Any Boolean : (U String Number)))
-(define (example-8 x)
-  (or (string? x) (number? x)))
-
-(let ([x 1])
-  (if (example-8 x)
-      ((lambda ([x : (U String Number)]) : Number
-         (if (number? x)
-             (add1 x)
-             (string-length x))) x)
+;; Example tuple_elements
+;; success
+(define (tuple-elements-success-f [x : (Pairof Any Any)]) : Number
+  (if (number? (car x))
+      (car x)
       0))
 
-;; Example 9
-(: example-9 (-> Any Number))
-(define (example-9 x)
-  (if (let ([tmp (number? x)])
-        (if tmp tmp (string? x)))
-      ((lambda ([x : (U String Number)]) : Number
-         (if (number? x)
-             (add1 x)
-             (string-length x))) x)
+;; failure
+(define (tuple-elements-failure-f [x : (Pairof Any Any)]) : Number
+  (if (number? (car x))
+      (+ (car x) (cdr x))
       0))
 
-;; Example 10
-(: example-10 (-> (Pairof Any Any) Number))
-(define (example-10 p)
-  (if (number? (car p))
-      (add1 (car p))
-      7))
+;; Example tuple_length
+;; success
+(define (tuple-length-success-f [x : (U (List Number Number) (List String String String))]) : Number
+  (if (= 2 (length x))
+      (+ (car x) (cdr x))
+      (string-length (car x))))
 
-;; Example 11
-(: example-11 (-> (Pairof Any Any) Number))
-(define example-11
-  (let ([g (lambda ([x : (Pairof Any Any)]) (car x))])
-    (lambda ([p : (Pairof Any Any)])
-      (if (and (number? (car p)) (number? (cdr p)))
-          (g p)
-          0))))
+;; failure
+(define (tuple-length-failure-f [x : (U (List Number Number) (List String String String))]) : Number
+  (if (= 2 (length x))
+      (+ (car x) (cdr x))
+      (+ (car x) (cadr x))))
 
-(example-11 '(1 . 2))
-(example-11 '('a . 'b))
 
-;; Example 12
-(: example-12 (-> (Pairof Any Any) Boolean : (Pairof Number Any)))
-(define (example-12 [x : (Pairof Any Any)])
-  (number? (car x)))
+;; Example subtyping_nominal
+;; success
+(struct SubtypingNominalSuccessA ([a : Number]))
+(struct SubtypingNominalSuccessB SubtypingNominalSuccessA ([b : Number]))
 
-(example-12 '(1 . 2))
-(example-12 '('s . 2))
+(define (subtyping-nominal-success-f [x : SubtypingNominalSuccessA]) : Number
+  (if (SubtypingNominalSuccessB? x)
+      (SubtypingNominalSuccessB-b x)
+      (SubtypingNominalSuccessA-a x)))
 
-;; Example 13
-(define (example-13-aux-1 [x : Number] [y : String]) : Number
-  x)
+;; failure
+(struct SubtypingNominalFailureA ([a : Number]))
+(struct SubtypingNominalFailureB SubtypingNominalFailureA ([b : Number]))
 
-(: example-13-aux-2 (-> ([x : Number] [y : Number]) Number))
-(define (example-13-aux-2 x y) : Number
-  y)
+(define (subtyping-nominal-failure-f [x : SubtypingNominalFailureA]) : Number
+  (if (SubtypingNominalFailureB? x)
+      (SubtypingNominalFailureA-a x)
+      (SubtypingNominalFailureB-b x)))
 
-(define (example-13 [x : Any] [y : (U Number String)])
-  (cond
-    [(and (number? x) (string? y)) (example-13-aux-1 x y)]
-    [(number? x) (example-13-aux-2 x y)]
-    [else 0]))
 
-;; Example 14
-(: example-14 (-> (U Number String) (Pairof Any Any) Number))
-(define (example-14 input extra)
-  (cond
-    [(and (number? input) (number? (car extra)))
-     (+ input (car extra))]
-    [(number? (car extra))
-     (+ (string-length input) (car extra))]
-    [else 0]))
+;; Example subtyping_structural
+;; success
+(define (subtyping-structural-success-f [x : Any]) : String
+  "hello")
+
+(define (subtyping-structural-success-g [f : (U (Number -> String) (Number -> Boolean))]) : String
+  (let ([c (f 0)])
+    (if (string? c)
+        c
+        "world")))
+
+(subtyping-structural-success-g subtyping-structural-success-f)
+
+;; failure
+(define (subtyping-structural-failure-f [x : Number]) : String
+  "hello")
+
+(define (subtyping-structural-failure-g [f : (U (Any -> String) (Any -> Boolean))]) : String
+  (let ([c (f 0)])
+    (if (string? c)
+        c
+        "world")))
+
+(subtyping-structural-failure-g subtyping-structural-failure-f)
+
+;; Example merge_with_union
+;; success
+(define (merge-with-union-success-f [x : Any]) : (U String Number)
+  (let ([y (cond
+             [(string? x) (string-append x "hello")]
+             [(number? x) (+ x 1)]
+             [else 0])])
+    y))
+
+;; failure
+(define (merge-with-union-failure-f [x : Any]) : (U String Number)
+  (let ([y (cond
+             [(string? x) (string-append x "hello")]
+             [(number? x) (+ x 1)]
+             [else 0])])
+    (+ 1 y)))
 
 ;;; End
