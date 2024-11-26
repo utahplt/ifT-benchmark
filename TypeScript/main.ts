@@ -176,7 +176,7 @@ function predicate_2way_success_g(x: string | number): number {
 
 // failure
 function predicate_2way_failure_f(x: string | number): x is string {
-  return typeof x === "number";
+  return typeof x === "string";
 }
 
 function predicate_2way_failure_g(x: string | number): number {
@@ -408,5 +408,5 @@ function merge_with_union_failure_f(x: unknown): string | number {
   } else {
     return 0;
   }
-  return x + 1;
+  return x.isNaN();
 }
