@@ -2,7 +2,10 @@
 name = "mypy"
 version = "0.1.0"
 description = "Benchmarking mypy's ability to type-check occurrence typing"
-requires-python = ">=3.12"
+requires-python = "==3.12.6"
 dependencies = [
-    "mypy",
+    "mypy==1.13.0",
 ]
+
+[tool.mypy]
+warn_unreachable = true

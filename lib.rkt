@@ -108,7 +108,8 @@
 
 (define (shell-command pre-exe pre-arguments pre-cmd)
   (define exe (find-exe pre-exe))
-  (define cmd* (if (procedure? (car pre-arguments))
+  (define cmd* (if (and (not (null? pre-arguments))
+                        (procedure? (car pre-arguments)))
                    (apply (car pre-arguments) `(,pre-cmd))
                    (append
                     pre-arguments
@@ -146,7 +147,7 @@
                             #:post-benchmark-func [post-func #f] #:post-benchmark-func-dir [post-dir (find-system-path 'temp-dir)])
   (when pre-func
     (with-current-directory pre-dir
-      (lambda () (apply post-func null))))
+      (lambda () (apply pre-func null))))
   (define result
     (with-current-directory file-base-path
       (lambda ()

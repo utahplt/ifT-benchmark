@@ -296,7 +296,7 @@ define g(x: String | Number) -> Number:
 
 ```text
 define f(x: String | Number) -> x is String:
-    return x is Number
+    return x is String
 
 define g(x: String | Number) -> Number:
     if f(x):
