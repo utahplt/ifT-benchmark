@@ -128,18 +128,17 @@ def nesting_body_failure_f(x: FinalStr | FinalInt | bool) -> int:
 ## Example nesting_condition
 ## success
 def nesting_condition_success_f(x: object, y: object) -> int:
-    if (type(x) is FinalInt and type(y) is FinalStr):
+    if (type(y) is str) if (type(x) is int) else False:
         return x + len(y)
     else:
         return 0
 
 ## failure
 def nesting_condition_failure_f(x: object, y: object) -> int:
-    if (type(x) is FinalInt and type(y) is FinalStr) or type(y) is FinalStr:
+    if (type(y) is str) if (type(x) is int) else (type(y) is str):
         return x + len(y)
     else:
         return 0
-
 
 ## Example predicate_2way
 ## success
