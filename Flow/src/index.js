@@ -1,132 +1,141 @@
 // @flow
 
 /// Code:
-// Example 1
-console.log("Example 1")
-function example1(x: mixed): number {
-  if (typeof x === "number") {
-    x = x + 1;
+// Example positive
+// success
+function positive_success_f(x: mixed): mixed {
+  if (typeof x === "string") {
+    return x.length;
   } else {
-    x = 0;
+    return x
   }
-  return x;
+}
+// failure
+function positive_failure_f(x: mixed): mixed {
+  if (typeof x === "string") {
+    return x.isNaN();
+  } else {
+    return x;
+  }
 }
 
-console.log(example1(1)); // 2
-console.log(example1("1")); // 0
+// Example negative
+// success
+function negative_success_f(x: string | number): number {
+  if (typeof x === "string") {
+    return x.length;
+  } else {
+    return x + 1;
+  }
+}
+// failure
+function negative_failure_f(x: string | number | boolean): number {
+  if (typeof x === "string") {
+    return x.length;
+  } else {
+    return x + 1;
+  }
+}
 
-// Example 2
-console.log("Example 2")
-function example2(x: string | number): number {
-  if (typeof x === "number") {
+// Example alias
+// success
+function alias_success_f(x: mixed): mixed {
+  const y = typeof x === "string";
+  if (y) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+// failure
+function alias_failure_f(x: mixed): mixed {
+  const y = typeof x === "string";
+  if (y) {
+    return x.isNaN();
+  } else {
+    return x;
+  }
+}
+
+function alias_failure_g(x: mixed): mixed {
+  let y = typeof x === "string";
+  y = true;
+  if (y) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+
+// Example connectives
+// success
+function connectives_success_f(x: string | number): number {
+  if (typeof x !== "number") {
+    return x.length;
+  } else {
+    return 0;
+  }
+}
+
+function connectives_success_g(x: mixed): number {
+  if (typeof x === "string" || typeof x === "number") {
+    return connectives_success_f(x);
+  } else {
+    return 0;
+  }
+}
+
+function connectives_success_h(x: string | number | boolean): number {
+  if (typeof x !== "boolean" && typeof x !== "number") {
+    return x.length;
+  } else {
+    return 0;
+  }
+}
+
+// failure
+function connectives_failure_f(x: string | number): number {
+  if (typeof x !== "number") {
     return x + 1;
   } else {
-    return x.length;
+    return 0;
   }
 }
 
-console.log(example2(1)); // 2
-console.log(example2("1")); // 1
-
-// Example 3
-console.log("Example 3")
-function member(l: Array<number>, v: number): Array<number> | false {
-  if (l.includes(v)) {
-    return l.slice(l.indexOf(v));
-  } else {
-    return false;
-  }
-}
-
-function example3(l: Array<number>, v: number): number {
-  let x = member(l, v);
-  if (x) {
-    return x[0];
-  } else {
-    throw new Error("fail");
-  }
-}
-
-console.log(example3([1, 2, 3, 4], 1)); // 1
-
-// Example 4
-console.log("Example 4")
-function example4(x: mixed): number {
-  if (typeof x === "number" || typeof x === "string") {
-    x = example2(x);
-  } else {
-    x = 0;
-  }
-  return x;
-}
-
-console.log(example4(1)); // 2
-console.log(example4("str")); // 3
-console.log(example4(Symbol('sym'))); // 0
-
-// Example 5
-console.log("Example 5")
-function example5(x: mixed, y: mixed): number {
-  if (typeof x === "number" && typeof y === "string") {
-    return x + y.length;
+function connectives_failure_g(x: mixed): number {
+  if (typeof x === "string" || typeof x === "number") {
+    return x + 1;
   } else {
     return 0;
   }
 }
 
-console.log(example5(5, "str")); // 8
-
-// Example 6 (this should fail)
-console.log("Example 6")
-
-function example6(x: mixed, y: mixed): number {
-  if (typeof x === "number" && typeof y === "string") {
-    return x + y.length;
-  } else {
-    return x.length;
-  }
-}
-
-console.log(example6(5, "str")); // 8
-console.log(example6(5, 5)); // undefined
-
-// Example 7
-console.log("Example 7")
-
-// this failed to refine the type of x and y
-function example7(x: mixed, y: mixed): number {
-  if (typeof x === "number" ? typeof y === "string" : false) {
-    return x + y.length;
+function connectives_failure_h(x: string | number | boolean): number {
+  if (typeof x !== "boolean" && typeof x !== "number") {
+    return x + 1;
   } else {
     return 0;
   }
 }
 
-// this failed to refine the type of x and y
-function example7_2nd_try(x: mixed, y: mixed): number {
-  if ((() => {
-    if (typeof x === "number") {
-      return typeof y === "string";
+// Example nesting_body
+// success
+function nesting_body_success_f(x: string | number | boolean): number {
+  if (!(typeof x === "string")) {
+    if (!(typeof x === "boolean")) {
+      return x + 1;
     } else {
-      return false;
+      return 0;
     }
-  })()) {
-    return x + y.length;
   } else {
     return 0;
   }
 }
-
-// this failed to refine the type of x and y
-function example7_3rd_try(x: mixed, y: mixed): number {
-  return (typeof x === "number" ? typeof y === "string" : false) ? x + y.length : 0;
-}
-
-// this works
-function example7_4th_try(x: mixed, y: mixed): number {
-  if (typeof x === "number") {
-    if (typeof y === "string") {
-      return x + y.length;
+// failure
+function nesting_body_failure_f(x: string | number | boolean): number {
+  if (typeof x === "string" || typeof x === "number") {
+    if (typeof x === "number" || typeof x === "boolean") {
+      return x.length;
     } else {
       return 0;
     }
@@ -135,171 +144,233 @@ function example7_4th_try(x: mixed, y: mixed): number {
   }
 }
 
-// this works
-function example7_5th_try(x: mixed, y: mixed): number {
-  return typeof x === "number" ? (typeof y === "string" ? x + y.length : 0) : 0;
+// Example nesting_condition
+// success
+function nesting_condition_success_f(x: mixed, y: mixed): number {
+  if (typeof x === "number" ? typeof y === "string" : false) {
+    return x + (y as string).length; // Flow fails to refine type of x here
+  } else {
+    return 0;
+  }
+}
+// failure
+function nesting_condition_failure_f(x: mixed, y: mixed): number {
+  if (typeof x === "number" ? typeof y === "string" : typeof y === "string") {
+    return x + (y as string).length;
+  } else {
+    return 0;
+  }
 }
 
-// conclusion: typescript is not able to refine types in nested conditionals when
-// the nesting happens in the condition part of the outer conditional statement,
-// but it is able to refine types in nested conditionals when the nesting happens
-// in the body
-
-console.log(example7(5, "str")); // 8
-console.log(example7_2nd_try(5, "str")); // 8
-console.log(example7_3rd_try(5, "str")); // 8
-console.log(example7_4th_try(5, "str")); // 8
-console.log(example7_5th_try(5, "str")); // 8
-
-// Example 8
-console.log("Example 8")
-
-// user-defined type guards
-function example8(x: mixed): x is string | number {
-  return typeof x === "number" || typeof x === "string";
-  // if you write it like below, it will fail
-  // if (typeof x === "number" || typeof x === "string") {
-  //     return true;
-  // } else {
-  //     return false;
-  // }
+// Example predicate_2way
+// success
+function predicate_2way_success_f(x: string | number): x is string {
+  return typeof x === "string";
 }
 
-let x: mixed = 1;
-if (example8(x)) {
-  example2(x);
+function predicate_2way_success_g(x: string | number): number {
+  if (predicate_2way_success_f(x)) {
+    return x.length;
+  } else {
+    return x;
+  }
 }
 
-// flow allows you to define one-sided type guards
-function example8_one_sided(x: number | string): implies x is number {
+// failure
+function predicate_2way_failure_f(x: string | number): x is string {
+  return typeof x === "string";
+}
+
+function predicate_2way_failure_g(x: string | number): number {
+  if (predicate_2way_failure_f(x)) {
+    return x + 1;
+  } else {
+    return x;
+  }
+}
+
+// Example predicate_1way
+// success
+function predicate_1way_success_f(x: string | number): implies x is number {
   return typeof x === "number" && x > 0;
 }
 
-let y: number | string = 1;
-if (example8_one_sided(y)) {
-  example2(y);
-} else {
-  console.log(y.length); // this does not type check
-}
-
-// Example 9
-console.log("Example 9")
-// this fails due to the same reason as example 7
-function example9(x: mixed): number {
-  let tmp = typeof x === "number";
-  if (tmp ? tmp : typeof x === "string") {
-    return example2(x);
+function predicate_1way_success_g(x: string | number): number {
+  if (predicate_1way_success_f(x)) {
+    return x + 1;
   } else {
     return 0;
   }
 }
 
-// this fails because flow cannot track aliasing of test results
-function example9_2nd_try(x: mixed): number {
-  let tmp = typeof x === "number";
-  if (tmp) {
-    return example2(x);
-  } else if (typeof x === "string") {
-    return example2(x);
+// failure
+function predicate_1way_failure_f(x: string | number): implies x is number {
+  return typeof x === "number" && x > 0;
+}
+
+function predicate_1way_failure_g(x: string | number): number {
+  if (predicate_1way_failure_f(x)) {
+    return x + 1;
+  } else {
+    return x.length;
+  }
+}
+
+// Example predicate_checked
+// success
+function predicate_checked_success_f(x: string | number): x is string {
+  return typeof x === "string";
+}
+
+function predicate_checked_success_g(x: string | number): number {
+  if (predicate_checked_success_f(x)) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+
+// failure
+function predicate_checked_failure_f(x: string | number): x is boolean {
+  return typeof x === "boolean";
+}
+
+function predicate_checked_failure_g(x: string | number): number {
+  return true;
+}
+
+// Example object_properties
+// success
+function object_properties_success_f(x: { a: mixed }): number {
+  if (typeof x.a === "number") {
+    return x.a;
+  } else {
+    return 0;
+  }
+}
+// failure
+function object_properties_failure_f(x: { a: mixed }): number {
+  if (typeof x.a === "string") {
+    return x.a;
   } else {
     return 0;
   }
 }
 
-// this fails because of the same reason as 2nd try,
-// but if use the test_fun(x) directly in the if condition, it works
-function example9_3rd_try(x: mixed): number {
-  let test_fun = (t): t is number => typeof t === "number";
-  let tmp = test_fun(x);
-  if (tmp) {
-    return example2(x);
-  } else if (typeof x === "string") {
-    return example2(x);
+// Example tuple_elements
+// success
+function tuple_elements_success_f(x: [mixed, mixed]): number {
+  if (typeof x[0] === "number") {
+    return x[0];
+  } else {
+    return 0;
+  }
+}
+// failure
+function tuple_elements_failure_f(x: [mixed, mixed]): number {
+  if (typeof x[0] === "number") {
+    return x[0] + x[1];
   } else {
     return 0;
   }
 }
 
-function example9_4th_try(x: mixed): number {
-  return (typeof x === "number" ? example2(x) : typeof x === "string" ? example2(x) : 0);
+// Example tuple_length
+// success
+function tuple_length_success_f(x: [number, number] | [string, string, string]): number {
+  if (x.length === 2) {
+    return x[0] + x[1];
+  } else {
+    return x[0].length;
+  }
+}
+// failure
+function tuple_length_failure_f(x: [number, number] | [string, string, string]): number {
+  if (x.length === 2) {
+    return x[0] + x[1];
+  } else {
+    return x[0] + x[1];
+  }
 }
 
-// Example 10
-// check if it refines successfully if using immutable data structures
-console.log("Example 10")
-function example10(p: [mixed, mixed]): number {
-  if (typeof p[0] === "number") {
-    return ((_p: [number, mixed]) => _p[0] + 1)(p);
+// Example subtyping_nominal
+// success
+class A {
+  a: number;
+}
+
+class B extends A {
+  b: number;
+}
+
+function subtyping_nominal_success_f(x: A): number {
+  if (x instanceof B) {
+    return x.b;
+  } else {
+    return x.a;
+  }
+}
+// failure
+function subtyping_nominal_failure_f(x: A): number {
+  if (x instanceof B) {
+    return x.a;
+  } else {
+    return x.b;
+  }
+}
+
+// Example subtyping_structural
+// success
+function subtyping_structural_success_f(x: mixed): string {
+  return "hello";
+}
+
+function subtyping_structural_success_g(f: (n: number) => string | boolean): string {
+  const r = f(0);
+  if (typeof r === "string") {
+    return r;
+  } else {
+    return "world";
+  }
+}
+
+subtyping_structural_success_g(subtyping_structural_success_f);
+
+// failure
+function subtyping_structural_failure_f(x: number): string {
+  return "hello";
+}
+
+function subtyping_structural_failure_g(f: (x: mixed) => string | boolean): string {
+  if (typeof f(0) === "string") {
+    return f(0);
+  } else {
+    return "world";
+  }
+}
+
+subtyping_structural_failure_g(subtyping_structural_failure_f);
+
+// Example merge_with_union
+// success
+function merge_with_union_success_f(x: mixed): string | number {
+  if (typeof x === "string") {
+    x += "hello";
+  } else if (typeof x === "number") {
+    x += 1;
   } else {
     return 0;
   }
+  return x;
 }
-
-console.log(example10([1, 2])); // 2
-
-class Pair {
-  x: mixed;
-  y: mixed;
-  constructor(x: mixed, y: mixed) {
-    this.x = x;
-    this.y = y;
-  }
-}
-
-function example10_2nd_try(p: Pair): number {
-  if (typeof p.x === "number") {
-    return p.x + 1; // succeed to refine the type of p.x here at compile time
+// failure
+function merge_with_union_failure_f(x: mixed): string | number {
+  if (typeof x === "string") {
+    x += "hello";
+  } else if (typeof x === "number") {
+    x += 1;
   } else {
     return 0;
   }
+  return x.isNaN();
 }
-
-// Example 11
-console.log("Example 11")
-
-function example11(p: [mixed, mixed]): number {
-  if (typeof p[0] === "number" && typeof p[1] === "number") {
-    return ((_p: [number, mixed]) => _p[0])(p); // failed to refine the type of p[0]
-  } else {
-    return 0;
-  }
-}
-
-console.log(example11([1, 2])); // 1
-
-function example11_2nd_try(p: Pair): number {
-  if (typeof p.x === "number" && typeof p.y === "number") {
-    return p.x; // succeeds to refine the type of p.x here at compile time
-  } else {
-    return 0;
-  }
-}
-
-function example11_3rd_try(p: [mixed, mixed]): number {
-  if (p.every((x) => typeof x === "number")) {
-    return p[0];
-  } else {
-    return 0;
-  }
-}
-
-// Example 12
-console.log("Example 12");
-
-// flow failed to refine the type of x[0] here, a difference to TypeScript!
-// give more examples on readonly data structures
-function example12(x: [mixed, mixed]): x is [number, mixed] {
-  return typeof x[0] === "number";
-}
-
-console.log(example12([1, 2])); // true
-console.log(example12(["str", 2])); // false
-
-let p: [mixed, mixed] = [1, 2];
-if (example12(p)) {
-  p;
-  console.log(typeof p[0]);
-  console.log(p[0] + 1);
-}
-
-/// End
