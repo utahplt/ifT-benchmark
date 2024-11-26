@@ -237,44 +237,6 @@ function predicate_checked_failure_g(x: string | number): number {
   return true;
 }
 
-// Example predicate_multi_args
-// success
-function predicate_multi_args_success_f(x: string | number, y: string | number): x is string & y is number {
-  // unfortunately, TypeScript does not really has such syntax, so this would not pass
-  return typeof x === "string" && typeof y === "number";
-}
-
-function predicate_multi_args_success_g(x: string | number, y: string | number): number {
-  if (predicate_multi_args_success_f(x, y)) {
-    return x.length + y;
-  } else {
-    return 0;
-  }
-}
-
-// failure
-function predicate_multi_args_failure_f(x: string | number, y: string | number): x is string & y is number {
-  return typeof x === "number" && typeof y === "string";
-}
-
-function predicate_multi_args_failure_g(x: string | number, y: string | number): number {
-  if (predicate_multi_args_failure_f(x, y)) {
-    return x.length + y;
-  } else {
-    return 0;
-  }
-}
-
-// Example predicate_extra_args
-// success
-function predicate_extra_args_success_f(x: unknown[], t: unknown): x is t[] { // not very sure TypeScript can do that, maybe a better example?
-  return x.every(y => typeof y === typeof t);
-}
-// failure
-function predicate_extra_args_failure_f(x: unknown[], t: unknown): x is t[] {
-  return x.every(y => typeof y === "number");
-}
-
 // Example object_properties
 // success
 function object_properties_success_f(x: { a: unknown }): number {
