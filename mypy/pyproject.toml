@@ -6,3 +6,6 @@ requires-python = ">=3.12"
 dependencies = [
     "mypy",
 ]
+
+[tool.mypy]
+warn_unreachable = true
