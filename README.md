@@ -2,7 +2,7 @@
 
 Benchmark for Occurrence Typing (and Similar Techniques).
 
-Occurrence typing is more widely known as "type narrowing" or "type refinement" these days. In one word, it is a technique that refines the type of a variable based on the occurrence of certain predicates. It is originally proposed by Tobin-Hochstadt and Felleisen in their paper "Logical Types for Untyped Languages" at ICFP 2010:
+Occurrence typing is more widely known as "type narrowing" or "type refinement" these days. It is a technique that refines the type of a variable based on the occurrence of certain predicates. It is originally proposed by Tobin-Hochstadt and Felleisen in their paper "Logical Types for Untyped Languages" at ICFP 2010:
 
 ``` bibtex
 @inproceedings{tobin-hochstadtLogicalTypesUntyped2010,
@@ -572,6 +572,9 @@ define f(x: Top) -> String | Number:
     return x + 1 // type of x is refined to String | Number
 ```
 
+## Benchmark Items Table
+
+Below is a table for all benchmark items as a quick reference.
 | Benchmark            | Description                                              |
 |:---------------------|----------------------------------------------------------|
 | positive             | refine when condition is true                            |
@@ -584,7 +587,6 @@ define f(x: Top) -> String | Number:
 | predicate_1way       | custom predicates refines only positively                |
 | predicate_checked    | perform strict type checks on custom predicates          |
 | object_properties    | refine types of properties of objects                    |
-| tuple_whole          | refine types of the whole tuple                          |
 | tuple_elements       | refine types of tuple elements                           |
 | tuple_length         | refine union of tuple types by their length              |
 | subtyping_nominal    | refine nominal subtyping                                 |
@@ -624,7 +626,17 @@ The result is as follows.
 
 `V` means passed, `X` means not passed, and `O` means partially passed (always with notes).
 
-## Uncertain Benchmark Items
+## Other Discussions
+
+### refinement invalidation
+
+see issue #7, also see [flow document](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations).
+
+### unknown to known length
+
+In Typed Racket, `Listof(T)` has unknown length, while `List(T ...)` has known length. A length test should narrow `Listof` to `List`.
+
+This does not make sense without known length types. Do any migratory languages besides TR have these?
 
 ### `predicate_extra_args`
 
@@ -700,18 +712,6 @@ define g(x: String | Number, y: String | Number) -> Number:
     else:
         return 0
 ```
-
-## Other Discussions
-
-### refinement invalidation
-
-see issue #7, also see [flow document](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations).
-
-### unknown to known length
-
-In Typed Racket, `Listof(T)` has unknown length, while `List(T ...)` has known length. A length test should narrow `Listof` to `List`.
-
-This does not make sense without known length types. Do any migratory languages besides TR have these?
 
 ## Acknowledge
 
