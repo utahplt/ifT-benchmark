@@ -21,7 +21,7 @@ For some instances, see
 - [TypeScript documentation on narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
 - [Flow documentation on type refinements](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations)
 - [Mypy documentation on type narrowing](https://mypy.readthedocs.io/en/stable/type_narrowing.html#typeguards-with-parameters)
-- [https://github.com/microsoft/pyright/blob/main/docs/type-concepts-advanced.md#type-narrowing](Pyright documentation on type narrowing)
+- [Pyright documentation on type narrowing](https://github.com/microsoft/pyright/blob/main/docs/type-concepts-advanced.md#type-narrowing)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 
@@ -44,20 +44,16 @@ For some instances, see
     - [`subtyping_nominal`](#subtyping_nominal)
     - [`subtyping_structural`](#subtyping_structural)
     - [`merge_with_union`](#merge_with_union)
+  - [Benchmark Items Table](#benchmark-items-table)
   - [Benchmark Results](#benchmark-results)
-  - [Uncertain Benchmark Items](#uncertain-benchmark-items)
-    - [`predicate_extra_args`](#predicate_extra_args)
-    - [`predicate_multi_args`](#predicate_multi_args)
   - [Other Discussions](#other-discussions)
     - [refinement invalidation](#refinement-invalidation)
     - [unknown to known length](#unknown-to-known-length)
+    - [`predicate_extra_args`](#predicate_extra_args)
+    - [`predicate_multi_args`](#predicate_multi_args)
   - [Acknowledge](#acknowledge)
 
 <!-- markdown-toc end -->
-
-## Examples
-
-For a set of code examples that demonstrate the features of occurrence typing, see [Examples.md](Examples.md)
 
 ## How to Run the Benchmark
 
