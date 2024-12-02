@@ -575,6 +575,7 @@ define f(x: Top) -> String | Number:
 ## Benchmark Items Table
 
 Below is a table for all benchmark items as a quick reference.
+
 | Benchmark            | Description                                              |
 |:---------------------|----------------------------------------------------------|
 | positive             | refine when condition is true                            |
@@ -606,23 +607,22 @@ The benchmark is performed on the following gradual type checker implements.
 The result is as follows.
 
 | Benchmark            | Typed Racket | TypeScript | Flow | mypy | Pyright |
-|:---------------------|--------------|------------|------|------|---------|
-| positive             |              |            |      |      |         |
-| negative             |              |            |      |      |         |
-| alias                |              |            |      |      |         |
-| connectives          |              |            |      |      |         |
-| nesting_condition    |              |            |      |      |         |
-| nesting_body         |              |            |      |      |         |
-| predicate_2way       |              |            |      |      |         |
-| predicate_1way       |              |            |      |      |         |
-| predicate_checked    |              |            |      |      |         |
-| object_properties    |              |            |      |      |         |
-| tuple_whole          |              |            |      |      |         |
-| tuple_elements       |              |            |      |      |         |
-| tuple_length         |              |            |      |      |         |
-| subtyping_nominal    |              |            |      |      |         |
-| subtyping_structural |              |            |      |      |         |
-| merge_with_union     |              |            |      |      |         |
+|:---------------------|:------------:|:----------:|:----:|:----:|:-------:|
+| positive             | V            | V          | V    | V    | V       |
+| negative             | V            | V          | V    | V    | V       |
+| alias                | V            | V          | X    | X    | V       |
+| connectives          | V            | V          | V    | V    | V       |
+| nesting_condition    | V            | V          | V    | V    | V       |
+| nesting_body         | V            | X          | X    | X    | X       |
+| predicate_2way       | V            | V          | V    | V    | V       |
+| predicate_1way       | V            | X          | V    | V    | V       |
+| predicate_checked    | V            | V          | V    | V    | V       |
+| object_properties    | V            | V          | V    | V    | V       |
+| tuple_elements       | V            | V          | V    | V    | V       |
+| tuple_length         | X            | V          | V    | V    | V       |
+| subtyping_nominal    | V            | V          | V    | V    | V       |
+| subtyping_structural | V            | V          | V    | V    | V       |
+| merge_with_union     | V            | V          | V    | X    | V       |
 
 `V` means passed, `X` means not passed, and `O` means partially passed (always with notes).
 
