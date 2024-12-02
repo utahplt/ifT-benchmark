@@ -1,10 +1,10 @@
 [project]
-name = "mypy"
+name = "ot-benchmark-mypy"
 version = "0.1.0"
 description = "Benchmarking mypy's ability to type-check occurrence typing"
-requires-python = "==3.12.6"
+requires-python = ">=3.13"
 dependencies = [
-    "mypy==1.13.0",
+    "mypy>=1.13.0",
 ]
 
 [tool.mypy]
