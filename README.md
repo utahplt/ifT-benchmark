@@ -59,6 +59,10 @@ For some instances, see
 
 For a set of code examples that demonstrate the features of occurrence typing, see [Examples.md](Examples.md)
 
+## How to Run the Benchmark
+
+See [HowToRun.md](HowToRun.md).
+
 ## The Benchmark
 
 From the examples, we can summarize the common features or "API"s that one would expect from a gradual type checker that supports occurrence typing. Each feature, with a brief description, the guarantee it provides, and the examples that demonstrate it, forms a benchmark item. All the benchmark items are listed below.
