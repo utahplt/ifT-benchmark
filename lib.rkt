@@ -2,9 +2,12 @@
 
 (provide run-benchmark-item)
 (provide shell-command)
+(provide benchmark-verbose)
 
 (require file/sha1)
 (require gtp-util)
+
+(define benchmark-verbose (make-parameter #f))
 
 (define (with-current-directory dir thunk)
   (parameterize ([current-directory (build-path dir)])
@@ -122,7 +125,8 @@
   (let ([test-case-name (car test-case)]
         [success-input (join-lines (append header-lines (cadr test-case) footer-lines))]
         [failure-input (join-lines (append header-lines (cddr test-case) footer-lines))])
-    (displayln (format "Running test case ~a ..." test-case-name))
+    (when (benchmark-verbose)
+      (displayln (format "Running test case ~a ..." test-case-name)))
     (define succeeded (eq? #t
                            (with-temp-file success-input
                              (lambda (input-file)
