@@ -1,4 +1,7 @@
 {
+  "name": "ot-benchmark-pyright",
+  "version": "0.1.0",
+  "description": "Benchmarking pyright's ability to type-check occurrence typing",
   "dependencies": {
     "pyright": "^1.1.389"
   }

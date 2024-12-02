@@ -1,8 +1,8 @@
 [project]
-name = "pyright-ot-benchmark"
+name = "ot-benchmark-pyright"
 version = "0.1.0"
 description = "Benchmarking pyright's ability to type-check occurrence typing"
-requires-python = "==3.12.6"
+requires-python = ">=3.13.0"
 
 [tool.pyright]
 include = ["*.py"]
