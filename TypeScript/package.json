@@ -1,4 +1,7 @@
 {
+  "name": "ot-benchmark-typescript",
+  "version": "0.1.0",
+  "description": "Benchmarking TypeScript's ability to type-check occurrence typing",
   "devDependencies": {
     "typescript": "^5.6.3"
   }
