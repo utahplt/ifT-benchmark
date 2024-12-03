@@ -291,64 +291,6 @@ function tuple_length_failure_f(x: [number, number] | [string, string, string]):
   }
 }
 
-// Example subtyping_nominal
-// success
-class A {
-  a: number;
-}
-
-class B extends A {
-  b: number;
-}
-
-function subtyping_nominal_success_f(x: A): number {
-  if (x instanceof B) {
-    return x.b;
-  } else {
-    return x.a;
-  }
-}
-// failure
-function subtyping_nominal_failure_f(x: A): number {
-  if (x instanceof B) {
-    return x.a;
-  } else {
-    return x.b;
-  }
-}
-
-// Example subtyping_structural
-// success
-function subtyping_structural_success_f(x: unknown): string {
-  return "hello";
-}
-
-function subtyping_structural_success_g(f: (n: number) => string | boolean): string {
-  const r = f(0);
-  if (typeof r === "string") {
-    return r;
-  } else {
-    return "world";
-  }
-}
-
-subtyping_structural_success_g(subtyping_structural_success_f);
-
-// failure
-function subtyping_structural_failure_f(x: number): string {
-  return "hello";
-}
-
-function subtyping_structural_failure_g(f: (x: unknown) => string | boolean): string {
-  if (typeof f(0) === "string") {
-    return f(0);
-  } else {
-    return "world";
-  }
-}
-
-subtyping_structural_failure_g(subtyping_structural_failure_f);
-
 // Example merge_with_union
 // success
 function merge_with_union_success_f(x: unknown): string | number {

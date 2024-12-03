@@ -230,52 +230,6 @@
       (+ (car x) (cdr x))
       (+ (car x) (cadr x))))
 
-
-;; Example subtyping_nominal
-;; success
-(struct SubtypingNominalSuccessA ([a : Number]))
-(struct SubtypingNominalSuccessB SubtypingNominalSuccessA ([b : Number]))
-
-(define (subtyping-nominal-success-f [x : SubtypingNominalSuccessA]) : Number
-  (if (SubtypingNominalSuccessB? x)
-      (SubtypingNominalSuccessB-b x)
-      (SubtypingNominalSuccessA-a x)))
-
-;; failure
-(struct SubtypingNominalFailureA ([a : Number]))
-(struct SubtypingNominalFailureB SubtypingNominalFailureA ([b : Number]))
-
-(define (subtyping-nominal-failure-f [x : SubtypingNominalFailureA]) : Number
-  (if (SubtypingNominalFailureB? x)
-      (SubtypingNominalFailureA-a x)
-      (SubtypingNominalFailureB-b x)))
-
-
-;; Example subtyping_structural
-;; success
-(define (subtyping-structural-success-f [x : Any]) : String
-  "hello")
-
-(define (subtyping-structural-success-g [f : (U (Number -> String) (Number -> Boolean))]) : String
-  (let ([c (f 0)])
-    (if (string? c)
-        c
-        "world")))
-
-(subtyping-structural-success-g subtyping-structural-success-f)
-
-;; failure
-(define (subtyping-structural-failure-f [x : Number]) : String
-  "hello")
-
-(define (subtyping-structural-failure-g [f : (U (Any -> String) (Any -> Boolean))]) : String
-  (let ([c (f 0)])
-    (if (string? c)
-        c
-        "world")))
-
-(subtyping-structural-failure-g subtyping-structural-failure-f)
-
 ;; Example merge_with_union
 ;; success
 (define (merge-with-union-success-f [x : Any]) : (U String Number)

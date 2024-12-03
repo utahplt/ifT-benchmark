@@ -254,66 +254,6 @@ def tuple_length_failure_f(x: tuple[FinalInt, FinalInt] | tuple[FinalStr, FinalS
     else:
         return x[0] + x[1]
 
-## Example subtyping_nominal
-## success
-class SubtypingNominalSuccessA:
-    def __init__(self, a: FinalInt):
-        self.a = a
-
-class SubtypingNominalSuccessB(SubtypingNominalSuccessA):
-    def __init__(self, a: FinalInt, b: FinalInt):
-        super().__init__(a)
-        self.b = b
-
-def subtyping_nominal_success_f(x: SubtypingNominalSuccessA) -> int:
-    if type(x) is SubtypingNominalSuccessB:
-        return x.b
-    else:
-        return x.a
-
-## failure
-class SubtypingNominalFailureA:
-    def __init__(self, a: FinalInt):
-        self.a = a
-
-class SubtypingNominalFailureB(SubtypingNominalFailureA):
-    def __init__(self, a: FinalInt, b: FinalInt):
-        super().__init__(a)
-        self.b = b
-
-def subtyping_nominal_failure_f(x: SubtypingNominalFailureA) -> int:
-    if type(x) is SubtypingNominalFailureB:
-        return x.a
-    else:
-        return x.b
-
-## Example subtyping_structural
-## success
-def subtyping_structural_success_f(x: object) -> FinalStr:
-    return FinalStr()
-
-def subtyping_structural_success_g(f: Callable[[int], FinalStr | bool]) -> str:
-    c = f(0)
-    if type(c) is FinalStr:
-        return c
-    else:
-        return "world"
-
-subtyping_structural_success_g(subtyping_structural_success_f)
-
-## failure
-def subtyping_structural_failure_f(x: FinalInt) -> FinalStr:
-    return FinalStr()
-
-def subtyping_structural_failure_g(f: Callable[[object], FinalStr | bool]) -> str:
-    c = f(0)
-    if type(c) is FinalStr:
-        return c
-    else:
-        return "world"
-
-subtyping_structural_failure_g(subtyping_structural_failure_f)
-
 ## Example merge_with_union
 ## success
 def merge_with_union_success_f(x: object) -> str | int:
