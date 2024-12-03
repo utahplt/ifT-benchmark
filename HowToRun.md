@@ -10,7 +10,7 @@ The tested versions are:
 
 | Tool         | Version | Notes                                                                                                                |
 |--------------|---------|----------------------------------------------------------------------------------------------------------------------|
-| Typed Racket | 8.15    | Bundled with Racket 8.15                                                                                             |
+| Typed Racket | 8.15    | Bundled with [Racket 8.15](https://download.racket-lang.org/releases/8.15/)                                                                                             |
 | Node.js      | 22.11.0 | See `.node-version` file under relevant directories                                                                  |
 | npm          | 10.9.0  | Bundled with Node.js                                                                                                 |
 | Python       | 3.13.0  | See `.python-version` file under relevant directories                                                                |
