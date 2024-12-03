@@ -41,8 +41,6 @@ For some instances, see
     - [`object_properties`](#object_properties)
     - [`tuple_elements`](#tuple_elements)
     - [`tuple_length`](#tuple_length)
-    - [`subtyping_nominal`](#subtyping_nominal)
-    - [`subtyping_structural`](#subtyping_structural)
     - [`merge_with_union`](#merge_with_union)
   - [Benchmark Items Table](#benchmark-items-table)
   - [Benchmark Results](#benchmark-results)
@@ -408,7 +406,7 @@ define f(x: Apple) -> Number:
 
 #### Description
 
-When appropriate predicates are applied to the elements of a tuple, refine the type of the elements of the tuple.
+When appropriate predicates are applied to the elements of a tuple, refine the type of the elements of the tuple. Note that this can be generalized to other data covariant data structures like lists, function results, etc.
 
 #### Examples
 
@@ -458,84 +456,6 @@ define f(x: Tupleof(Number, Number) | Tupleof(String, String, String)) -> Number
         return x[0] + x[1] // type of x is refined to Tupleof(Number, Number)
     else:
         return x[0] + x[1] // type of x is refined to Tupleof(String, String, String), thus not allowing addition
-```
-
-### `subtyping_nominal`
-
-#### Description
-
-Refine supertypes to subtypes in a nominal subtyping scheme.
-
-#### Examples
-
-##### Success Expected
-
-```text
-struct A:
-    a: Number
-
-struct B extends A:
-    b: Number
-
-define f(x: A) -> Number:
-    if x is B:
-        return x.b // type of x is refined to B
-    else:
-        return x.a // type of x is refined to A
-```
-
-##### Failure Expected
-
-```text
-struct A:
-    a: Number
-
-struct B extends A:
-    b: Number
-
-define f(x: A) -> Number:
-    if x is B:
-        return x.a
-    else:
-        return x.b // type of x is refined to A which does not have a property b
-```
-
-### `subtyping_structural`
-
-#### Description
-
-Refine supertypes to subtypes in a structural subtyping scheme.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: Top) -> String:
-    return "hello"
-
-define g(f: Number -> String | Boolean) -> String:
-    if f(0) is String:
-        return f(0) // type of f(0) is refined to String
-    else:
-        return "world"
-
-g(f) // this should type check
-```
-
-##### Failure Expected
-
-```text
-define f(x: Number) -> String:
-    return "hello"
-
-define g(f: Top -> String | Boolean) -> String:
-    if f(0) is String:
-        return f(0) // type of f(0) is refined to String
-    else:
-        return "world"
-
-g(f) // this should not type check
 ```
 
 ### `merge_with_union`
@@ -590,8 +510,6 @@ Below is a table for all benchmark items as a quick reference.
 | object_properties    | refine types of properties of objects                    |
 | tuple_elements       | refine types of tuple elements                           |
 | tuple_length         | refine union of tuple types by their length              |
-| subtyping_nominal    | refine nominal subtyping                                 |
-| subtyping_structural | refine structural subtyping                              |
 | merge_with_union     | merge several types with union instead of joining        |
 
 ## Benchmark Results
@@ -612,16 +530,14 @@ The result is as follows.
 | negative             | V            | V          | V    | V    | V       |
 | alias                | V            | V          | X    | X    | V       |
 | connectives          | V            | V          | V    | V    | V       |
-| nesting_condition    | V            | V          | V    | V    | V       |
-| nesting_body         | V            | X          | X    | X    | X       |
+| nesting_body         | V            | V          | V    | V    | V       |
+| nesting_condition    | V            | X          | X    | X    | X       |
 | predicate_2way       | V            | V          | V    | V    | V       |
 | predicate_1way       | V            | X          | V    | V    | V       |
 | predicate_checked    | V            | V          | V    | V    | V       |
 | object_properties    | V            | V          | V    | V    | V       |
 | tuple_elements       | V            | V          | V    | V    | V       |
 | tuple_length         | X            | V          | V    | V    | V       |
-| subtyping_nominal    | V            | V          | V    | V    | V       |
-| subtyping_structural | V            | V          | V    | V    | V       |
 | merge_with_union     | V            | V          | V    | X    | V       |
 
 `V` means passed, `X` means not passed, and `O` means partially passed (always with notes).
@@ -711,6 +627,48 @@ define g(x: String | Number, y: String | Number) -> Number:
         return String.length(x) + y // type of x is refined to Number, type of y is refined to String
     else:
         return 0
+```
+
+### `subtyping_nominal`
+
+This seems to be too trivial to be a benchmark item. It just seems essential for a type checker that has explicitly named program constructs.
+
+#### Description
+
+Refine supertypes to subtypes in a nominal subtyping scheme.
+
+#### Examples
+
+##### Success Expected
+
+```text
+struct A:
+    a: Number
+
+struct B extends A:
+    b: Number
+
+define f(x: A) -> Number:
+    if x is B:
+        return x.b // type of x is refined to B
+    else:
+        return x.a // type of x is refined to A
+```
+
+##### Failure Expected
+
+```text
+struct A:
+    a: Number
+
+struct B extends A:
+    b: Number
+
+define f(x: A) -> Number:
+    if x is B:
+        return x.a
+    else:
+        return x.b // type of x is refined to A which does not have a property b
 ```
 
 ## Acknowledge
