@@ -526,21 +526,21 @@ The result is as follows.
 
 | Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright |
 |:------------------|:------------:|:----------:|:----:|:----:|:-------:|
-| positive          | V            | V          | V    | V    | V       |
-| negative          | V            | V          | V    | V    | V       |
-| alias             | V            | V          | x    | x    | V       |
-| connectives       | V            | V          | V    | V    | V       |
-| nesting_body      | V            | V          | V    | V    | V       |
-| nesting_condition | V            | x          | x    | x    | x       |
-| predicate_2way    | V            | V          | V    | V    | V       |
-| predicate_1way    | V            | x          | V    | V    | V       |
-| predicate_checked | V            | V          | V    | V    | V       |
-| object_properties | V            | V          | V    | V    | V       |
-| tuple_elements    | V            | V          | V    | V    | V       |
-| tuple_length      | x            | V          | V    | V    | V       |
-| merge_with_union  | V            | V          | V    | x    | V       |
+| positive          | O            | O          | O    | O    | O       |
+| negative          | O            | O          | O    | O    | O       |
+| alias             | O            | O          | x    | x    | O       |
+| connectives       | O            | O          | O    | O    | O       |
+| nesting_body      | O            | O          | O    | O    | O       |
+| nesting_condition | O            | x          | x    | x    | x       |
+| predicate_2way    | O            | O          | O    | O    | O       |
+| predicate_1way    | O            | x          | O    | O    | O       |
+| predicate_checked | O            | O          | O    | O    | O       |
+| object_properties | O            | O          | O    | O    | O       |
+| tuple_elements    | O            | O          | O    | O    | O       |
+| tuple_length      | x            | O          | O    | O    | O       |
+| merge_with_union  | O            | O          | O    | x    | O       |
 
-`V` means passed, `x` means not passed.
+`O` means passed, `x` means not passed.
 
 ## Other Discussions
 

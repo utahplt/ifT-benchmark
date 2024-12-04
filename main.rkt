@@ -72,7 +72,7 @@
                  (let ([positive-passed (cadr test)]
                        [negative-passed (caddr test)])
                    (cond
-                     [(and positive-passed negative-passed) "V"]
+                     [(and positive-passed negative-passed) "O"]
                      [(or positive-passed negative-passed) "x"]
                      [else "X"])))
                benchmark-result-row)))
