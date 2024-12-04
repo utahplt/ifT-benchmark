@@ -524,23 +524,23 @@ The benchmark is performed on the following gradual type checker implements.
 
 The result is as follows.
 
-| Benchmark            | Typed Racket | TypeScript | Flow | mypy | Pyright |
-|:---------------------|:------------:|:----------:|:----:|:----:|:-------:|
-| positive             | V            | V          | V    | V    | V       |
-| negative             | V            | V          | V    | V    | V       |
-| alias                | V            | V          | X    | X    | V       |
-| connectives          | V            | V          | V    | V    | V       |
-| nesting_body         | V            | V          | V    | V    | V       |
-| nesting_condition    | V            | X          | X    | X    | X       |
-| predicate_2way       | V            | V          | V    | V    | V       |
-| predicate_1way       | V            | X          | V    | V    | V       |
-| predicate_checked    | V            | V          | V    | V    | V       |
-| object_properties    | V            | V          | V    | V    | V       |
-| tuple_elements       | V            | V          | V    | V    | V       |
-| tuple_length         | X            | V          | V    | V    | V       |
-| merge_with_union     | V            | V          | V    | X    | V       |
+| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright |
+|:------------------|:------------:|:----------:|:----:|:----:|:-------:|
+| positive          | V            | V          | V    | V    | V       |
+| negative          | V            | V          | V    | V    | V       |
+| alias             | V            | V          | x    | x    | V       |
+| connectives       | V            | V          | V    | V    | V       |
+| nesting_body      | V            | V          | V    | V    | V       |
+| nesting_condition | V            | x          | x    | x    | x       |
+| predicate_2way    | V            | V          | V    | V    | V       |
+| predicate_1way    | V            | x          | V    | V    | V       |
+| predicate_checked | V            | V          | V    | V    | V       |
+| object_properties | V            | V          | V    | V    | V       |
+| tuple_elements    | V            | V          | V    | V    | V       |
+| tuple_length      | x            | V          | V    | V    | V       |
+| merge_with_union  | V            | V          | V    | x    | V       |
 
-`V` means passed, `X` means not passed, and `O` means partially passed (always with notes).
+`V` means passed, `x` means not passed.
 
 ## Other Discussions
 
