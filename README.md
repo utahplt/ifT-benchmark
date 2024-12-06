@@ -254,9 +254,9 @@ When a conditional statement is nested inside the condition of another condition
 ```text
 define f(x: Top, y: Top) -> Number:
     if (if x is Number: y is String else: false)
-        x + String.length(y) // type of x is refined to Number, type of y is refined to String
+        return x + String.length(y) // type of x is refined to Number, type of y is refined to String
     else
-        0
+        return 0
 ```
 
 ##### Failure Expected
@@ -264,9 +264,9 @@ define f(x: Top, y: Top) -> Number:
 ```text
 define f(x: Top, y: Top) -> Number:
     if (if x is Number: y is String else: y is String)
-        x + String.length(y) // type of x is not clear here, thus not allowing addition
+        return x + String.length(y) // type of x is not clear here, thus not allowing addition
     else
-        0
+        return 0
 ```
 
 ### `predicate_2way`
