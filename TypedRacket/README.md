@@ -121,6 +121,8 @@ Fairly direct:
 * we introduce struct definitions for the object-properties benchmarks
 * there are lots more parentheses because it's Racket
 
+TODO length=2 vs null? cdr cdr
+
 
 #### Advanced Examples
 
