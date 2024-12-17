@@ -8,7 +8,7 @@ Flow is a typechecker for JavaScript by Facebook.
   - <https://github.com/facebook/flow>
   - <https://play.flow.com/>
 * If-T version: **1.0**
-* Implementation: [./src/index.js]()
+* Implementation: [./src/index.js](./src/index.js)
 
 
 #### Type System Basics
