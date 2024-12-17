@@ -9,7 +9,7 @@ Typed Racket adds gradual types to Racket.
   - <https://www2.ccs.neu.edu/racket/pubs/popl08-thf.pdf>
   - <https://www2.ccs.neu.edu/racket/pubs/icfp10-thf.pdf>
 * If-T version: **1.0**
-* Implementation: <./main.rkt>
+* Implementation: [./main.rkt](./main.rkt)
 
 
 #### Type System Basics

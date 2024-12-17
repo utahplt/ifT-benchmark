@@ -8,7 +8,7 @@ TypeScript is a typechecker for JavaScript by Microsoft.
   - <https://github.com/microsoft/TypeScript>
   - <https://www.typescriptlang.org/play>
 * If-T version: **1.0**
-* Implementation: <./main.ts>
+* Implementation: [./main.ts](./main.ts)
 
 
 #### Type System Basics

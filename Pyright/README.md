@@ -10,7 +10,7 @@ through the Pylance plugin.
   - <https://pyright-play.net/>
   - <https://peps.python.org/pep-0484/>
 * If-T version: **1.0**
-* Implementation: <./main.py>
+* Implementation: [./main.py](./main.py)
 
 
 #### Type System Basics
