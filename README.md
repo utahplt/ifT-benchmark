@@ -7,14 +7,14 @@ Type narrowing is a feature of static type systems that refines the type of a va
 The benchmark is deeply inspired by the motivating examples from the following paper, which provides a formal model for type narrowing as realized in Typed Racket:
 
 ``` bibtex
-@inproceedings{tobin-hochstadtLogicalTypesUntyped2010,
+@inproceedings{tf-icfp-2010,
   title = {Logical Types for Untyped Languages},
   booktitle = {{ICFP}},
-  author = {Tobin-Hochstadt, Sam and Felleisen, Matthias},
-  date = {2010-09-27},
+  author = {Tobin--Hochstadt, Sam and Felleisen, Matthias},
   pages = {117--128},
   publisher = {{ACM}},
   doi = {10.1145/1863543.1863561},
+  year = {2010}
 }
 ```
 
