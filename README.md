@@ -1,8 +1,10 @@
-# ot-benchmark
+# If T: Type Narrowing Benchmark
 
-Benchmark for Occurrence Typing (and Similar Techniques).
+Benchmark for Type Narrowing (aka Occurrence Typing, aka Type Refinement).
 
-Occurrence typing is more widely known as "type narrowing" or "type refinement" these days. It is a technique that refines the type of a variable based on the occurrence of certain predicates. It is originally proposed by Tobin-Hochstadt and Felleisen in their paper "Logical Types for Untyped Languages" at ICFP 2010:
+Type narrowing is a feature of static type systems that refines the type of a variable based on the result of type tests. Occurrences of the variable that appear after a type test have a more precise type.
+
+The benchmark is deeply inspired by the motivating examples from the following paper, which provides a formal model for type narrowing as realized in Typed Racket:
 
 ``` bibtex
 @inproceedings{tobin-hochstadtLogicalTypesUntyped2010,
