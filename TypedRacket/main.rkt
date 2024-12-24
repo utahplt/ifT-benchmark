@@ -221,13 +221,13 @@
 ;; success
 (define (tuple-length-success-f [x : (U (List Number Number) (List String String String))]) : Number
   (if (= 2 (length x))
-      (+ (car x) (cdr x))
+      (+ (car x) (cadr x))
       (string-length (car x))))
 
 ;; failure
 (define (tuple-length-failure-f [x : (U (List Number Number) (List String String String))]) : Number
   (if (= 2 (length x))
-      (+ (car x) (cdr x))
+      (+ (car x) (cadr x))
       (+ (car x) (cadr x))))
 
 ;; Example merge_with_union
