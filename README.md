@@ -343,7 +343,7 @@ define g(x: String | Number) -> Number:
 
 #### Description
 
-The type checker checks that the assertion made by a custom predicate is compatible with the type of the variable, instead of just accepting what the programmer asserts.
+The type checker checks that the body of a custom predicate really checks the type of the variable, instead of just accepting what the programmer asserts.
 
 #### Examples
 
