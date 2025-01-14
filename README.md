@@ -350,24 +350,21 @@ The type checker checks that the assertion made by a custom predicate is compati
 ##### Success Expected
 
 ```text
-define f(x: String | Number) -> x is String:
+define f(x: String | Number | Boolean) -> x is String:
     return x is String
 
-define g(x: String | Number) -> Number:
-    if f(x):
-        return String.length(x) // type of x is refined to String
-    else:
-        return x // type of x is refined to Number, namely (String | Number) - String
+define g(x: String | Number | Boolean) -> x is Number | Boolean:
+    return not f(x)
 ```
 
 ##### Failure Expected
 
 ```text
-define f(x: String | Number) -> x is Boolean: // should not type check
-    return x is Boolean
+define f(x: String | Number | Boolean) -> x is String:
+    return x is String or x is Number // may return true when predicate is false
 
-define g(x: String | Number) -> Number:
-    return true // not really checking the type of x, should not type check
+define g(x: String | Number | Boolean) -> x is Number | Boolean:
+    return x is Number // may return false when predicate is true
 ```
 
 ### `object_properties`

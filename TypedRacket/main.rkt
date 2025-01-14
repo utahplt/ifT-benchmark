@@ -168,24 +168,22 @@
 
 ;; Example predicate_checked
 ;; success
-(: predicate-checked-success-f (-> (U String Number) Boolean : String))
+(: predicate-checked-success-f (-> (U String Number Boolean) Boolean : String))
 (define (predicate-checked-success-f x)
   (string? x))
 
-(define (predicate-checked-success-g [x : (U String Number)]) : Number
-  (if (predicate-checked-success-f x)
-      (string-length x)
-      x))
+(: predicate-checked-success-g (-> (U String Number Boolean) Boolean : (U Number Boolean)))
+(define (predicate-checked-success-g x)
+  (not (predicate-checked-success-f x)))
 
 ;; failure
-(: predicate-checked-failure-f (-> (U String Number) Boolean : String))
+(: predicate-checked-failure-f (-> (U String Number Boolean) Boolean : String))
 (define (predicate-checked-failure-f x)
-  (boolean? x))
+  (or (string? x) (number? x)))
 
-(define (predicate-checked-failure-g [x : (U String Number)]) : Number
-  (if (predicate-checked-failure-f x)
-      1
-      0))
+(: predicate-checked-failure-g (-> (U String Number Boolean) Boolean : (U Number Boolean)))
+(define (predicate-checked-failure-g x)
+  (number? x))
 
 ;; Example object_properties
 ;; success

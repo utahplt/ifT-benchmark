@@ -185,21 +185,18 @@ def predicate_1way_failure_g(x: FinalStr | FinalInt) -> int:
 
 ## Example predicate_checked
 ## success
-def predicate_checked_success_f(x: FinalStr | FinalInt) -> TypeIs[FinalStr]:
+def predicate_checked_success_f(x: FinalStr | FinalInt | bool) -> TypeIs[FinalStr]:
     return type(x) is FinalStr
 
-def predicate_checked_success_g(x: FinalStr | FinalInt) -> int:
-    if predicate_checked_success_f(x):
-        return len(x)
-    else:
-        return x
+def predicate_checked_success_g(x: FinalStr | FinalInt | bool) -> TypeIs[FinalInt | bool]:
+    return not predicate_checked_success_f(x)
 
 ## failure
-def predicate_checked_failure_f(x: FinalStr | FinalInt) -> TypeIs[bool]:
-    return type(x) is bool
+def predicate_checked_failure_f(x: FinalStr | FinalInt | bool) -> TypeIs[FinalStr]:
+    return type(x) is FinalStr or type(x) is FinalInt
 
-def predicate_checked_failure_g(x: FinalStr | FinalInt) -> int:
-    return True
+def predicate_checked_failure_g(x: FinalStr | FinalInt | bool) -> TypeIs[FinalInt | bool]:
+    return type(x) is FinalInt
 
 ## Example object_properties
 ## success
