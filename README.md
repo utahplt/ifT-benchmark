@@ -545,7 +545,7 @@ The result is as follows.
 
 ### refinement invalidation
 
-see issue #7, also see [flow document](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations).
+see [issue #7](https://github.com/utahplt/ifT-benchmark/issues/7), also see [flow document](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations).
 
 ### unknown to known length
 
