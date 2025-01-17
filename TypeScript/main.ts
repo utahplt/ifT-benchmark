@@ -217,11 +217,11 @@ function predicate_1way_failure_g(x: string | number): number {
 // Example predicate_checked
 // success
 function predicate_checked_success_f(x: string | number | boolean): x is string {
-  return typeof x === "string"
+  return typeof x === "string";
 }
 
 function predicate_checked_success_g(x: string | number | boolean): x is number | boolean {
-  return !predicate_checked_success_f(x)
+  return !predicate_checked_success_f(x);
 }
 
 // failure
@@ -230,7 +230,7 @@ function predicate_checked_failure_f(x: string | number | boolean): x is string 
 }
 
 function predicate_checked_failure_g(x: string | number | boolean): x is number | boolean {
-  return typeof x === "number"
+  return typeof x === "number";
 }
 
 // Example object_properties
