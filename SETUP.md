@@ -5,12 +5,13 @@ To run the benchmark, you need to have the following tools installed:
 - [Racket](https://racket-lang.org/)
 - [Node.js and npm](https://nodejs.org/)
 - [Python and pip](https://www.python.org/)
+- [Luau](https://luau.org/)
 
 The tested versions are:
 
 | Tool         | Version | Notes                                                                                                                |
 |--------------|---------|----------------------------------------------------------------------------------------------------------------------|
-| Typed Racket | 8.15    | Bundled with [Racket 8.15](https://download.racket-lang.org/releases/8.15/)                                                                                             |
+| Typed Racket | 8.15    | Bundled with [Racket 8.15](https://download.racket-lang.org/releases/8.15/)                                          |
 | Node.js      | 22.11.0 | See `.node-version` file under relevant directories                                                                  |
 | npm          | 10.9.0  | Bundled with Node.js                                                                                                 |
 | Python       | 3.13.0  | See `.python-version` file under relevant directories                                                                |
@@ -19,6 +20,7 @@ The tested versions are:
 | Flow         | 0.245.2 | See [`Flow/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Flow/package-lock.json)             |
 | Pyright      | 1.1.389 | See [`Pyright/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Pyright/package-lock.json)       |
 | mypy         | 1.13.0  | See [`mypy/requirements.txt`](https://github.com/utahplt/ot-benchmark/blob/main/mypy/requirements.txt)               |
+| luau-analyze | 0.657   | Bundeled with [luau](https://github.com/luau-lang/luau/releases/tag/0.657)                                           |
 
 First, clone this repository. Then, install the dependencies for the benchmark tools:
 
