@@ -513,15 +513,7 @@ Below is a table for all benchmark items as a quick reference.
 
 ## Benchmark Results
 
-The benchmark is performed on the following gradual type checker implements.
-
-*   Typed Racket
-*   TypeScript
-*   Flow
-*   mypy
-*   Pyright
-
-The result is as follows.
+For language details: [SETUP.md](./SETUP.md)
 
 | Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright |
 |:------------------|:------------:|:----------:|:----:|:----:|:-------:|
