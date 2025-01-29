@@ -19,26 +19,39 @@ _FILL in here_
 
 > Q. What base types does this implementation use? Why?
 
+_FILL in here_
+
 
 > Q. What container types does this implementation use (for objects, tuples, etc)? Why?
 
+_FILL in here_
 
 
 #### Type Narrowing
 
 > Q. How do simple type tests work in this language?
 
+_FILL in here_
+
 
 > Q. Are there other forms of type test? If so, explain.
+
+_FILL in here_
 
 
 > Q. How do type casts work in this language?
 
+_FILL in here_
+
 
 > Q. What is the syntax for a symmetric (2-way) type-narrowing predicate?
 
+_FILL in here_
+
 
 > Q. If the language supports other type-narrowing predicates, describe them below.
+
+_FILL in here_
 
 
 #### Benchmark Details
@@ -50,8 +63,12 @@ _FILL in here_
 
 > Q. Are any benchmarks expressed particularly well, or particularly poorly? Explain.
 
+_FILL in here_
+
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
+
+_FILL in here_
 
 
 #### Advanced Examples
