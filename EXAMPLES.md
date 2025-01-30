@@ -1,6 +1,6 @@
 # Example Programs
 
-The If-T benchmark includes a set of example programs, yet they are more focused on demonstrating the features tested in corresponding benchmark items. The following, however, is a list of example programs that demonstrate practical use cases of those type narrowing features, each may cover multiple benchmark items. They reflect the real-world use cases of type narrowing features in programming languages, and type checkers which support relevant features should be able to type check them correctly.
+The If-T benchmark includes a set of example programs described in section \ref{s:benchmark}, yet they are more focused on demonstrating the corresponding benchmark items. The following, however, is some real-world-like programs that illustrate practical use cases, each covering multiple benchmark items. Type checkers which support relevant features should be able to type check them correctly.
 
 ## `filter`
 
