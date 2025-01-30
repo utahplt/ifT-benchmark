@@ -9,20 +9,20 @@ The `filter` function is a higher-order function that takes a predicate function
 ```
 define filter(predicate: (x: T) -> x is S, list: Listof(T)) -> Listof(S)
     if empty?(list):
-        empty
+        return []
     else:
-        let ([head . tail] = list)
+        let [head . tail] = list
         if predicate(head)
-            cons(head, filter(predicate, tail))
+            return cons(head, filter(predicate, tail))
         else
-            filter(predicate, tail)
+            return filter(predicate, tail)
 ```
 
 Another imperative version of the `filter` function is as follows:
 
 ```
 define filter(predicate: (x: T) -> x is S, list: Listof(T)) -> Listof(S)
-    let result = empty
+    let result = []
     for each element in list:
         if predicate(element):
             result = cons(element, result)
@@ -34,15 +34,35 @@ define filter(predicate: (x: T) -> x is S, list: Listof(T)) -> Listof(S)
 The `flatten` function takes anything. If it is not a list, it returns a list containing the input. If it is a list, it returns a new list that contains all the elements in the input list, recursively flattened.
 
 ```
-define flatten(x: Listof(T | Pairof(T, T))) -> Listof(T):
-    if x is empty:
-        return [] // is Listof(T)
-    else if x[0] is a pair:
-        return flatten(x[0]) + flatten(x[1:]) // they are both Listof(T)
+define flatten(x: Any -> Listof(Any \ Listof(Any, Any))):
+    if empty?(x):
+        return []
+    else if x is Listof(Any):
+        let [head . tail] = x
+        return append(flatten(head), flatten(tail))
     else:
-        return [x[0]] + flatten(x[1:]) // x[0] is not a pair
+        return [x]
 ```
 
 ## Tree Node
+
+This is an example of recursive predicates. The `TreeNode` is defined to be a recursive type, where each node is a pair of a number and a list of `TreeNode`s. The `IsTreeNode?` function checks if the input is a `TreeNode` or not.
+
+```
+type TreeNode = Pairof(Number, Listof(TreeNode))
+
+define IsTreeNode?(node: Top) -> node is TreeNode
+    if node is not Pairof(Any, Any):
+        return false
+    else:
+        let ([head . tail] = node)
+        if head is not Number:
+            return false
+        else:
+            if tail is not Listof(Any):
+                return false
+            else:
+                return foldl(and, true, map(IsTreeNode?, tail))
+```
 
 ## Rainfall
