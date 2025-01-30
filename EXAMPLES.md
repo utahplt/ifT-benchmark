@@ -11,11 +11,10 @@ define filter(predicate: (x: T) -> x is S, list: Listof(T)) -> Listof(S)
     if empty?(list):
         return []
     else:
-        let [head . tail] = list
-        if predicate(head)
-            return cons(head, filter(predicate, tail))
+        if predicate(head(list))
+            return cons(head(list), filter(predicate, tail(list)))
         else
-            return filter(predicate, tail)
+            return filter(predicate, tail(list))
 ```
 
 A failing example:
@@ -25,11 +24,10 @@ define filter(predicate: (x: T) -> x is S, list: Listof(T)) -> Listof(S)
     if empty?(list):
         return []
     else:
-        let [head . tail] = list
-        if predicate(head)
-            return cons(head, filter(predicate, tail))
+        if predicate(head(list))
+            return cons(head(list), filter(predicate, tail(list)))
         else
-            return cons(head, filter(predicate, tail)) // Error: head is not guaranteed to be of type S
+            return cons(head(list), filter(predicate, tail(list))) // Error: head is not guaranteed to be of type S
 ```
 
 Another imperative version of the `filter` function is as follows:
@@ -59,6 +57,7 @@ define filter(predicate: (x: T) -> x is S, list: Listof(T)) -> Listof(S)
 Covered features:
 - `positive`
 - `predicate_2way` or `predicate_1way`
+- `tuple_elements`, but for lists instead of tuples
 
 ## `flatten`
 
@@ -69,8 +68,7 @@ define flatten(x: Any -> Listof(Any \ Listof(Any, Any))):
     if empty?(x):
         return []
     else if x is Listof(Any):
-        let [head . tail] = x
-        return append(flatten(head), flatten(tail))
+        return append(flatten(head(x)), flatten(tail(x)))
     else:
         return [x]
 ```
@@ -82,8 +80,7 @@ define flatten(x: Any -> Listof(Any \ Listof(Any, Any))):
     if empty?(x):
         return []
     else if x is Listof(Any):
-        let [head . tail] = x
-        return append(flatten(head), flatten(tail))
+        return append(flatten(head(x)), flatten(tail(x)))
     else:
         return x  // Error: x is not guaranteed to be Listof(Any \ Listof(Any, Any))
 ```
@@ -103,11 +100,10 @@ define TreeNode?(node: Top) -> node is TreeNode
     if node is not Pairof(Any, Any):
         return false
     else:
-        let ([head . tail] = node)
-        if head is not Number:
+        if first(node) is not Number:
             return false
         else:
-            if tail is not Listof(Any):
+            if second(node) is not Listof(Any):
                 return false
             else:
                 return foldl(and, true, map(TreeNode?, tail))
@@ -122,11 +118,10 @@ define TreeNode?(node: Top) -> node is TreeNode
     if node is not Pairof(Any, Any):
         return false
     else:
-        let ([head . tail] = node)
-        if head is not Number:
+        if first(node) is not Number:
             return false
         else:
-            if tail is not Listof(Any):
+            if second(node) is not Listof(Any):
                 return false
             else:
                 return true // Error: We haven't checked if elements of tail are TreeNodes
