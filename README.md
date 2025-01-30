@@ -29,7 +29,7 @@ For some instances, see
 
 ## Table of Contents
 
-  - [Examples](#examples)
+  - [How to Run the Benchmark](#how-to-run-the-benchmark)
   - [The Benchmark](#the-benchmark)
     - [`positive`](#positive)
     - [`negative`](#negative)
@@ -51,6 +51,7 @@ For some instances, see
     - [unknown to known length](#unknown-to-known-length)
     - [`predicate_extra_args`](#predicate_extra_args)
     - [`predicate_multi_args`](#predicate_multi_args)
+    - [`subtyping_nominal`](#subtyping_nominal)
   - [Acknowledge](#acknowledge)
 
 <!-- markdown-toc end -->
