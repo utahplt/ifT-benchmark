@@ -40,7 +40,7 @@ For some instances, see
     - [`predicate_2way`](#predicate_2way)
     - [`predicate_1way`](#predicate_1way)
     - [`predicate_checked`](#predicate_checked)
-    - [`object_properties`](#object_properties)
+    - [`struct_fields`](#struct_fields)
     - [`tuple_elements`](#tuple_elements)
     - [`tuple_length`](#tuple_length)
     - [`merge_with_union`](#merge_with_union)
@@ -368,11 +368,11 @@ define g(x: String | Number | Boolean) -> x is Number | Boolean:
     return x is Number // may return false when predicate is true
 ```
 
-### `object_properties`
+### `struct_fields`
 
 #### Description
 
-Partially refine the type of objects, that is, when the predicate is applied to an object property, refine the type of the object property.
+Partially refine the type of a struct, that is, when the predicate is applied to an struct field, refine the type of the field.
 
 #### Examples
 
@@ -507,7 +507,7 @@ Below is a table for all benchmark items as a quick reference.
 | predicate_2way       | custom predicates refines both positively and negatively |
 | predicate_1way       | custom predicates refines only positively                |
 | predicate_checked    | perform strict type checks on custom predicates          |
-| object_properties    | refine types of properties of objects                    |
+| struct_fields        | refine type of an element in an immutable data structure |
 | tuple_elements       | refine types of tuple elements                           |
 | tuple_length         | refine union of tuple types by their length              |
 | merge_with_union     | merge several types with union instead of joining        |
@@ -527,7 +527,7 @@ For language details: [SETUP.md](./SETUP.md)
 | predicate_2way    | O            | O          | O    | O    | O       |
 | predicate_1way    | O            | x          | O    | O    | O       |
 | predicate_checked | O            | O          | O    | O    | O       |
-| object_properties | O            | O          | O    | O    | O       |
+| struct_fields     | O            | O          | O    | O    | O       |
 | tuple_elements    | O            | O          | O    | O    | O       |
 | tuple_length      | x            | O          | O    | O    | O       |
 | merge_with_union  | O            | O          | O    | x    | O       |
