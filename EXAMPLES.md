@@ -33,6 +33,10 @@ Covered features:
 - `predicate_2way` or `predicate_1way`
 - `tuple_elements`, but for lists instead of tuples
 
+References:
+- https://www2.ccs.neu.edu/racket/pubs/popl08-thf.pdf
+
+
 ## `flatten`
 
 The `flatten` function takes anything. If it is not a list, it returns a list containing the input. If it is a list, it returns a new list that contains all the elements in the input list, recursively flattened.
@@ -62,6 +66,9 @@ define flatten(x: Any) -> Listof(Any \ Listof(Any)):
 Covered features:
 - `positive`
 - `negative`
+
+References:
+- https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.SNAPL.2019.6
 
 ## Tree Node
 
@@ -107,6 +114,10 @@ Covered features:
 - `predicate_checked`
 - `nesting_body`
 
+References:
+- https://www.geeksforgeeks.org/recursive-type-guards-in-typescript/
+
+
 ## Rainfall
 
 This is an example of the rainfall problem, which asks for the average rainfall
@@ -143,3 +154,7 @@ Covered features:
 - `positive`
 - `object_properties`
 - `nesting_body`
+
+References:
+- https://web.cs.wpi.edu/~kfisler/Pubs/icer14-rainfall/icer14.pdf
+- https://dl.acm.org/doi/10.1145/6592.6594
