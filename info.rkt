@@ -1,0 +1,11 @@
+#lang info
+(define collection "ift-benchmark")
+(define deps '("base" "gtp-util"))
+(define build-deps '("gtp-util"))
+(define pkg-desc "Benchmark for Type Narrowing")
+(define version "0.1")
+(define pkg-authors '(ben "hanwen.guo@utah.edu"))
+(define scribblings '())
+(define compile-omit-paths '("Flow" "Pyright" "TypeScript" "TypedRacket" "mypy"))
+(define test-omit-paths '("Flow" "Pyright" "TypeScript" "TypedRacket" "mypy"))
+;; (define license 'LGPL-2.0-or-later)

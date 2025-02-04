@@ -34,7 +34,15 @@ source venv/bin/activate # not necessary if you have direnv installed
 pip install -r requirements.txt
 ```
 
-The benchmark is written in Racket. The usage of the benchmark tool is as follows:
+The benchmark driver is written in Racket (`main.rkt`).
+Install the toplevel directory as a package to manage dependencies:
+
+```text
+$ raco pkg install
+```
+
+
+The usage of the benchmark tool is as follows:
 
 ```text
 $ racket main.rkt --help
