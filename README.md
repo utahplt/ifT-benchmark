@@ -441,21 +441,21 @@ When refining a variable with the type as a union of tuple types, refine the typ
 ##### Success Expected
 
 ```text
-define f(x: Tupleof(Number, Number) | Tupleof(String, String, String)) -> Number:
+define f(x: Tuple(Number, Number) | Tuple(String, String, String)) -> Number:
     if Tuple.length(x) is 2:
-        return x[0] + x[1] // type of x is refined to Tupleof(Number, Number)
+        return x[0] + x[1] // type of x is refined to Tuple(Number, Number)
     else:
-        return String.length(x[0]) // type of x is refined to Tupleof(String, String, String)
+        return String.length(x[0]) // type of x is refined to Tuple(String, String, String)
 ```
 
 ##### Failure Expected
 
 ```text
-define f(x: Tupleof(Number, Number) | Tupleof(String, String, String)) -> Number:
+define f(x: Tuple(Number, Number) | Tuple(String, String, String)) -> Number:
     if Tuple.length(x) is 2:
-        return x[0] + x[1] // type of x is refined to Tupleof(Number, Number)
+        return x[0] + x[1] // type of x is refined to Tuple(Number, Number)
     else:
-        return x[0] + x[1] // type of x is refined to Tupleof(String, String, String), thus not allowing addition
+        return x[0] + x[1] // type of x is refined to Tuple(String, String, String), thus not allowing addition
 ```
 
 ### `merge_with_union`
