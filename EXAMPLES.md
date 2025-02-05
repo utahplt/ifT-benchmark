@@ -72,7 +72,7 @@ References:
 
 ## Tree Node
 
-This is an example of recursive predicates. The `TreeNode` is defined to be a recursive type, where each node is a pair of a number and a list of `TreeNode`s. The `IsTreeNode?` function checks if the input is a `TreeNode` or not. Implementers may use a for-loop instead of `foldl`. 
+This is an example of recursive predicates. The `TreeNode` is defined to be a recursive type, where each node is a pair of a number and a list of `TreeNode`s. The `IsTreeNode?` function checks if the input is a `TreeNode` or not. Implementers may use a for-loop instead of `foldl`.
 
 ```
 type TreeNode = Pairof(Number, Listof(TreeNode))
