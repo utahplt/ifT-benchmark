@@ -64,15 +64,17 @@ See [HowToRun.md](HowToRun.md).
 
 From the examples, we can summarize the common features or "API"s that one would expect from a gradual type checker that supports occurrence typing. Each feature, with a brief description, the guarantee it provides, and the examples that demonstrate it, forms a benchmark item. All the benchmark items are listed below.
 
-### `positive`
+### Basic Narrowing
 
-#### Description
+#### `positive`
+
+##### Description
 
 If the predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds.
 
-#### Examples
+##### Examples
 
-##### Success Expected
+###### Success Expected
 
 ```text
 define f(x: Top) -> Top:
@@ -82,7 +84,7 @@ define f(x: Top) -> Top:
         return x
 ```
 
-##### Failure Expected
+###### Failure Expected
 
 ```text
 define f(x: Top) -> Top:
@@ -92,15 +94,15 @@ define f(x: Top) -> Top:
         return x
 ```
 
-### `negative`
+#### `negative`
 
-#### Description
+##### Description
 
 If the predicate is false, the type of the variable is refined to a more specific type with the information that the negation of the predicate holds.
 
-#### Examples
+##### Examples
 
-##### Success Expected
+###### Success Expected
 
 ```text
 define f(x: String | Number) -> Number:
@@ -110,7 +112,7 @@ define f(x: String | Number) -> Number:
         return x + 1 // type of x is refined to Number, namely (String | Number) - String
 ```
 
-##### Failure Expected
+###### Failure Expected
 
 ```text
 define f(x: String | Number | Boolean) -> Number:
@@ -120,53 +122,15 @@ define f(x: String | Number | Boolean) -> Number:
         return x + 1 // type of x is refined to Number | Boolean, thus not allowing addition
 ```
 
-### `alias`
+#### `connectives`
 
-#### Description
-
-When the result of a predicate test is bound to an immutable variable, that variable can also be used as a type guard. When the result of a predicate test is bound to a mutable variable, that variable can be used as a type guard only if it is not updated.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: Top) -> Top:
-    let y = x is String
-    if y:
-        return String.length(x) // type of x is refined to String
-    else:
-        return x
-```
-
-##### Failure Expected
-
-```text
-define f(x: Top) -> Top:
-    let y = x is String
-    if y:
-        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
-    else:
-        return x
-
-define g(x: Top) -> Top:
-    var y = x is String // y is mutable
-    y = true
-    if y:
-        return String.length(x) // since y is updated, type of x is not refined
-    else:
-        return x
-```
-
-### `connectives`
-
-#### Description
+##### Description
 
 When a predicate is a conjunction of multiple predicates, the type of the variable is refined to the intersection of the types refined by each predicate. When a predicate is a disjunction of multiple predicates, the type of the variable is refined to the union of the types refined by each predicate. When a predicate is a negation of another predicate, the type of the variable is refined to the complement of the type refined by the negated predicate.
 
-#### Examples
+##### Examples
 
-##### Success Expected
+###### Success Expected
 
 ```text
 define f(x: String | Number) -> Number:
@@ -188,7 +152,7 @@ define h(x: String | Number | Boolean) -> Number:
         return 0
 ```
 
-##### Failure Expected
+###### Failure Expected
 
 ```text
 define f(x: String | Number) -> Number:
@@ -210,15 +174,15 @@ define h(x: String | Number | Boolean) -> Number:
         return 0
 ```
 
-### `nesting_body`
+#### `nesting_body`
 
-#### Description
+##### Description
 
 When a conditional statement is nested inside the body of another conditional statement, the type of the variable is refined to the intersection of the types refined by each conditional statement.
 
-#### Examples
+##### Examples
 
-##### Success Expected
+###### Success Expected
 
 ```text
 define f(x: String | Number | Boolean) -> Number:
@@ -231,7 +195,7 @@ define f(x: String | Number | Boolean) -> Number:
         return 0
 ```
 
-##### Failure Expected
+###### Failure Expected
 
 ```text
 define f(x: String | Number | Boolean) -> Number:
@@ -244,139 +208,17 @@ define f(x: String | Number | Boolean) -> Number:
         return 0
 ```
 
-### `nesting_condition`
+### Compound Structures
 
-#### Description
+#### `struct_fields`
 
-When a conditional statement is nested inside the condition of another conditional statement, the type of the variable is refined to the intersection of the types refined by each conditional statement.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: Top, y: Top) -> Number:
-    if (if x is Number: y is String else: false)
-        return x + String.length(y) // type of x is refined to Number, type of y is refined to String
-    else
-        return 0
-```
-
-##### Failure Expected
-
-```text
-define f(x: Top, y: Top) -> Number:
-    if (if x is Number: y is String else: y is String)
-        return x + String.length(y) // type of x is not clear here, thus not allowing addition
-    else
-        return 0
-```
-
-### `predicate_2way`
-
-#### Description
-
-When a custom predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds. When a custom predicate is false, the type of the variable is refined to a more specific type with the information that the negation of the predicate holds.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: String | Number) -> x is String:
-    return x is String
-
-define g(x: String | Number) -> Number:
-    if f(x):
-        return String.length(x) // type of x is refined to String
-    else:
-        return x // type of x is refined to Number, namely (String | Number) - String
-```
-
-##### Failure Expected
-
-```text
-define f(x: String | Number) -> x is String:
-    return x is String
-
-define g(x: String | Number) -> Number:
-    if f(x):
-        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
-    else:
-        return x // type of x is refined to Number, namely (String | Number) - String
-```
-
-### `predicate_1way`
-
-#### Description
-
-When a custom predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds. When a custom predicate is false, the type of the variable is not refined. This is helpful for predicates that are underapproximations.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: String | Number) -> implies x is Number:
-    return x is Number and x > 0
-
-define g(x: String | Number) -> Number:
-    if f(x):
-        return x + 1 // type of x is refined to Number
-    else:
-        return 0
-```
-
-##### Failure Expected
-
-```text
-define f(x: String | Number) -> implies x is Number:
-    return x is Number and x > 0
-
-define g(x: String | Number) -> Number:
-    if f(x):
-        return x + 1 // type of x is refined to Number
-    else:
-        return String.length(x) // type of x is not refined, thus not compatible with the return type
-```
-
-### `predicate_checked`
-
-#### Description
-
-The type checker checks that the body of a custom predicate really checks the type of the variable, instead of just accepting what the programmer asserts.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: String | Number | Boolean) -> x is String:
-    return x is String
-
-define g(x: String | Number | Boolean) -> x is Number | Boolean:
-    return not f(x)
-```
-
-##### Failure Expected
-
-```text
-define f(x: String | Number | Boolean) -> x is String:
-    return x is String or x is Number // may return true when predicate is false
-
-define g(x: String | Number | Boolean) -> x is Number | Boolean:
-    return x is Number // may return false when predicate is true
-```
-
-### `struct_fields`
-
-#### Description
+##### Description
 
 Partially refine the type of a struct, that is, when the predicate is applied to an struct field, refine the type of the field.
 
-#### Examples
+##### Examples
 
-##### Success Expected
+###### Success Expected
 
 ```text
 struct Apple:
@@ -389,7 +231,7 @@ define f(x: Apple) -> Number:
         return 0
 ```
 
-##### Failure Expected
+###### Failure Expected
 
 ```text
 struct Apple:
@@ -402,15 +244,15 @@ define f(x: Apple) -> Number:
         return 0
 ```
 
-### `tuple_elements`
+#### `tuple_elements`
 
-#### Description
+##### Description
 
 When appropriate predicates are applied to the elements of a tuple, refine the type of the elements of the tuple. Note that this can be generalized to other data covariant data structures like lists, function results, etc.
 
-#### Examples
+##### Examples
 
-##### Success Expected
+###### Success Expected
 
 ```text
 define f(x: Tuple(Top, Top)) -> Number:
@@ -420,7 +262,7 @@ define f(x: Tuple(Top, Top)) -> Number:
         return 0
 ```
 
-##### Failure Expected
+###### Failure Expected
 
 ``` text
 define f(x: Tuple(Top, Top)) -> Number:
@@ -430,15 +272,15 @@ define f(x: Tuple(Top, Top)) -> Number:
         return 0
 ```
 
-### `tuple_length`
+#### `tuple_length`
 
-#### Description
+##### Description
 
 When refining a variable with the type as a union of tuple types, refine the type of the variable by the length of the tuple.
 
-#### Examples
+##### Examples
 
-##### Success Expected
+###### Success Expected
 
 ```text
 define f(x: Tuple(Number, Number) | Tuple(String, String, String)) -> Number:
@@ -448,7 +290,7 @@ define f(x: Tuple(Number, Number) | Tuple(String, String, String)) -> Number:
         return String.length(x[0]) // type of x is refined to Tuple(String, String, String)
 ```
 
-##### Failure Expected
+###### Failure Expected
 
 ```text
 define f(x: Tuple(Number, Number) | Tuple(String, String, String)) -> Number:
@@ -458,15 +300,83 @@ define f(x: Tuple(Number, Number) | Tuple(String, String, String)) -> Number:
         return x[0] + x[1] // type of x is refined to Tuple(String, String, String), thus not allowing addition
 ```
 
-### `merge_with_union`
+### Advanced Control Flow
 
-#### Description
+#### `alias`
+
+##### Description
+
+When the result of a predicate test is bound to an immutable variable, that variable can also be used as a type guard. When the result of a predicate test is bound to a mutable variable, that variable can be used as a type guard only if it is not updated.
+
+##### Examples
+
+###### Success Expected
+
+```text
+define f(x: Top) -> Top:
+    let y = x is String
+    if y:
+        return String.length(x) // type of x is refined to String
+    else:
+        return x
+```
+
+###### Failure Expected
+
+```text
+define f(x: Top) -> Top:
+    let y = x is String
+    if y:
+        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
+    else:
+        return x
+
+define g(x: Top) -> Top:
+    var y = x is String // y is mutable
+    y = true
+    if y:
+        return String.length(x) // since y is updated, type of x is not refined
+    else:
+        return x
+```
+
+#### `nesting_condition`
+
+##### Description
+
+When a conditional statement is nested inside the condition of another conditional statement, the type of the variable is refined to the intersection of the types refined by each conditional statement.
+
+##### Examples
+
+###### Success Expected
+
+```text
+define f(x: Top, y: Top) -> Number:
+    if (if x is Number: y is String else: false)
+        return x + String.length(y) // type of x is refined to Number, type of y is refined to String
+    else
+        return 0
+```
+
+###### Failure Expected
+
+```text
+define f(x: Top, y: Top) -> Number:
+    if (if x is Number: y is String else: y is String)
+        return x + String.length(y) // type of x is not clear here, thus not allowing addition
+    else
+        return 0
+```
+
+#### `merge_with_union`
+
+##### Description
 
 When multiple branches where the type of a variable is refined to different types are merged, the type of the variable is refined to the union of the types refined by each branch, instead of joining the types, that is, taking the common supertype.
 
-#### Examples
+##### Examples
 
-##### Success Expected
+###### Success Expected
 
 ```text
 define f(x: Top) -> String | Number:
@@ -479,7 +389,7 @@ define f(x: Top) -> String | Number:
     return x // type of x is refined to String | Number; a bad implementation will refine to Top
 ```
 
-##### Failure Expected
+###### Failure Expected
 
 ```text
 define f(x: Top) -> String | Number:
@@ -492,6 +402,104 @@ define f(x: Top) -> String | Number:
     return x + 1 // type of x is refined to String | Number
 ```
 
+### Custom Predicates
+
+#### `predicate_2way`
+
+##### Description
+
+When a custom predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds. When a custom predicate is false, the type of the variable is refined to a more specific type with the information that the negation of the predicate holds.
+
+##### Examples
+
+###### Success Expected
+
+```text
+define f(x: String | Number) -> x is String:
+    return x is String
+
+define g(x: String | Number) -> Number:
+    if f(x):
+        return String.length(x) // type of x is refined to String
+    else:
+        return x // type of x is refined to Number, namely (String | Number) - String
+```
+
+###### Failure Expected
+
+```text
+define f(x: String | Number) -> x is String:
+    return x is String
+
+define g(x: String | Number) -> Number:
+    if f(x):
+        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
+    else:
+        return x // type of x is refined to Number, namely (String | Number) - String
+```
+
+#### `predicate_1way`
+
+##### Description
+
+When a custom predicate is true, the type of the variable is refined to a more specific type with the information that the predicate holds. When a custom predicate is false, the type of the variable is not refined. This is helpful for predicates that are underapproximations.
+
+##### Examples
+
+###### Success Expected
+
+```text
+define f(x: String | Number) -> implies x is Number:
+    return x is Number and x > 0
+
+define g(x: String | Number) -> Number:
+    if f(x):
+        return x + 1 // type of x is refined to Number
+    else:
+        return 0
+```
+
+###### Failure Expected
+
+```text
+define f(x: String | Number) -> implies x is Number:
+    return x is Number and x > 0
+
+define g(x: String | Number) -> Number:
+    if f(x):
+        return x + 1 // type of x is refined to Number
+    else:
+        return String.length(x) // type of x is not refined, thus not compatible with the return type
+```
+
+#### `predicate_checked`
+
+##### Description
+
+The type checker checks that the body of a custom predicate really checks the type of the variable, instead of just accepting what the programmer asserts.
+
+##### Examples
+
+###### Success Expected
+
+```text
+define f(x: String | Number | Boolean) -> x is String:
+    return x is String
+
+define g(x: String | Number | Boolean) -> x is Number | Boolean:
+    return not f(x)
+```
+
+###### Failure Expected
+
+```text
+define f(x: String | Number | Boolean) -> x is String:
+    return x is String or x is Number // may return true when predicate is false
+
+define g(x: String | Number | Boolean) -> x is Number | Boolean:
+    return x is Number // may return false when predicate is true
+```
+
 ## Benchmark Items Table
 
 Below is a table for all benchmark items as a quick reference.
@@ -500,17 +508,17 @@ Below is a table for all benchmark items as a quick reference.
 |:---------------------|----------------------------------------------------------|
 | positive             | refine when condition is true                            |
 | negative             | refine when condition is false                           |
-| alias                | track test results assigned to variables                 |
 | connectives          | handle logic connectives                                 |
 | nesting_body         | nested conditionals with nesting happening in body       |
-| nesting_condition    | nested conditionals with nesting happening in condition  |
-| predicate_2way       | custom predicates refines both positively and negatively |
-| predicate_1way       | custom predicates refines only positively                |
-| predicate_checked    | perform strict type checks on custom predicates          |
 | struct_fields        | refine type of an element in an immutable data structure |
 | tuple_elements       | refine types of tuple elements                           |
 | tuple_length         | refine union of tuple types by their length              |
+| alias                | track test results assigned to variables                 |
+| nesting_condition    | nested conditionals with nesting happening in condition  |
 | merge_with_union     | merge several types with union instead of joining        |
+| predicate_2way       | custom predicates refines both positively and negatively |
+| predicate_1way       | custom predicates refines only positively                |
+| predicate_checked    | perform strict type checks on custom predicates          |
 
 ## Benchmark Results
 
@@ -520,17 +528,17 @@ For language details: [SETUP.md](./SETUP.md)
 |:------------------|:------------:|:----------:|:----:|:----:|:-------:|
 | positive          | O            | O          | O    | O    | O       |
 | negative          | O            | O          | O    | O    | O       |
-| alias             | O            | O          | x    | x    | O       |
 | connectives       | O            | O          | O    | O    | O       |
 | nesting_body      | O            | O          | O    | O    | O       |
-| nesting_condition | O            | x          | x    | x    | x       |
-| predicate_2way    | O            | O          | O    | O    | O       |
-| predicate_1way    | O            | x          | O    | O    | O       |
-| predicate_checked | O            | O          | O    | O    | O       |
 | struct_fields     | O            | O          | O    | O    | O       |
 | tuple_elements    | O            | O          | O    | O    | O       |
 | tuple_length      | x            | O          | O    | O    | O       |
+| alias             | O            | O          | x    | x    | O       |
+| nesting_condition | O            | x          | x    | x    | x       |
 | merge_with_union  | O            | O          | O    | x    | O       |
+| predicate_2way    | O            | O          | O    | O    | O       |
+| predicate_1way    | O            | x          | O    | O    | O       |
+| predicate_checked | O            | O          | O    | O    | O       |
 
 `O` means passed, `x` means not passed.
 
