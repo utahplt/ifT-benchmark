@@ -1,8 +1,5 @@
 --!strict
 
-
--- TODO: use tagged unions for dep return types
-
 -- Example positive 
 -- success
 function positive_success_f(x: unknown): unknown
@@ -15,8 +12,8 @@ end
 
 -- failure
 function positive_failure_f(x: unknown): unknown
-    if type(x) == "string" then
-        return x == nil
+    if typeof(x) == "string" then
+        return x+1
     else 
         return x
     end 
