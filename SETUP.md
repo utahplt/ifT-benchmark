@@ -38,7 +38,7 @@ The benchmark driver is written in Racket (`main.rkt`).
 Install the toplevel directory as a package to manage dependencies:
 
 ```text
-$ raco pkg install
+$ raco pkg install --auto
 ```
 
 
