@@ -1,6 +1,6 @@
 # Example Programs
 
-The If-T benchmark includes a set of example programs described in section \ref{s:benchmark}, yet they are more focused on demonstrating the corresponding benchmark items. The following, however, is some real-world-like programs that illustrate practical use cases, each covering multiple benchmark items. Type checkers which support relevant features should be able to type check them correctly.
+The If-T benchmark includes a set of example programs that are more focused on demonstrating the corresponding benchmark items. The following, however, is some real-world-like programs that illustrate practical use cases, each covering multiple benchmark items. Type checkers which support relevant features should be able to type check them correctly.
 
 ## `filter`
 
