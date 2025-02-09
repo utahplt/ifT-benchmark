@@ -10,7 +10,7 @@ To run the benchmark, you need to have the following tools installed:
 The tested versions are:
 
 | Tool         | Version | Notes                                                                                                                |
-|--------------|---------|----------------------------------------------------------------------------------------------------------------------|
+| ------------ | ------- | -------------------------------------------------------------------------------------------------------------------- |
 | Typed Racket | 8.15    | Bundled with [Racket 8.15](https://download.racket-lang.org/releases/8.15/)                                          |
 | Node.js      | 22.11.0 | See `.node-version` file under relevant directories                                                                  |
 | npm          | 10.9.0  | Bundled with Node.js                                                                                                 |
@@ -20,9 +20,10 @@ The tested versions are:
 | Flow         | 0.245.2 | See [`Flow/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Flow/package-lock.json)             |
 | Pyright      | 1.1.389 | See [`Pyright/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Pyright/package-lock.json)       |
 | mypy         | 1.13.0  | See [`mypy/requirements.txt`](https://github.com/utahplt/ot-benchmark/blob/main/mypy/requirements.txt)               |
-| luau-analyze | 0.657   | Bundeled with [luau](https://github.com/luau-lang/luau/releases/tag/0.657)                                           |
+| luau-analyze | 0.657   | Bundled with [luau](https://github.com/luau-lang/luau/releases/tag/0.657)                                            |
 
-First, clone this repository. Then, install the dependencies for the benchmark tools:
+First, clone this repository. Then, install the dependencies for the benchmark
+tools:
 
 ```shell
 cd TypeScript
@@ -36,13 +37,12 @@ source venv/bin/activate # not necessary if you have direnv installed
 pip install -r requirements.txt
 ```
 
-The benchmark driver is written in Racket (`main.rkt`).
-Install the toplevel directory as a package to manage dependencies:
+The benchmark driver is written in Racket (`main.rkt`). Install the toplevel
+directory as a package to manage dependencies:
 
 ```text
 $ raco pkg install --auto
 ```
-
 
 The usage of the benchmark tool is as follows:
 
@@ -65,4 +65,5 @@ usage: main.rkt [ <option> ... ] [<type-checker>]
  one `-`. For example, `-h-` is the same as `-h --`.
 ```
 
-When parameter `<type-checker>` is not provided, the benchmark will run all type checkers. Otherwise, it will run only the specified type checker.
+When parameter `<type-checker>` is not provided, the benchmark will run all type
+checkers. Otherwise, it will run only the specified type checker.
