@@ -38,7 +38,7 @@
     (luau (comment-char #\-)
           (extension ".luau")
           (file-base-path ,(build-path (current-directory) "Luau"))
-          (arguments ,(list (build-path "main.py") "luau-analyze"))
+          (arguments ,(list (build-path "main.luau") "luau-analyze"))
           (command "bash"))
     (pyright (comment-char #\#)
              (extension ".py")
