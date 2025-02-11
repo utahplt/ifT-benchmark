@@ -40,7 +40,7 @@ end
 -- Example alias
 -- success
 function alias_success_f(x: unknown): unknown
-    local y = typeof(x) == "string"
+    local y = typeof(x) == "number"
     if y then
         return #x
     else
