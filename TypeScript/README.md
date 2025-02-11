@@ -36,7 +36,7 @@ These are simple, final base types in TypeScript.
 * Array types for tuples: `[type, ...]`
 
 Both these types describe mutable data, but TypeScript still allows type narrowing on
-their elements. 
+their elements.
 
 
 #### Type Narrowing
@@ -96,16 +96,12 @@ Very direct.
 
 > Q. Are any examples inexpressible? Why?
 
-_FILL in here_
-
+No,they are all expressible.
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-_FILL in here_
-
+The `flatten` example has a return type of `string[]`, which reflects the idea of returning a flat list but is putting restriction on the return type.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
-_FILL in here_
-
-
+Very direct.
