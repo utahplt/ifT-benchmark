@@ -35,13 +35,13 @@
 
 (require typed/json)
 
-(define (rainfall [weather-reports : (Listof JSExpr)]) : Number
+(define (rainfall [weather-reports : (Listof JSExpr)]) : Real
   (define total 0.0)
   (define count 0)
   (for ([day (in-list weather-reports)])
     (when (and (hash? day) (hash-has-key? day "rainfall"))
       (let ([val (hash-ref day "rainfall")])
-        (when (and (or (integer? val) (inexact-real? val)) (<= 0 val 999))
+        (when (and (real? val) (<= 0 val 999))
           (set! total (+ total val))
           (set! count (+ count 1))))))
   (if (> count 0)

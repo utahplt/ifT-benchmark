@@ -119,10 +119,7 @@ N/A
 
 Fairly direct:
 * we introduce struct definitions for the object-properties benchmarks
-* there are lots more parentheses because it's Racket
-
-TODO length=2 vs null? cdr cdr
-
+* `tuple_length` has a direct encoding and fails. However, it can be expressed indirectly (`cdr`, `null?`) and pass.
 
 #### Advanced Examples
 
@@ -132,7 +129,9 @@ No, they are all expressible.
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-The `flatten` example is expressed in a restricted way. In the pseudocode, the type of the parameter of `flatten` is `Any`, and returns `Listof(Any \ Listof(Any))`. However, Typed Racket struggles to express non-top-level type subtraction, so a more restricted type is used to express the idea of a “flatten” list.
+The `flatten` example is expressed in a restricted way. In the pseudocode, the type of the parameter of `flatten` is `Any`, and returns `Listof(Any \ Listof(Any))`. However, Typed Racket cannot directly express non-top-level type subtraction (`! T` is a special case). So, instead we use two base types instead of `Any`.
+
+The `rainfall` example returns a `Real` instead of a `Number` because the `Number` type of Typed Racket includes complex numbers, which do not support the `<=` operator.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
