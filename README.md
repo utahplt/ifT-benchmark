@@ -449,8 +449,6 @@ define g(x: String | Number | Boolean) -> x is Number | Boolean:
 Partially refine the type of objects, that is, when the predicate is applied to
 an object property, refine the type of the object property.
 
->>>>>>> a421fdb (updated docs, attempt to mod rkt script)
-
 #### Examples
 
 ##### Success Expected
@@ -660,8 +658,6 @@ The result is as follows.
 | tuple_elements    |      O       |     O      |  O   |  O   |    O    |
 | tuple_length      |      x       |     O      |  O   |  O   |    O    |
 | merge_with_union  |      O       |     O      |  O   |  x   |    O    |
-
->>>>>>> a421fdb (updated docs, attempt to mod rkt script)
 
 `O` means passed, `x` means not passed.
 
