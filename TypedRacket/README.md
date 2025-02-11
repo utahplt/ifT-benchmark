@@ -128,17 +128,14 @@ TODO length=2 vs null? cdr cdr
 
 > Q. Are any examples inexpressible? Why?
 
-_FILL in here_
-
+No, they are all expressible.
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-_FILL in here_
-
+The `flatten` example is expressed in a restricted way. In the pseudocode, the type of the parameter of `flatten` is `Any`, and returns `Listof(Any \ Listof(Any))`. However, Typed Racket struggles to express non-top-level type subtraction, so a more restricted type is used to express the idea of a “flatten” list.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
-_FILL in here_
-
-
-
+The implementation is fairly direct. The main difference is:
+1. `filter` uses a functional style in the Typed Racket implementation, while the pseudocode uses a more imperative style.
+2. the type of the parameter of `flatten` is more restricted in the Typed Racket implementation.
