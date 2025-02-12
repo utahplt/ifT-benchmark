@@ -29,7 +29,6 @@ For some instances, see
 - [Flow documentation on type refinements](https://flow.org/en/docs/lang/refinements/#toc-refinement-invalidations)
 - [Mypy documentation on type narrowing](https://mypy.readthedocs.io/en/stable/type_narrowing.html#typeguards-with-parameters)
 - [Pyright documentation on type narrowing](https://github.com/microsoft/pyright/blob/main/docs/type-concepts-advanced.md#type-narrowing)
-- [Luau documentation on type refinement](https://luau.org/typecheck#type-refinements)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 
@@ -134,50 +133,9 @@ define f(x: String | Number | Boolean) -> Number:
         return x + 1 // type of x is refined to Number | Boolean, thus not allowing addition
 ```
 
-### `alias`
+#### `connectives`
 
-#### Description
-
-When the result of a predicate test is bound to an immutable variable, that
-variable can also be used as a type guard. When the result of a predicate test
-is bound to a mutable variable, that variable can be used as a type guard only
-if it is not updated.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: Top) -> Top:
-    let y = x is String
-    if y:
-        return String.length(x) // type of x is refined to String
-    else:
-        return x
-```
-
-##### Failure Expected
-
-```text
-define f(x: Top) -> Top:
-    let y = x is String
-    if y:
-        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
-    else:
-        return x
-
-define g(x: Top) -> Top:
-    var y = x is String // y is mutable
-    y = true
-    if y:
-        return String.length(x) // since y is updated, type of x is not refined
-    else:
-        return x
-```
-
-### `connectives`
-
-#### Description
+##### Description
 
 When a predicate is a conjunction of multiple predicates, the type of the
 variable is refined to the intersection of the types refined by each predicate.
@@ -268,9 +226,148 @@ define f(x: String | Number | Boolean) -> Number:
         return 0
 ```
 
-### `nesting_condition`
+### Compound Structures
 
-#### Description
+#### `struct_fields`
+
+##### Description
+
+Partially refine the type of a struct, that is, when the predicate is applied to
+an struct field, refine the type of the field.
+
+##### Examples
+
+###### Success Expected
+
+```text
+struct Apple:
+    a: Top
+
+define f(x: Apple) -> Number:
+    if x.a is Number:
+        return x.a // type of x.a is refined to Number
+    else:
+        return 0
+```
+
+###### Failure Expected
+
+```text
+struct Apple:
+    a: Top
+
+define f(x: Apple) -> Number:
+    if x.a is String:
+        return x.a // type of x.a is refined to String, thus not allowing the return
+    else:
+        return 0
+```
+
+#### `tuple_elements`
+
+##### Description
+
+When appropriate predicates are applied to the elements of a tuple, refine the
+type of the elements of the tuple. Note that this can be generalized to other
+data covariant data structures like lists, function results, etc.
+
+##### Examples
+
+###### Success Expected
+
+```text
+define f(x: Tuple(Top, Top)) -> Number:
+    if x[0] is Number:
+        return x[0] // type of x[0] is refined to Number, type of x is refined to Tuple(Number, Top)
+    else:
+        return 0
+```
+
+###### Failure Expected
+
+```text
+define f(x: Tuple(Top, Top)) -> Number:
+    if x[0] is Number:
+        return x[0] + x[1] // type of x[0] is refined to Number, but type of x[1] is not clear
+    else:
+        return 0
+```
+
+#### `tuple_length`
+
+##### Description
+
+When refining a variable with the type as a union of tuple types, refine the
+type of the variable by the length of the tuple.
+
+##### Examples
+
+###### Success Expected
+
+```text
+define f(x: Tuple(Number, Number) | Tuple(String, String, String)) -> Number:
+    if Tuple.length(x) is 2:
+        return x[0] + x[1] // type of x is refined to Tuple(Number, Number)
+    else:
+        return String.length(x[0]) // type of x is refined to Tuple(String, String, String)
+```
+
+###### Failure Expected
+
+```text
+define f(x: Tuple(Number, Number) | Tuple(String, String, String)) -> Number:
+    if Tuple.length(x) is 2:
+        return x[0] + x[1] // type of x is refined to Tuple(Number, Number)
+    else:
+        return x[0] + x[1] // type of x is refined to Tuple(String, String, String), thus not allowing addition
+```
+
+### Advanced Control Flow
+
+#### `alias`
+
+##### Description
+
+When the result of a predicate test is bound to an immutable variable, that
+variable can also be used as a type guard. When the result of a predicate test
+is bound to a mutable variable, that variable can be used as a type guard only
+if it is not updated.
+
+##### Examples
+
+###### Success Expected
+
+```text
+define f(x: Top) -> Top:
+    let y = x is String
+    if y:
+        return String.length(x) // type of x is refined to String
+    else:
+        return x
+```
+
+###### Failure Expected
+
+```text
+define f(x: Top) -> Top:
+    let y = x is String
+    if y:
+        return x + 1 // type of x is refined to String, adding a number to a string is not allowed
+    else:
+        return x
+
+define g(x: Top) -> Top:
+    var y = x is String // y is mutable
+    y = true
+    if y:
+        return String.length(x) // since y is updated, type of x is not refined
+    else:
+        return x
+```
+
+#### `nesting_condition`
+
+##### Description
 
 When a conditional statement is nested inside the condition of another
 conditional statement, the type of the variable is refined to the intersection
@@ -440,224 +537,45 @@ define g(x: String | Number | Boolean) -> x is Number | Boolean:
     return x is Number // may return false when predicate is true
 ```
 
-### `struct_fields`
-
-#### Description
-
-# <<<<<<< HEAD Partially refine the type of a struct, that is, when the predicate is applied to an struct field, refine the type of the field.
-
-Partially refine the type of objects, that is, when the predicate is applied to
-an object property, refine the type of the object property.
-
-#### Examples
-
-##### Success Expected
-
-```text
-struct Apple:
-    a: Top
-
-define f(x: Apple) -> Number:
-    if x.a is Number:
-        return x.a // type of x.a is refined to Number
-    else:
-        return 0
-```
-
-##### Failure Expected
-
-```text
-struct Apple:
-    a: Top
-
-define f(x: Apple) -> Number:
-    if x.a is String:
-        return x.a // type of x.a is refined to String, thus not allowing the return
-    else:
-        return 0
-```
-
-### `tuple_elements`
-
-#### Description
-
-When appropriate predicates are applied to the elements of a tuple, refine the
-type of the elements of the tuple. Note that this can be generalized to other
-data covariant data structures like lists, function results, etc.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: Tuple(Top, Top)) -> Number:
-    if x[0] is Number:
-        return x[0] // type of x[0] is refined to Number, type of x is refined to Tuple(Number, Top)
-    else:
-        return 0
-```
-
-##### Failure Expected
-
-```text
-define f(x: Tuple(Top, Top)) -> Number:
-    if x[0] is Number:
-        return x[0] + x[1] // type of x[0] is refined to Number, but type of x[1] is not clear
-    else:
-        return 0
-```
-
-### `tuple_length`
-
-#### Description
-
-When refining a variable with the type as a union of tuple types, refine the
-type of the variable by the length of the tuple.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: Tupleof(Number, Number) | Tupleof(String, String, String)) -> Number:
-    if Tuple.length(x) is 2:
-        return x[0] + x[1] // type of x is refined to Tupleof(Number, Number)
-    else:
-        return String.length(x[0]) // type of x is refined to Tupleof(String, String, String)
-```
-
-##### Failure Expected
-
-```text
-define f(x: Tupleof(Number, Number) | Tupleof(String, String, String)) -> Number:
-    if Tuple.length(x) is 2:
-        return x[0] + x[1] // type of x is refined to Tupleof(Number, Number)
-    else:
-        return x[0] + x[1] // type of x is refined to Tupleof(String, String, String), thus not allowing addition
-```
-
-### `merge_with_union`
-
-#### Description
-
-When multiple branches where the type of a variable is refined to different
-types are merged, the type of the variable is refined to the union of the types
-refined by each branch, instead of joining the types, that is, taking the common
-supertype.
-
-#### Examples
-
-##### Success Expected
-
-```text
-define f(x: Top) -> String | Number:
-    if x is String:
-        String.append(x, "hello") // type of x is refined to String
-    else if x is Number:
-        x = x + 1 // type of x is refined to Number
-    else:
-        return 0
-    return x // type of x is refined to String | Number; a bad implementation will refine to Top
-```
-
-##### Failure Expected
-
-```text
-define f(x: Top) -> String | Number:
-    if x is String:
-        String.append(x, "hello") // type of x is refined to String
-    else if x is Number:
-        x = x + 1 // type of x is refined to Number
-    else:
-        return 0
-    return x + 1 // type of x is refined to String | Number
-```
-
 ## Benchmark Items Table
 
 Below is a table for all benchmark items as a quick reference.
-
-<<<<<<< HEAD
 
 | Benchmark         | Description                                              |
 | :---------------- | -------------------------------------------------------- |
 | positive          | refine when condition is true                            |
 | negative          | refine when condition is false                           |
-| alias             | track test results assigned to variables                 |
 | connectives       | handle logic connectives                                 |
 | nesting_body      | nested conditionals with nesting happening in body       |
-| nesting_condition | nested conditionals with nesting happening in condition  |
-| predicate_2way    | custom predicates refines both positively and negatively |
-| predicate_1way    | custom predicates refines only positively                |
-| predicate_checked | perform strict type checks on custom predicates          |
 | struct_fields     | refine type of an element in an immutable data structure |
 | tuple_elements    | refine types of tuple elements                           |
 | tuple_length      | refine union of tuple types by their length              |
+| alias             | track test results assigned to variables                 |
+| nesting_condition | nested conditionals with nesting happening in condition  |
 | merge_with_union  | merge several types with union instead of joining        |
+| predicate_2way    | custom predicates refines both positively and negatively |
+| predicate_1way    | custom predicates refines only positively                |
+| predicate_checked | perform strict type checks on custom predicates          |
 
 ## Benchmark Results
 
 For language details: [SETUP.md](./SETUP.md)
 
-| Benchmark         |                       Typed Racket                       | TypeScript | Flow | mypy | Pyright |
-| :---------------- | :------------------------------------------------------: | :--------: | :--: | :--: | :-----: |
-| positive          |                            O                             |     O      |  O   |  O   |    O    |
-| negative          |                            O                             |     O      |  O   |  O   |    O    |
-| alias             |                            O                             |     O      |  x   |  x   |    O    |
-| connectives       |                            O                             |     O      |  O   |  O   |    O    |
-| nesting_body      |                            O                             |     O      |  O   |  O   |    O    |
-| nesting_condition |                            O                             |     x      |  x   |  x   |    x    |
-| predicate_2way    |                            O                             |     O      |  O   |  O   |    O    |
-| predicate_1way    |                            O                             |     x      |  O   |  O   |    O    |
-| predicate_checked |                            O                             |     O      |  O   |  O   |    O    |
-| struct_fields     |                            O                             |     O      |  O   |  O   |    O    |
-| tuple_elements    |                            O                             |     O      |  O   |  O   |    O    |
-| tuple_length      |                            x                             |     O      |  O   |  O   |    O    |
-| merge_with_union  |                            O                             |     O      |  O   |  x   |    O    |
-| =======           |                                                          |            |      |      |         |
-| Benchmark         |                       Description                        |            |      |      |         |
-| :---------------- | -------------------------------------------------------- |            |      |      |         |
-| positive          |              refine when condition is true               |            |      |      |         |
-| negative          |              refine when condition is false              |            |      |      |         |
-| alias             |         track test results assigned to variables         |            |      |      |         |
-| connectives       |                 handle logic connectives                 |            |      |      |         |
-| nesting_body      |    nested conditionals with nesting happening in body    |            |      |      |         |
-| nesting_condition | nested conditionals with nesting happening in condition  |            |      |      |         |
-| predicate_2way    | custom predicates refines both positively and negatively |            |      |      |         |
-| predicate_1way    |        custom predicates refines only positively         |            |      |      |         |
-| predicate_checked |     perform strict type checks on custom predicates      |            |      |      |         |
-| object_properties |          refine types of properties of objects           |            |      |      |         |
-| tuple_elements    |              refine types of tuple elements              |            |      |      |         |
-| tuple_length      |       refine union of tuple types by their length        |            |      |      |         |
-| merge_with_union  |    merge several types with union instead of joining     |            |      |      |         |
-
-## Benchmark Results
-
-The benchmark is performed on the following gradual type checker implements.
-
-- Typed Racket
-- TypeScript
-- Flow
-- mypy
-- Pyright
-
-The result is as follows.
-
 | Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright |
 | :---------------- | :----------: | :--------: | :--: | :--: | :-----: |
 | positive          |      O       |     O      |  O   |  O   |    O    |
 | negative          |      O       |     O      |  O   |  O   |    O    |
-| alias             |      O       |     O      |  x   |  x   |    O    |
 | connectives       |      O       |     O      |  O   |  O   |    O    |
 | nesting_body      |      O       |     O      |  O   |  O   |    O    |
+| struct_fields     |      O       |     O      |  O   |  O   |    O    |
+| tuple_elements    |      O       |     O      |  O   |  O   |    O    |
+| tuple_length      |      x       |     O      |  O   |  O   |    O    |
+| alias             |      O       |     O      |  x   |  x   |    O    |
 | nesting_condition |      O       |     x      |  x   |  x   |    x    |
+| merge_with_union  |      O       |     O      |  O   |  x   |    O    |
 | predicate_2way    |      O       |     O      |  O   |  O   |    O    |
 | predicate_1way    |      O       |     x      |  O   |  O   |    O    |
 | predicate_checked |      O       |     O      |  O   |  O   |    O    |
-| object_properties |      O       |     O      |  O   |  O   |    O    |
-| tuple_elements    |      O       |     O      |  O   |  O   |    O    |
-| tuple_length      |      x       |     O      |  O   |  O   |    O    |
-| merge_with_union  |      O       |     O      |  O   |  x   |    O    |
 
 `O` means passed, `x` means not passed.
 
