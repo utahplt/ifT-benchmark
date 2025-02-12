@@ -1,9 +1,16 @@
---!strict
+--!nonstrict
+
+
+type Apple = {
+  a: unknown
+}
+type Pair<T> = {first: T, second: T}
+type Tuple<T> = {first: T, second: T, third: T}
 
 --- Code:
 -- Example positive 
 -- success
-function positive_success_f(x: unknown): unknown
+function _positive_success_f(x: unknown): unknown
     if typeof(x) == "string" then
         return #x
     else 
@@ -12,7 +19,7 @@ function positive_success_f(x: unknown): unknown
 end
 
 -- failure
-function positive_failure_f(x: unknown): unknown
+function _positive_failure_f(x: unknown): unknown
     if typeof(x) == "string" then
         return x+1
     else 
@@ -22,15 +29,16 @@ end
 
 -- Example negative
 -- success
-function negative_success_f(x: string | number): number 
-    if typeof(x) == "string" then
-        return #x
-    else 
-        return x + 1
-    end
+function _negative_success_f(x: string | number): number 
+  if typeof(x) == "string" then
+    return #x
+  else 
+    return x + 1
+  end
 end
 
-function negative_failure_f(x: string | number | boolean): number 
+-- failure
+function _negative_failure_f(x: string | number | boolean): number 
     if typeof(x) == "string" then
         return #x
     else 
@@ -40,7 +48,7 @@ end
 
 -- Example alias
 -- success
-function alias_success_f(x: unknown): unknown
+function _alias_success_f(x: unknown): unknown
     local y = typeof(x) == "number"
     if y then
         return #x
@@ -50,7 +58,7 @@ function alias_success_f(x: unknown): unknown
 end
 
 -- failure
-function alias_failure_f(x: unknown): unknown
+function _alias_failure_f(x: unknown): unknown
     local y = typeof(x) == "string"
     if y then
         return x + 1
@@ -59,7 +67,7 @@ function alias_failure_f(x: unknown): unknown
     end
 end
 
-function alias_failure_g(x: unknown): unknown 
+function _alias_failure_g(x: unknown): unknown 
     local y = typeof(x) == "string"
     y = true
     if (y) then
@@ -79,7 +87,7 @@ function connectives_success_f(x: string | number): number
     end
 end
 
-function connectives_success_g(x: string | number): number 
+function _connectives_success_g(x: string | number): number 
     if (typeof(x) == "number" or typeof(x) == "string") then
       return connectives_success_f(x)
     else
@@ -87,7 +95,7 @@ function connectives_success_g(x: string | number): number
     end
 end
 
-function connectives_success_h(x: string | number | boolean): number 
+function _connectives_success_h(x: string | number | boolean): number 
     if (typeof(x) ~= "boolean" and typeof(x) ~= "number") then
       return #x
     else
@@ -96,7 +104,7 @@ function connectives_success_h(x: string | number | boolean): number
 end
   
 -- failure
-function connectives_failure_f(x: string | number): number
+function _connectives_failure_f(x: string | number): number
     if (typeof(x) ~= "number") then
         return x + 1
     else
@@ -104,7 +112,7 @@ function connectives_failure_f(x: string | number): number
     end
 end
 
-function connectives_failure_g(x: unknown): number
+function _connectives_failure_g(x: unknown): number
     if (typeof(x) == "string" or typeof(x) == "number") then
         return x + 1
     else
@@ -112,7 +120,7 @@ function connectives_failure_g(x: unknown): number
     end
 end
 
-function connectives_failure_h(x: string | number | boolean): number
+function _connectives_failure_h(x: string | number | boolean): number
     if (typeof(x) ~= "boolean" and typeof(x) ~= "number") then
         return x + 1
     else
@@ -122,7 +130,7 @@ end
 
 -- Example nesting_body
 -- success
-function nesting_body_success_f(x: string | number | boolean): number 
+function _nesting_body_success_f(x: string | number | boolean): number 
     if (not (typeof(x) == "string")) then
       if (not (typeof(x) == "boolean")) then
         return x + 1
@@ -135,7 +143,7 @@ function nesting_body_success_f(x: string | number | boolean): number
 end
 
 -- failure
-function nesting_body_failure_f(x: string | number | boolean): number
+function _nesting_body_failure_f(x: string | number | boolean): number
     if (typeof(x) == "string" or typeof(x) == "number") then
         if (typeof(x) == "number" or typeof(x) == "boolean") then
             return #x
@@ -147,9 +155,9 @@ function nesting_body_failure_f(x: string | number | boolean): number
     end
 end
 
--- Example nesting condition
+-- Example nesting_condition
 -- success
-function nesting_condition_success_f(x: unknown, y: unknown): number
+function _nesting_condition_success_f(x: unknown, y: unknown): number
     if typeof(x) == "number" and typeof(y) == "string" then
       return x + #y
     else
@@ -158,7 +166,7 @@ function nesting_condition_success_f(x: unknown, y: unknown): number
 end
 
 -- failure
-function nesting_condition_failure_f(x: unknown, y: unknown): number 
+function _nesting_condition_failure_f(x: unknown, y: unknown): number 
   if (typeof(x) == "number" and typeof(y) == "string") or typeof(y) == "string"  then
     return x + #y
   else 
@@ -169,81 +177,76 @@ end
 
 -- Example predicate_2way
 -- success
-function predicate_2way_success_f(x: string | number): never
+function _predicate_2way_success_f(x: string | number): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
-function predicate_2way_success_g(x: string | number): never 
+function _predicate_2way_success_g(x: string | number): never 
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 -- failure
-function predicate_2way_failure_f(x: string | number): never
+function _predicate_2way_failure_f(x: string | number): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
-function predicate_2way_failure_g(x: string | number): never
+function _predicate_2way_failure_g(x: string | number): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 -- Example predicate_1way
 -- success
-function predicate_1way_success_f(x: string | number): never
+function _predicate_1way_success_f(x: string | number): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
-function predicate_1way_success_g(x: string | number): never
+function _predicate_1way_success_g(x: string | number): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 -- failure
-function predicate_1way_failure_f(x: string | number): never
+function _predicate_1way_failure_f(x: string | number): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
-function predicate_1way_failure_g(x: string | number): never
+function _predicate_1way_failure_g(x: string | number): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 -- Example predicate_checked
 -- success
-function predicate_checked_success_f(x: string | number | boolean): never
+function _predicate_checked_success_f(x: string | number | boolean): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
-function predicate_checked_success_g(x: string | number | boolean): never 
+function _predicate_checked_success_g(x: string | number | boolean): never 
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 -- failure
-function predicate_checked_failure_f(x: string | number | boolean): never
+function _predicate_checked_failure_f(x: string | number | boolean): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
-function predicate_checked_failure_g(x: string | number | boolean): never
+function _predicate_checked_failure_g(x: string | number | boolean): never
 -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
--- Example table_properties
+-- Example object_properties
 -- success
-
-type Apple = {
-  a: unknown
-}
-
-function table_properties_success_f(x: Apple): number 
+function _table_properties_success_f(x: Apple): number 
   if (typeof(x.a) == "number") then
     return x.a
   else
@@ -252,7 +255,7 @@ function table_properties_success_f(x: Apple): number
 end
 
 -- failure
-function table_properties_failure_f(x: Apple): number
+function _table_properties_failure_f(x: Apple): number
   if (typeof(x.a) == "string") then
     return x.a
   else
@@ -262,9 +265,7 @@ end
 
 -- Example tuple_elements
 -- success
-type Pair<T> = {first: T, second: T}
-
-function tuple_elements_success_f(x: Pair<unknown>): number 
+function _tuple_elements_success_f(x: Pair<unknown>): number 
   if (typeof(x[0]) == "number") then
     return x[0]
   else
@@ -273,7 +274,7 @@ function tuple_elements_success_f(x: Pair<unknown>): number
 end
 
 -- failure
-function tuple_elements_failure_f(x: Pair<unknown>): number
+function _tuple_elements_failure_f(x: Pair<unknown>): number
   if (typeof(x[0]) == "number") then
     return x[0] + x[1]
   else
@@ -283,9 +284,7 @@ end
 
 -- Example tuple_length
 -- success
-type Tuple<T> = {first: T, second: T, third: T}
-
-function tuple_length_success_f(x: Pair<number> | Tuple<string>): number
+function _tuple_length_success_f(x: Pair<number> | Tuple<string>): number
   if (#x == 2) then
     return x[0] + x[1]
   else
@@ -294,7 +293,7 @@ function tuple_length_success_f(x: Pair<number> | Tuple<string>): number
 end
 
 -- failure
-function tuple_length_failure_f(x: Pair<number> | Tuple<string>): number
+function _tuple_length_failure_f(x: Pair<number> | Tuple<string>): number
   if (#x == 2) then
     return x[0] + x[1]
   else
@@ -304,7 +303,7 @@ end
 
 -- Example merge_with_union
 -- success
-function merge_with_union_success_f(x: unknown): string | number
+function _merge_with_union_success_f(x: unknown): string | number
   if (typeof(x) == "string") then
     x = x .. "hello"
   elseif (typeof(x) == "number") then
@@ -316,7 +315,7 @@ function merge_with_union_success_f(x: unknown): string | number
 end
 
 -- failure
-function merge_with_union_failure_f(x: unknown): string | number
+function _merge_with_union_failure_f(x: unknown): string | number
     if (typeof(x) == "string") then
       x = x .. "hello"
     elseif (typeof(x) == "number") then
