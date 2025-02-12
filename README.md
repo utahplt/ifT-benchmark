@@ -540,7 +540,6 @@ For language details: [SETUP.md](./SETUP.md)
 | predicate_1way    | O            | x          | O    | O    | O       | x    |
 | predicate_checked | O            | O          | O    | O    | O       | x    |
 
-
 `O` means passed, `x` means not passed.
 
 ## Other Discussions
