@@ -20,7 +20,7 @@ The tested versions are:
 | Flow         | 0.245.2 | See [`Flow/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Flow/package-lock.json)             |
 | Pyright      | 1.1.389 | See [`Pyright/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Pyright/package-lock.json)       |
 | mypy         | 1.13.0  | See [`mypy/requirements.txt`](https://github.com/utahplt/ot-benchmark/blob/main/mypy/requirements.txt)               |
-| luau-analyze | 0.657 | Bundled with [Luau](https://github.com/luau-lang/luau/releases/tag/0.657) |
+| Luau | 0.657 | Bundled with [Luau](https://github.com/luau-lang/luau/releases/tag/0.657) |
 
 First, clone this repository. Then, install the dependencies for the benchmark tools:
 

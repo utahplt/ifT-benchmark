@@ -1,6 +1,7 @@
 # Luau
 
-Luau is a typed-sister variant of Lua (3.8?)
+Luau is a typed-sister variant of Lua (it breaks backwards compatibility after
+v5.1).
 
 - Language resources:
   - <https://www.luau.org/>
@@ -25,8 +26,9 @@ It uses `string`,`number` and `boolean`.
 > Q. What container types does this implementation use (for objects, tuples,
 > etc)? Why?
 
-It adopts `tables`, for Lists, Structs and to construct aliases for `Pairs` and
-`Tuples`.
+A Table in Luau is the base data structure for constructing complex objects or
+organizing data. This implementation adopts `tables` for Lists, Structs and to
+construct aliases for `Pairs` and `Tuples`.
 
 #### Type Narrowing
 
@@ -67,6 +69,8 @@ Luau is unable to express the type-narrowing predicate examples.
 > Q. Are any benchmarks expressed particularly well, or particularly poorly?
 > Explain.
 
+No.
+
 > Q. How direct (or complex) is the implementation compared to the pseudocode
 > from If-T?
 
@@ -76,7 +80,7 @@ Very similar.
 
 > Q. Are any examples inexpressible? Why?
 
-```Luau
+```
 define f(x: String | Number | Boolean) -> x is String:
     return x is String
 ```
@@ -88,14 +92,14 @@ inexpressible.
 > Q. Are any examples expressed particularly well, or particularly poorly?
 > Explain.
 
-_FILL in here_
+No.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode
 > from If-T?
 
 Here is an example of the alias psuedocode by its Luau counterpart.
 
-```luau
+```
 -- Luau implementation
 function f(x: unknown): unknown
     local y = typeof(x) == "string"
@@ -107,7 +111,7 @@ function f(x: unknown): unknown
 end
 ```
 
-```luau
+```
 -- psuedocode example: alias success
 
 define f(x: Top) -> Top:
