@@ -98,16 +98,13 @@ Very direct.
 
 > Q. Are any examples inexpressible? Why?
 
-_FILL in here_
-
+No,they are all expressible.
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-_FILL in here_
-
+- The `flatten` example has a slightly different implementation than the pseudocode from If-T, since the `empty?` predicate in the pseudocode checks both if the argument is an array and if it is empty, and this must be done in two separate steps in Flow.
+- The `rainfall` example uses type `unknown` instead of a `JSON` type, since every value in JavaScript (hence Flow) is representing a legitimate JSON value. Also, it has 2 extra null tests: on the object `day` and its field `rainfall`.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
-_FILL in here_
-
-
+Very direct.
