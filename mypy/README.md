@@ -116,17 +116,14 @@ Very direct, though we introduce classes for the object benchmarks.
 
 > Q. Are any examples inexpressible? Why?
 
-_FILL in here_
-
+No,they are all expressible.
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-_FILL in here_
-
+- The `flatten` example has a slightly different implementation than the pseudocode from If-T, since the `empty?` predicate in the pseudocode checks both if the argument is an array and if it is empty, and this must be done in two separate steps in Python.
+- The `TreeNode` example does not use `foldl` as the pseudocode from If-T does, since functions equivalent to `foldl` need to be imported from the `functools` module in Python, and this would add unnecessary complexity to the implementation.
+- The `filter` and `rainfall` examples aligns very closely with the pseudocode from If-T. `rainfall` initialize `total` to `0.0` instead of `0` to make mypy happy.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
-_FILL in here_
-
-
-
+Very direct.
