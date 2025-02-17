@@ -100,7 +100,8 @@ No,they are all expressible.
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-The `flatten` example has a return type of `string[]`, which reflects the idea of returning a flat list but is putting restriction on the return type.
+- The `flatten` example has a slightly different implementation than the pseudocode from If-T, since the `empty?` predicate in the pseudocode checks both if the argument is an array and if it is empty, and this must be done in two separate steps in TypeScript.
+- The `rainfall` example uses type `unknown` instead of a `JSON` type, since every value in JavaScript (hence TypeScript) is representing a legitimate JSON value. Also, it has 2 extra null tests: on the object `day` and its field `rainfall`.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 

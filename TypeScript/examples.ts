@@ -11,16 +11,16 @@ function filter<T, S extends T>(
   return result;
 }
 
-function flatten(l: any): string[] {
+type MaybeNestedList = (number | MaybeNestedList)[] | number
+function flatten(l: MaybeNestedList): number[] {
   if (Array.isArray(l)) {
-    const t = flatten(l[0]).concat(flatten(l.slice(1)));
-    return t;
-  } else {
-    if (typeof l === 'string') {
-      return [l];
+    if (l.length === 0) {
+      return [];
     } else {
-      return [String(l)];
+      return flatten(l[0]).concat(flatten(l.slice(1)))
     }
+  } else {
+    return [l];
   }
 }
 
@@ -54,14 +54,16 @@ function isTreeNode(node: any): node is TreeNode {
   return true;
 }
 
-function rainfall(weather_reports : object[]): number {
+function rainfall(weather_reports : unknown[]): number {
   let total = 0, count = 0;
   for (let day of weather_reports) {
-    if ("rainfall" in day) {
-      const val = day["rainfall"]
-      if (typeof val === "number" && 0 <= val && val <= 999) {
-        total += val;
-        count += 1;
+    if (typeof day === "object" && day) {
+      if ("rainfall" in day) {
+        const val = day["rainfall"]
+        if (typeof val === "number" && 0 <= val && val <= 999) {
+          total += val;
+          count += 1;
+        }
       }
     }
   }
