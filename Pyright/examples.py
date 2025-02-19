@@ -38,7 +38,7 @@ def is_tree_node(node: object) -> TypeIs[TreeNode]:
 
 type JSON = Union[str, float, bool, None, list[JSON], dict[str, JSON]]
 def rainfall(weather_reports: list[JSON]) -> float:
-    total = 0
+    total = 0.0
     count = 0
     for day in weather_reports:
         if isinstance(day, dict) and "rainfall" in day:
