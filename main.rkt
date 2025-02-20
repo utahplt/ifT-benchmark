@@ -5,22 +5,29 @@
 
 (define benchmark-output-format (make-parameter 'plain))
 (define benchmark-output-transposed (make-parameter #f)) ; one type checker per row by default, set to #t to have one type checker per column
+(define benchmark-run-examples (make-parameter #f))
 
 (define typechecker-parameters-alist
   `((typedracket (comment-char #\;)
                  (extension ".rkt")
                  (file-base-path ,(build-path (current-directory) "TypedRacket"))
+                 (examples-file-base-path ,(build-path (current-directory) "TypedRacket"))
                  (arguments ,(list (build-path "main.rkt")))
+                 (examples-arguments ,(list (build-path "examples.rkt")))
                  (command "racket"))
     (typescript (comment-char #\/)
                 (extension ".ts")
                 (file-base-path ,(build-path (current-directory) "TypeScript"))
+                (examples-file-base-path ,(build-path (current-directory) "TypeScript"))
                 (arguments ,(list (build-path "main.ts") "tsc" "--noEmit" "--target" "es2023"))
+                (examples-arguments ,(list (build-path "examples.ts") "tsc" "--noEmit" "--target" "es2023"))
                 (command "npx"))
     (flow (comment-char #\/)
           (extension ".js")
           (file-base-path ,(build-path (current-directory) "Flow"))
+          (examples-file-base-path ,(build-path (current-directory) "Flow"))
           (arguments ,(list (build-path "src/index.js") "flow" "focus-check"))
+          (examples-arguments ,(list (build-path "src/examples.js") "flow" "focus-check"))
           (command "npx")
           (pre-benchmark-func ,(lambda () (shell-command "touch" '() ".flowconfig")))
           (post-benchmark-func ,(lambda () (shell-command "npx" '("flow" "stop") (build-path "src/index.js"))))
@@ -28,17 +35,26 @@
     (mypy (comment-char #\#)
           (extension ".py")
           (file-base-path ,(build-path (current-directory) "mypy"))
+          (examples-file-base-path ,(build-path (current-directory) "mypy"))
           (arguments ,`(,(build-path "main.py")
                         ,(lambda (input-file)
                            (list "-c"
                                  (string-append-immutable
                                   "source .venv/bin/activate; mypy "
                                   (path->string input-file))))))
+          (examples-arguments ,`(,(build-path "examples.py")
+                                 ,(lambda (input-file)
+                                    (list "-c"
+                                          (string-append-immutable
+                                           "source .venv/bin/activate; mypy "
+                                           (path->string input-file))))))
           (command "bash"))
     (pyright (comment-char #\#)
              (extension ".py")
              (file-base-path ,(build-path (current-directory) "Pyright"))
+             (examples-file-base-path ,(build-path (current-directory) "Pyright"))
              (arguments ,(list (build-path "main.py") "pyright"))
+             (examples-arguments ,(list (build-path "examples.py") "pyright"))
              (command "npx"))))
 
 (define (print-benchmark-row-markdown type-checker benchmark-result)
@@ -129,8 +145,16 @@
         (error (format "Type checker ~a not found." type-checker))
         (let ([comment-char (cadr (assoc 'comment-char typechecker-parameters))]
               [extension (cadr (assoc 'extension typechecker-parameters))]
-              [file-base-path (cadr (assoc 'file-base-path typechecker-parameters))]
-              [arguments (cadr (assoc 'arguments typechecker-parameters))]
+              [file-base-path (cadr (assoc
+                                     (if (benchmark-run-examples)
+                                         'examples-file-base-path
+                                         'file-base-path)
+                                     typechecker-parameters))]
+              [arguments (cadr (assoc
+                                (if (benchmark-run-examples)
+                                    'examples-arguments
+                                    'arguments)
+                                typechecker-parameters))]
               [command (cadr (assoc 'command typechecker-parameters))]
               [pre-benchmark-func (cadr (or (assoc 'pre-benchmark-func typechecker-parameters) '(#f #f) ))]
               [post-benchmark-func (cadr (or (assoc 'post-benchmark-func typechecker-parameters) '(#f #f)))]
@@ -143,23 +167,17 @@
                               #:post-benchmark-func-dir post-benchmark-func-dir))))
   (cons type-checker benchmark-result))
 
+(define core-benchmark-items '("positive" "negative" "alias" "connectives" "nesting_body" "nesting_condition" "predicate_2way" "predicate_1way" "predicate_checked" "object_properties" "tuple_elements" "tuple_length" "merge_with_union"))
+(define examples-benchmark-items '("filter" "flatten" "tree_node" "rainfall"))
+
 (define (run-benchmarks type-checker-list)
   (define benchmark-result-rows
     (map get-benchmark-result-row type-checker-list))
   (print-benchmark benchmark-result-rows (benchmark-output-format)
-                   (cons "Benchmark" '("positive"
-                                       "negative"
-                                       "alias"
-                                       "connectives"
-                                       "nesting_body"
-                                       "nesting_condition"
-                                       "predicate_2way"
-                                       "predicate_1way"
-                                       "predicate_checked"
-                                       "object_properties"
-                                       "tuple_elements"
-                                       "tuple_length"
-                                       "merge_with_union"))))
+                   (cons "Benchmark"
+                         (if (benchmark-run-examples)
+                             examples-benchmark-items
+                             core-benchmark-items))))
 
 (define type-checker
   (command-line
@@ -171,6 +189,8 @@
                       (benchmark-output-format (string->symbol output-format))]
    [("-t" "--transpose") "Transpose the output of the benchmarks"
                          (benchmark-output-transposed #t)]
+   [("-e" "--examples") "Run the advanced examples"
+                        (benchmark-run-examples #t)]
    ;; #:once-any
    ;; [("-m" "--markdown") "Print the output of the benchmarks in markdown format"
    ;;                      (benchmark-output-format 'markdown)]
