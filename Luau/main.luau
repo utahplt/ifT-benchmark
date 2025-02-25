@@ -5,7 +5,7 @@ type Apple = {
   a: unknown
 }
 type Pair<T> = {first: T, second: T}
-type Tuple<T> = {first: T, second: T, third: T}
+type Triple<T> = {first: T, second: T, third: T}
 
 --- Code:
 -- Example positive 
@@ -284,7 +284,7 @@ end
 
 -- Example tuple_length
 -- success
-function _tuple_length_success_f(x: Pair<number> | Tuple<string>): number
+function _tuple_length_success_f(x: Pair<number> | Triple<string>): number
   if (#x == 2) then
     return x[0] + x[1]
   else
@@ -293,7 +293,7 @@ function _tuple_length_success_f(x: Pair<number> | Tuple<string>): number
 end
 
 -- failure
-function _tuple_length_failure_f(x: Pair<number> | Tuple<string>): number
+function _tuple_length_failure_f(x: Pair<number> | Triple<string>): number
   if (#x == 2) then
     return x[0] + x[1]
   else

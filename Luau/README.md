@@ -6,7 +6,6 @@ v5.1).
 - Language resources:
   - <https://www.luau.org/>
   - <https://github.com/luau-lang/luau/>
-  - <https://github.com/luau-lang/luau/>
 - If-T version: **1.0**
 - Implementation: [main.luau](main.luau)
 
@@ -34,22 +33,21 @@ construct aliases for `Pairs` and `Tuples`.
 
 > Q. How do simple type tests work in this language?
 
-There are two main options: `typeof()` and `type()`. `typeof()`, comes shipped
-with the typechecker and works on both Roblox data types and vanilla data types.
-
-Example: `typeof(x) == "number"` or `type(x) == "number"`
+Example: `typeof(x) == "number"`
 
 > Q. Are there other forms of type test? If so, explain.
 
-Yes, It also supports `IsA` for table instance refinements.
+Yes, It also supports `IsA` for table instance refinements and Assertions
+(`assert`) to trigger type refinement.
 
-Example: `local x = Instance.new(Part); x:IsA("BasePart")`
+Example: `local x = Instance.new(Part); x:IsA("BasePart")` Example:
+`assert(type(stringOrNumber) == "string")`
 
 > Q. How do type casts work in this language?
 
 Type casts are done with the double colon (`::`) syntax.
 
-Example: `x::unknown`
+Example: `x::number`
 
 > Q. What is the syntax for a symmetric (2-way) type-narrowing predicate?
 
@@ -57,8 +55,6 @@ Luau does not supports these predicates yet.
 
 > Q. If the language supports other type-narrowing predicates, describe them
 > below.
-
-Assertions (`assert`) can often be used to trigger type refinement.
 
 #### Benchmark Details
 
@@ -69,25 +65,32 @@ Luau is unable to express the type-narrowing predicate examples.
 > Q. Are any benchmarks expressed particularly well, or particularly poorly?
 > Explain.
 
-No.
-
-> Q. How direct (or complex) is the implementation compared to the pseudocode
-> from If-T?
-
-Very similar.
-
-#### Advanced Examples
-
-> Q. Are any examples inexpressible? Why?
-
 ```
 define f(x: String | Number | Boolean) -> x is String:
     return x is String
 ```
 
-Since Luau, does not support syntax for predicates on types, all the examples
-(`predicate_checked`, `predicate_1way` and `predicate_2way`) are currently
-inexpressible.
+Since Luau, does not support syntax for predicates on types, all the related
+examples (`predicate_checked`, `predicate_1way` and `predicate_2way`) are
+currently inexpressible.
+
+> Q. How direct (or complex) is the implementation compared to the pseudocode
+> from If-T?
+
+Very similar. Luau has some special syntax to get the length of some sequence or
+iterable.
+
+Example: `#x`
+
+It also supports special syntax for string concatenation.
+
+Example: `"Hello" .. "World"`
+
+#### Advanced Examples
+
+> Q. Are any examples inexpressible? Why?
+
+No.
 
 > Q. Are any examples expressed particularly well, or particularly poorly?
 > Explain.
@@ -97,27 +100,4 @@ No.
 > Q. How direct (or complex) is the implementation compared to the pseudocode
 > from If-T?
 
-Here is an example of the alias psuedocode by its Luau counterpart.
-
-```
--- Luau implementation
-function f(x: unknown): unknown
-    local y = typeof(x) == "string"
-    if y then
-        return #x // type of x is not refined to String
-    else
-        return x
-    end
-end
-```
-
-```
--- psuedocode example: alias success
-
-define f(x: Top) -> Top:
-    let y = x is String
-    if y:
-        return String.length(x) // type of x is refined to String
-    else:
-        return x
-```
+Very similar.
