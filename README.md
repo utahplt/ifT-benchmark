@@ -58,7 +58,7 @@ For some instances, see
 
 ## How to Run the Benchmark
 
-See [HowToRun.md](HowToRun.md).
+See [SETUP.md](SETUP.md).
 
 ## The Benchmark
 
