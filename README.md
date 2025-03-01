@@ -544,7 +544,8 @@ For language details: [SETUP.md](./SETUP.md)
 
 ## More Examples
 
-[EXAMPLES.md](./EXAMPLES.md) contains more examples that are not included in the benchmark items. Those are real-world-like examples showing the use of type narrowing in various contexts. For more details, see [EXAMPLES.md](./EXAMPLES.md). The results of these examples are demonstrated below.
+[EXAMPLES.md](./EXAMPLES.md) contains more examples that are not included in the benchmark items. Those are real-world-like examples showing the use of type narrowing in various contexts. For more details about the examples, see [EXAMPLES.md](./EXAMPLES.md). For more details about the results, see the README.md file in the respective typechecker directories.
+The results of these examples are demonstrated below.
 
 | Benchmark | Typed Racket | TypeScript | Flow | mypy | Pyright |
 | filter    | O            | O          | O    | O    | O       |
