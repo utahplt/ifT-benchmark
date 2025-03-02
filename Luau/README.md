@@ -94,7 +94,8 @@ currently inexpressible.
 > from If-T?
 
 Very similar. Luau has some special syntax to get the length of some sequence or
-iterable.
+iterable. Other notable mentions are `~=` for the not operator and `_` as a
+prefix to silence warnings to unused definitions.
 
 Example: `#x`
 
