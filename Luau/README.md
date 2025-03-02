@@ -37,11 +37,11 @@ Example: `typeof(x) == "number"`
 
 > Q. Are there other forms of type test? If so, explain.
 
-Yes, It also supports `IsA` for table instance refinements and Assertions
-(`assert`) to trigger type refinement.
+Yes, It also supports `IsA` and `is` for instance refinements. Assertions
+(`assert`) can also trigger type refinement.
 
-Example: `local x = Instance.new(Part); x:IsA("BasePart")` Example:
-`assert(type(stringOrNumber) == "string")`
+Example: `local x = Instance.new(Part); x:IsA("BasePart"); x:is("string")`\
+Example: `assert(type(stringOrNumber) == "string")`
 
 > Q. How do type casts work in this language?
 
@@ -60,7 +60,22 @@ Luau does not supports these predicates yet.
 
 > Q. Are any benchmarks inexpressible? Why?
 
-Luau is unable to express the type-narrowing predicate examples.
+Luau is unable to express the type-narrowing predicate examples. The new solver
+supports
+[type functions](https://rfcs.luau.org/user-defined-type-functions.html), which
+should be ideal for implementing this, however, parameters are not allowed to be
+referenced in the return type.
+
+```
+type function isString(T)
+  return types.singleton(T:is("string"))
+end
+
+-- luau flags both instances of x in the signature as being in different scopes
+function predicate_2way_success_f(x: string | number): isString<x>
+ return typeof(x) == "string"
+end
+```
 
 > Q. Are any benchmarks expressed particularly well, or particularly poorly?
 > Explain.
@@ -70,7 +85,8 @@ define f(x: String | Number | Boolean) -> x is String:
     return x is String
 ```
 
-Since Luau, does not support syntax for predicates on types, all the related
+Since Luau, does not currently provide a direct way to connect a function
+parameter to its returned type information in this manner, all the related
 examples (`predicate_checked`, `predicate_1way` and `predicate_2way`) are
 currently inexpressible.
 

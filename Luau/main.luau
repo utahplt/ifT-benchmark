@@ -1,4 +1,4 @@
---!nonstrict
+--!strict
 
 
 type Apple = {
@@ -21,7 +21,7 @@ end
 -- failure
 function _positive_failure_f(x: unknown): unknown
     if typeof(x) == "string" then
-        return x+1
+        return x + 1
     else 
         return x
     end 
@@ -158,7 +158,7 @@ end
 -- Example nesting_condition
 -- success
 function _nesting_condition_success_f(x: unknown, y: unknown): number
-    if typeof(x) == "number" and typeof(y) == "string" then
+    if (if typeof(x) == "number" then typeof(y) == "string" else false) then
       return x + #y
     else
       return 0
@@ -167,58 +167,58 @@ end
 
 -- failure
 function _nesting_condition_failure_f(x: unknown, y: unknown): number 
-  if (typeof(x) == "number" and typeof(y) == "string") or typeof(y) == "string"  then
+  if (if typeof(x) == "number" then typeof(y) == "string" else typeof(y) == "string")  then
     return x + #y
   else 
     return 0
   end
 end
 
-
 -- Example predicate_2way
 -- success
 function _predicate_2way_success_f(x: string | number): never
--- not representable in Luau (v0.657)
+  -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 function _predicate_2way_success_g(x: string | number): never 
--- not representable in Luau (v0.657)
+  -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 -- failure
-function _predicate_2way_failure_f(x: string | number): never
--- not representable in Luau (v0.657)
+function _predicate_2way_failure_f<T>(x: string | number): never
+  -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 function _predicate_2way_failure_g(x: string | number): never
--- not representable in Luau (v0.657)
+  -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 -- Example predicate_1way
 -- success
 function _predicate_1way_success_f(x: string | number): never
--- not representable in Luau (v0.657)
+  -- is "implies" a stronger property than bare is?
+  -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 function _predicate_1way_success_g(x: string | number): never
--- not representable in Luau (v0.657)
+  -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 -- failure
 function _predicate_1way_failure_f(x: string | number): never
--- not representable in Luau (v0.657)
+  -- not representable in Luau (v0.657)
   error("not representable in Luau (v0.657)")
 end
 
 function _predicate_1way_failure_g(x: string | number): never
 -- not representable in Luau (v0.657)
-  error("not representable in Luau (v0.657)")
+error("not representable in Luau (v0.657)")
 end
 
 -- Example predicate_checked
@@ -266,8 +266,8 @@ end
 -- Example tuple_elements
 -- success
 function _tuple_elements_success_f(x: Pair<unknown>): number 
-  if (typeof(x[0]) == "number") then
-    return x[0]
+  if (typeof(x.first) == "number") then
+    return x.first
   else
     return 0
   end
@@ -275,8 +275,8 @@ end
 
 -- failure
 function _tuple_elements_failure_f(x: Pair<unknown>): number
-  if (typeof(x[0]) == "number") then
-    return x[0] + x[1]
+  if (typeof(x.first) == "number") then
+    return x.first + x.second
   else
     return 0
   end
@@ -286,7 +286,7 @@ end
 -- success
 function _tuple_length_success_f(x: Pair<number> | Triple<string>): number
   if (#x == 2) then
-    return x[0] + x[1]
+    return x.first + x.second
   else
     return #x[0]
   end
@@ -295,9 +295,9 @@ end
 -- failure
 function _tuple_length_failure_f(x: Pair<number> | Triple<string>): number
   if (#x == 2) then
-    return x[0] + x[1]
+    return x.first + x.second
   else
-    return x[0] + x[1] -- resolves to any? for some reason
+    return x.first + x.second
   end
 end
 
