@@ -131,8 +131,8 @@ end
 -- Example nesting_body
 -- success
 function _nesting_body_success_f(x: string | number | boolean): number 
-    if (not (typeof(x) == "string")) then
-      if (not (typeof(x) == "boolean")) then
+    if (typeof(x) ~= "string") then
+      if (typeof(x) ~= "boolean") then
         return x + 1
       else
         return 0
