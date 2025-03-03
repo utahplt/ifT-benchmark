@@ -524,21 +524,21 @@ Below is a table for all benchmark items as a quick reference.
 
 For language details: [SETUP.md](./SETUP.md)
 
-| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright |
-|:------------------|:------------:|:----------:|:----:|:----:|:-------:|
-| positive          | O            | O          | O    | O    | O       |
-| negative          | O            | O          | O    | O    | O       |
-| connectives       | O            | O          | O    | O    | O       |
-| nesting_body      | O            | O          | O    | O    | O       |
-| struct_fields     | O            | O          | O    | O    | O       |
-| tuple_elements    | O            | O          | O    | O    | O       |
-| tuple_length      | x            | O          | O    | O    | O       |
-| alias             | O            | O          | x    | x    | O       |
-| nesting_condition | O            | x          | x    | x    | x       |
-| merge_with_union  | O            | O          | O    | x    | O       |
-| predicate_2way    | O            | O          | O    | O    | O       |
-| predicate_1way    | O            | x          | O    | O    | O       |
-| predicate_checked | O            | O          | O    | O    | O       |
+| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright | Luau |
+|:------------------|:------------:|:----------:|:----:|:----:|:-------:|:----:|
+| positive          | O            | O          | O    | O    | O       | O    |
+| negative          | O            | O          | O    | O    | O       | O    |
+| connectives       | O            | O          | O    | O    | O       | O    |
+| nesting_body      | O            | O          | O    | O    | O       | O    |
+| struct_fields     | O            | O          | O    | O    | O       | O    |
+| tuple_elements    | O            | O          | O    | O    | O       | O    |
+| tuple_length      | x            | O          | O    | O    | O       | x    |
+| alias             | O            | O          | x    | x    | O       | x    |
+| nesting_condition | O            | x          | x    | x    | x       | x    |
+| merge_with_union  | O            | O          | O    | x    | O       | x    |
+| predicate_2way    | O            | O          | O    | O    | O       | x    |
+| predicate_1way    | O            | x          | O    | O    | O       | x    |
+| predicate_checked | O            | O          | O    | O    | O       | x    |
 
 `O` means passed, `x` means not passed.
 
