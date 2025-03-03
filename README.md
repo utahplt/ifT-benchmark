@@ -548,6 +548,7 @@ For language details: [SETUP.md](./SETUP.md)
 The results of these examples are demonstrated below.
 
 | Benchmark | Typed Racket | TypeScript | Flow | mypy | Pyright |
+|:----------|:------------:|:----------:|:----:|:----:|:-------:|
 | filter    | O            | O          | O    | O    | O       |
 | flatten   | O            | O          | O    | O    | O       |
 | tree_node | O            | x          | x    | x    | x       |
