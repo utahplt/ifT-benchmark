@@ -98,7 +98,9 @@ Very direct.
 
 > Q. Are any examples inexpressible? Why?
 
-No,they are all expressible.
+`tree_node` fails to typecheck. Currently, user-defined predicates in Flow
+can only test one expression.
+
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 

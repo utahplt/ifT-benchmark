@@ -117,7 +117,8 @@ Very direct, though we introduce classes for the object benchmarks.
 
 > Q. Are any examples inexpressible? Why?
 
-No,they are all expressible.
+`tree_node_failure` is incorrectly labeled as type correct.
+
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 

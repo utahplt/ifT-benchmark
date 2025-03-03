@@ -96,7 +96,9 @@ Very direct.
 
 > Q. Are any examples inexpressible? Why?
 
-No,they are all expressible.
+`tree_node` in the failure case passes typechecking (incorrectly).
+This is because TypeScript trusts all user-defined predicates to match their types.
+
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
