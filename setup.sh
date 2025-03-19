@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Exit on any error
 set -e
@@ -41,26 +41,20 @@ cd ..
 # Install mypy
 echo "Setting up mypy..."
 cd mypy
-# Check if direnv is installed; if not, manage venv
-if command_exists direnv; then
-    echo "direnv detected, skipping manual venv management"
+# Create virtual environment
+if [ ! -d "venv" ]; then
+    echo "Creating virtual environment..."
+    python -m venv venv
 else
-    echo "No direnv detected, managing virtual environment..."
-    # Create virtual environment if it doesn't exist
-    if [ ! -d "venv" ]; then
-        echo "Creating virtual environment..."
-        python -m venv venv
-    else
-        echo "Virtual environment already exists"
-    fi
-    # Activate the virtual environment
-    if [ -f "venv/bin/activate" ]; then
-        echo "Activating virtual environment..."
-        source venv/bin/activate
-    else
-        echo "Error: venv/bin/activate not found after creation. Something went wrong."
-        exit 1
-    fi
+    echo "Virtual environment already exists"
+fi
+# Activate the virtual environment
+if [ -f "venv/bin/activate" ]; then
+    echo "Activating virtual environment..."
+    source venv/bin/activate
+else
+    echo "Error: venv/bin/activate not found after creation. Something went wrong."
+    exit 1
 fi
 # Install requirements
 if [ -f "requirements.txt" ]; then
@@ -69,6 +63,5 @@ if [ -f "requirements.txt" ]; then
 else
     echo "Warning: requirements.txt not found in mypy directory. Skipping pip install."
 fi
-cd ..
 
 echo "Setup complete!"

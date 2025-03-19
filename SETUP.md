@@ -34,12 +34,6 @@ chmod +x setup.sh
 ./setup.sh
 ```
 
-(or)
-
-```shell
-bash setup.sh
-```
-
 The benchmark driver is written in Racket (`main.rkt`).
 Install the toplevel directory as a package to manage dependencies:
 
