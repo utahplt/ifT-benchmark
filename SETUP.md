@@ -20,18 +20,18 @@ The tested versions are:
 | Pyright      | 1.1.389 | See [`Pyright/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Pyright/package-lock.json)       |
 | mypy         | 1.13.0  | See [`mypy/requirements.txt`](https://github.com/utahplt/ot-benchmark/blob/main/mypy/requirements.txt)               |
 
-First, clone this repository. Then, install the dependencies for the benchmark tools:
+First, clone this repository:
 
 ```shell
-cd TypeScript
-npm install
-cd ../Flow
-npm install
-cd ../Pyright
-npm install
-cd ../mypy
-source venv/bin/activate # not necessary if you have direnv installed
-pip install -r requirements.txt
+git clone https://github.com/utahplt/ifT-benchmark.git
+cd ifT-benchmark
+```
+
+Then, install the dependencies for the benchmark tools:
+
+```shell
+chmod +x setup.sh
+./setup.sh
 ```
 
 The benchmark driver is written in Racket (`main.rkt`).
