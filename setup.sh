@@ -41,27 +41,33 @@ cd ..
 # Install mypy
 echo "Setting up mypy..."
 cd mypy
-# Create virtual environment
-if [ ! -d "venv" ]; then
-    echo "Creating virtual environment..."
-    python -m venv venv
+# try to use uv to sync envirionment
+if command -v uv 2&>1 >/dev/null; then
+    uv sync
 else
-    echo "Virtual environment already exists"
-fi
-# Activate the virtual environment
-if [ -f "venv/bin/activate" ]; then
-    echo "Activating virtual environment..."
-    source venv/bin/activate
-else
-    echo "Error: venv/bin/activate not found after creation. Something went wrong."
-    exit 1
-fi
-# Install requirements
-if [ -f "requirements.txt" ]; then
-    echo "Installing Python dependencies..."
-    pip install -r requirements.txt
-else
-    echo "Warning: requirements.txt not found in mypy directory. Skipping pip install."
+    # Create virtual environment
+    if [ ! -d "venv" ]; then
+        echo "Creating virtual environment..."
+        python -m venv venv
+    else
+        echo "Virtual environment already exists"
+    fi
+    # Activate the virtual environment
+    if [ -f "venv/bin/activate" ]; then
+        echo "Activating virtual environment..."
+        source venv/bin/activate
+    else
+        echo "Error: venv/bin/activate not found after creation. Something went wrong."
+        exit 1
+    fi
+    # Install requirements
+    if [ -f "requirements.txt" ]; then
+        echo "Installing Python dependencies..."
+        pip install -r requirements.txt
+    else
+        echo "Warning: requirements.txt not found in mypy directory. Skipping pip install."
+    fi
+
 fi
 
 echo "Setup complete!"
