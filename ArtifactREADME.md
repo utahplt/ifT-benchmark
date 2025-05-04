@@ -5,7 +5,7 @@ This document provides instructions for evaluating the artifact associated with 
 ## Getting Started Guide
 
 ### Set Up the Environment
-For your convenience, we provide a Dockerfile to create a container with the necessary environment. You can also import the provided Docker image. 
+For your convenience, we provide a Dockerfile to create a container with the necessary environment. The Dockerfile should work for both amd64 and arm64 architectures. You can also import the provided Docker image.
 
 To use the Dockerfile, first clone the repository:
 
@@ -18,9 +18,9 @@ Then, build the Docker image using the provided Dockerfile, and run the containe
 
 ```shell
 # Build the Docker image
-docker build -t ifT-benchmark .
+docker build -t ift .
 # Run the Docker container
-docker run -it --rm -v ifT-benchmark
+docker run -it --rm ift
 ```
 
 Alternatively, you can import the pre-built Docker image from the provided link. This image contains all the necessary dependencies and configurations to run the benchmark suite.
@@ -68,7 +68,7 @@ For example, to run the benchmark for all type checkers and get the output in Ma
 racket main.rkt --format markdown
 ```
 
-This will run the benchmark suite and print the results to the console. The output will include a summary of the results for each type checker, indicating whether they passed or failed each benchmark item. Failures of benchmark items are indicated by an `x` and successes by an `O`. 
+This will run the benchmark suite and print the results to the console. The output will include a summary of the results for each type checker, indicating whether they passed or failed each benchmark item. Failures of benchmark items are indicated by an `x` and successes by an `O`.
 
 If you see the following output without errors, the basic setup is complete and functional.
 
@@ -86,7 +86,7 @@ If you see the following output without errors, the basic setup is complete and 
 | object_properties | O           | O          | O    | x    | O       |
 | tuple_elements    | O           | O          | O    | x    | O       |
 | tuple_length      | x           | O          | O    | x    | O       |
-| merge_with_union  | O           | O          | O    | x    | O       |    
+| merge_with_union  | O           | O          | O    | x    | O       |
 ```
 
 ## Overview of Claims
