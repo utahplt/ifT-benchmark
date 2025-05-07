@@ -11,7 +11,7 @@ through the Pylance plugin.
   - <https://peps.python.org/pep-0484/>
 * If-T version: **1.0**
 * Implementation: [./main.py](./main.py)
-
+* Raw command to run the benchmark: `npx pyright <path-to-file>`
 
 #### Type System Basics
 

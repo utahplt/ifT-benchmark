@@ -10,7 +10,7 @@ mypy is a typechecker for Python PEP 484 types.
   - <https://peps.python.org/pep-0484/>
 * If-T version: **1.0**
 * Implementation: [./main.py](./main.py)
-
+* Raw command to run the benchmark: `source .venv/bin/activate && mypy <path-to-file>`
 
 #### Type System Basics
 

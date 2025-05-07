@@ -9,7 +9,7 @@ TypeScript is a typechecker for JavaScript by Microsoft.
   - <https://www.typescriptlang.org/play>
 * If-T version: **1.0**
 * Implementation: [./main.ts](./main.ts)
-
+* Raw command to run the benchmark: `tsc --noEmit --target es2023 <path-to-file>`
 
 #### Type System Basics
 

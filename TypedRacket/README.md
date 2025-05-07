@@ -10,7 +10,7 @@ Typed Racket adds gradual types to Racket.
   - <https://www2.ccs.neu.edu/racket/pubs/icfp10-thf.pdf>
 * If-T version: **1.0**
 * Implementation: [./main.rkt](./main.rkt)
-
+* Raw command to run the benchmark: `racket <path-to-file>`
 
 #### Type System Basics
 

@@ -1,13 +1,33 @@
 #lang racket
 
-(provide run-benchmark-item)
-(provide shell-command)
-(provide benchmark-verbose)
+(provide run-benchmark-item
+         shell-command
+         benchmark-verbose
+         benchmark-output-format
+         benchmark-output-transposed
+         benchmark-run-examples
+         core-benchmark-items
+         examples-benchmark-items
+         transpose
+         pad-columns
+         print-row-markdown
+         print-row-latex
+         print-row
+         process-benchmark-row
+         print-benchmark
+         execute-benchmark-for-one-typechecker)
 
 (require file/sha1)
 (require gtp-util)
+(require racket/string)
 
 (define benchmark-verbose (make-parameter #f))
+(define benchmark-output-format (make-parameter 'plain))
+(define benchmark-output-transposed (make-parameter #f))
+(define benchmark-run-examples (make-parameter #f))
+
+(define core-benchmark-items '("positive" "negative" "alias" "connectives" "nesting_body" "nesting_condition" "predicate_2way" "predicate_1way" "predicate_checked" "object_properties" "tuple_elements" "tuple_length" "merge_with_union"))
+(define examples-benchmark-items '("filter" "flatten" "tree_node" "rainfall"))
 
 (define (with-current-directory dir thunk)
   (parameterize ([current-directory (build-path dir)])
@@ -102,7 +122,6 @@
 (define (join-lines lines)
   (string-join lines "\n"))
 
-;; find-exe : path-string? -> path-string?
 (define (find-exe pre-exe)
   (define fep (find-executable-path pre-exe))
   (if (path? fep)
@@ -164,3 +183,85 @@
     (with-current-directory post-dir
       (lambda () (apply post-func null))))
   result)
+
+(define (execute-benchmark-for-one-typechecker tc-params)
+  (when (benchmark-verbose)
+    (displayln (format "Running benchmark for ~a" (cadr (assoc 'name tc-params)))))
+  (let* ([comment-char (cadr (assoc 'comment-char tc-params))]
+         [extension (cadr (assoc 'extension tc-params))]
+         [base-path-key (if (benchmark-run-examples) 'examples-file-base-path 'file-base-path)]
+         [file-base-path (cadr (assoc base-path-key tc-params))]
+         [args-key (if (benchmark-run-examples) 'examples-arguments 'arguments)]
+         [arguments (cadr (assoc args-key tc-params))]
+         [command (cadr (assoc 'command tc-params))]
+         [pre-benchmark-func (cadr (or (assoc 'pre-benchmark-func tc-params) '(#f #f)))]
+         [post-benchmark-func (cadr (or (assoc 'post-benchmark-func tc-params) '(#f #f)))]
+         [pre-benchmark-func-dir (cadr (or (assoc 'pre-benchmark-func-dir tc-params) `(#f ,(find-system-path 'temp-dir))))]
+         [post-benchmark-func-dir (cadr (or (assoc 'post-benchmark-func-dir tc-params) `(#f ,(find-system-path 'temp-dir))))])
+    (run-benchmark-item file-base-path command arguments comment-char extension
+                        #:pre-benchmark-func pre-benchmark-func
+                        #:post-benchmark-func post-benchmark-func
+                        #:pre-benchmark-func-dir pre-benchmark-func-dir
+                        #:post-benchmark-func-dir post-benchmark-func-dir)))
+
+(define (transpose l)
+  (apply map list l))
+
+(define (pad-columns rows)
+  (define transposed-rows (transpose rows))
+  (define column-widths (map (lambda (column) (apply max (map string-length column))) transposed-rows))
+  (define padded-rows
+    (map (lambda (row)
+           (map (lambda (column width)
+                  (format "~a~a" column (make-string (- width (string-length column)) #\space)))
+                row column-widths))
+         rows))
+  padded-rows)
+
+(define (print-row-markdown row)
+  (display (format "| ~a " (car row)))
+  (for-each (lambda (test-result)
+              (display (format "| ~a " test-result)))
+            (cdr row))
+  (display "|\n"))
+
+(define (print-row-latex row)
+  (display (format "~a " (car row)))
+  (for-each (lambda (test-result)
+              (display (format "& ~a " test-result)))
+            (cdr row))
+  (display "\\n"))
+
+(define (print-row row [output-format 'plain])
+  (case output-format
+    [(markdown) (print-row-markdown row)]
+    [(tex) (print-row-latex row)]
+    [(plain) (display (format "~a\n" row))]))
+
+(define (process-benchmark-row type-checker-name benchmark-result-row-data)
+  (append (list type-checker-name)
+          (map (lambda (test)
+                 (let ([positive-passed (cadr test)]
+                       [negative-passed (caddr test)])
+                   (cond
+                     [(and positive-passed negative-passed) "O"]
+                     [(or positive-passed negative-passed) "x"]
+                     [else "X"])))
+               benchmark-result-row-data)))
+
+(define (print-benchmark benchmark-result-rows [output-format 'plain] [table-header null])
+  (define processed-benchmark-result-rows
+    (map (lambda (row) (process-benchmark-row (car row) (cdr row))) benchmark-result-rows))
+
+  (define rows-to-print-internally
+    (if (not (null? table-header))
+        (cons table-header processed-benchmark-result-rows)
+        processed-benchmark-result-rows))
+
+  (define maybe-transposed-rows
+    (if (benchmark-output-transposed)
+        rows-to-print-internally
+        (transpose rows-to-print-internally)))
+
+  (define padded-rows (pad-columns maybe-transposed-rows))
+  (for-each (lambda (row) (print-row row output-format)) padded-rows))
