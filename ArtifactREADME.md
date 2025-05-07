@@ -5,6 +5,7 @@ This document provides instructions for evaluating the artifact associated with 
 ## Getting Started Guide
 
 ### Set Up the Environment
+
 For your convenience, we provide a Dockerfile to create a container with the necessary environment. The Dockerfile should work for both amd64 and arm64 architectures. You can also import the provided Docker image.
 
 To use the Dockerfile, first clone the repository:
@@ -35,7 +36,7 @@ docker run -it --rm -v ifT-benchmark
 
 ### Running the Benchmark
 
-Once entered into the Docker container, the work directory will be set to `/ifT-benchmark`. You can run the benchmark suite directly from this directory. The entry point for the benchmark is the `main.rkt` script, which serves as the driver for executing the tests.
+Once entered into the Docker container, the work directory will be set to `/ifT`. You can run the benchmark suite directly from this directory. The entry point for the benchmark is the `main.rkt` script, which serves as the driver for executing the tests.
 
 ```
 $ racket main.rkt --help
@@ -62,31 +63,89 @@ usage: main.rkt [ <option> ... ] [<type-checker>]
 
 When parameter `<type-checker>` is not provided, the benchmark will run all type checkers. Otherwise, it will run only the specified type checker. For now, the supported type checkers are `TypedRacket`, `TypeScript`, `Flow`, `mypy`, and `Pyright`.
 
-For example, to run the benchmark for all type checkers and get the output in Markdown format, you can execute:
+#### Running the Core Benchmark
+
+The core benchmark suite consists of 13 benchmark items that test the expressiveness, soundness, and precision of type narrowing features across the five type checkers. The benchmark items are designed to cover a representative set of core features relevant to type narrowing. These benchmark items are implemented in the respective subdirectories for each type checker.
+
+To run the benchmark for all type checkers and get the output in Markdown format, you can execute:
 
 ```shell
 racket main.rkt --format markdown
 ```
 
-This will run the benchmark suite and print the results to the console. The output will include a summary of the results for each type checker, indicating whether they passed or failed each benchmark item. Failures of benchmark items are indicated by an `x` and successes by an `O`.
+This will run the core benchmark suite and print the results to the console. The output will include a summary of the results for each type checker, indicating whether they passed or failed each benchmark item. Failures of benchmark items are indicated by an `x` and successes by an `O`.
 
 If you see the following output without errors, the basic setup is complete and functional.
 
 ```markdown
 | Benchmark         | typedracket | typescript | flow | mypy | pyright |
-| positive          | O           | O          | O    | x    | O       |
-| negative          | O           | O          | O    | x    | O       |
+| positive          | O           | O          | O    | O    | O       |
+| negative          | O           | O          | O    | O    | O       |
 | alias             | O           | O          | x    | x    | O       |
-| connectives       | O           | O          | O    | x    | O       |
-| nesting_body      | O           | O          | O    | x    | O       |
+| connectives       | O           | O          | O    | O    | O       |
+| nesting_body      | O           | O          | O    | O    | O       |
 | nesting_condition | O           | x          | x    | x    | x       |
-| predicate_2way    | O           | O          | O    | x    | O       |
-| predicate_1way    | O           | x          | O    | x    | O       |
+| predicate_2way    | O           | O          | O    | O    | O       |
+| predicate_1way    | O           | x          | O    | O    | O       |
 | predicate_checked | O           | x          | O    | x    | x       |
-| object_properties | O           | O          | O    | x    | O       |
-| tuple_elements    | O           | O          | O    | x    | O       |
-| tuple_length      | x           | O          | O    | x    | O       |
+| object_properties | O           | O          | O    | O    | O       |
+| tuple_elements    | O           | O          | O    | O    | O       |
+| tuple_length      | x           | O          | O    | O    | O       |
 | merge_with_union  | O           | O          | O    | x    | O       |
+```
+
+#### Evaluating Practical Example Programs
+
+The artifact also includes practical examples to show how the features of type narrowing come together to support useful and practical programs. These examples are described in the `EXAMPLES.md` file inside the root directory in pseudo code, and they are implemented in the respective subdirectories for each type checker.
+
+To evaluate these examples, you can run the benchmark driver with the `--examples` flag:
+
+```shell
+racket main.rkt --examples --format markdown
+```
+
+If yousee the following output without errors, the advanced examples are functional and demonstrate the practical use of type narrowing features.
+
+```markdown
+| Benchmark | typedracket | typescript | flow | mypy | pyright |
+| filter    | O           | O          | O    | O    | O       |
+| flatten   | O           | O          | O    | O    | O       |
+| tree_node | O           | x          | x    | x    | x       |
+| rainfall  | O           | O          | O    | O    | O       |
+```
+
+#### Evaluate Typecheckers Individually
+
+Inside the root directory of the repository, there are several subdirectories for each type checker, each containing the necessary files to run the benchmarks. Each subdirectory contains the package manager manifest files, the implemention code for core benchmark items and advanced practical examples of that type checker. You may inspect these files to understand how the benchmarks are implemented and how they interact with the type checkers.
+
+To run the benchmarks for a specific type checker, you can navigate to the respective subdirectory and run the `_benchmark.rkt` script. For example, to run the benchmark for TypeScript, you can execute:
+
+```shell
+cd TypeScript
+racket _benchmark.rkt
+```
+
+This will run the benchmark suite for TypeScript and print the results to the console. You may also run the raw command for the type checker directly from the command line. For example, to run the core benchmark suite for TypeScript, you can execute:
+
+```shell
+cd TypeScript
+npx tsc --noEmit --target es2023 main.ts
+```
+
+The raw command for each typechecker is written in the `README.md` file inside the respective subdirectory.
+
+You can also run the advanced examples by executing the `_benchmark.rkt` script with the `--examples` flag:
+
+```shell
+cd TypeScript
+racket _benchmark.rkt --examples
+```
+
+Or use the raw typechecker command:
+
+```shell
+cd TypeScript
+npx tsc --noEmit --target es2023 examples.ts
 ```
 
 ## Overview of Claims
@@ -95,15 +154,31 @@ This artifact supports the central claims made in the paper regarding the charac
 
 ### Claims Supported by the Artifact
 
-1.  **Characterization of Type Narrowing Features:** The If-T benchmark suite consists of the 13 core features of type narrowing identified in the paper (see section 3 & 4 of the paper). Running the artifact executes these benchmark items against each type checker.
-    *   *Evaluation:* Run the benchmark for all type checker and note that it evaluates 13 benchmark items for each type checker.
-2.  **Comparison Across Type Systems:** The artifact enables the reproduction of the comparison results presented in Table 2 of the paper, showing how Typed Racket, TypeScript, Flow, mypy, and Pyright behave differently on type narrowing.
-    *   *Evaluation:* Run the full benchmark suite (see Step-by-Step Instructions) and compare the generated summary table with Table 2 in the paper.
-3.  **Practicality of the Core Features:** The artifact includes example programs (see EXAMPLES.md and section 6 of the paper) that demonstrate how the features of type narrowing come together to support useful and practical programs.
-    *   *Evaluation:* Run the main benchmark driver with the `--examples` flag to execute the advanced examples. The results should match the discussion in the paper.
+1. *If-T characterizes a set of 13 core type narrowing features.* The code of each type checker explicitly lists and implements 13 core benchmark items. After running the benchmark, the results show that every feature is supported by at least one of these popular typecheckers, indicating that these features are relevant and important.
 
-**Claims Not Supported by the Artifact:**
+2. *If-T evaluates type checkers by providing runnable implementations of benchmark programs.* The codebase is organized with separate subdirectories for each of the five type checkers. Within each of these directories, there are source files containing the concrete implementations of the 13 benchmark programs for that type checker. Furthermore, each type checker directory contains a `_benchmark.rkt` script that specifies the command and arguments needed to execute the type checker on its respective benchmark files and is directly executable.
 
-1.  **Performance Evaluation:** The benchmark is designed to test the *expressiveness* and *correctness* of type narrowing features, not the *performance* of the type checkers. No performance claims are made in the paper, and the artifact does not include timing mechanisms. Performance comparisons would likely be unreliable within a VM environment anyway.
-2.  **Exhaustiveness:** While the benchmark covers core features identified through literature and documentation review (\Cref{s:design}), it does not claim to be an exhaustive list of *all possible* type narrowing behaviors or edge cases.
-3.  **Type Checkers Not Included:** The artifact only provides implementations and results for the five type checkers mentioned. Claims about other type systems cannot be directly evaluated using this artifact.
+3. *If-T enables a comparison of the expressiveness, soundness and precision regarding type narrowing across five type systems.* The results of the `main.rkt` script demonstrates difference of the behavior of the type checkers: some type checkers support certain features while others do not. Failing to pass an item indicates a shortage of either expressiveness, soundness or precision. Comparing the results of the benchmark items across type checkers allows us to see how they differ in their support for type narrowing features.
+
+4. *If-T illustrates challenges and compromises of the design and implementation type narrowing.* The results of the `main.rkt` script show that each of these type checkers, despite being popular and mature, does not implement certain features, indicating the challenges and compromises of implementing type narrowing in practice. For example, the `nesting_condition` benchmark item is not supported by TypeScript and Flow, while `tuple_length` is not supported by Typed Racket.
+
+5. *If-T demonstrates the practicality of type narrowing features with example programs.* The repository includes an `EXAMPLES.md` file that describes more complex, "real-world-like" programs such as `filter`, `flatten`, `TreeNode`, and `Rainfall`. Inside the subdirectory for each type checker, there are implementations of these examples that demonstrate the practical use of type narrowing features. The `main.rkt` script can be used to run these examples and collect results as described above.
+
+### Claims Not Supported by the Artifact
+
+1. *If-T focuses on a specific set of 13 core features and does not claim to provide exhaustive coverage of every possible type narrowing feature.* The benchmark suite is designed to cover a representative set of 13 core features that are relevant to type narrowing, but it does not claim to cover every possible feature or edge case, as that would be impractical and infeasible.
+
+2. *If-T is implemented and evaluated for five specific type checkers currently, and it does not claim to be an evaluation of every existingtype checker.* The benchmark suite is designed to be extensible, and it can be adapted to work with other type checkers in the future. However, the current implementation and evaluation are limited to the five type checkers mentioned in the paper: Typed Racket, TypeScript, Flow, mypy, and Pyright. The artifact does not claim to provide a comprehensive evaluation of all existing type checkers or their implementations of type narrowing features.
+
+3. *If-T does not claim on the performance of the type checkers. The focus is on the expressiveness, soundness, and precision of type narrowing features.* As the paper already stated, the performance of the type checkers is not the focus of this benchmark suite. The goal is to evaluate the expressiveness, soundness, and precision of type narrowing features across different type systems, rather than their performance in terms of speed or efficiency.
+
+## Troubleshooting
+
+If you encounter any issues while running the benchmarks or if you have questions about the artifact, please refer to the following troubleshooting tips:
+
+- The Dockerfile and Docker image are designed to work on both amd64 and arm64 architectures. In some cases, the build might not work due to some cross-architecture cache issues. If you encounter any issues, try clearing the Docker cache or rebuilding the image without using the cache:
+
+```shell
+docker builder prune
+docker build --no-cache -t ift .
+```
