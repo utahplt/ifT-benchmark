@@ -40,31 +40,6 @@ def negative_failure_f(x: FinalStr | FinalInt | bool) -> int:
     else:
         return len(x)
 
-## Example alias
-## success
-def alias_success_f(x: object) -> object:
-    y = type(x) is FinalStr
-    if y:
-        return len(x)
-    else:
-        return x
-
-## failure
-def alias_failure_f(x: object) -> object:
-    y = type(x) is FinalStr
-    if y:
-        return x + 1
-    else:
-        return x
-
-def alias_failure_g(x: object) -> object:
-    y = type(x) is FinalStr
-    y = True
-    if y:
-        return len(x)
-    else:
-        return x
-
 ## Example connectives
 ## success
 def connectives_success_f(x: FinalStr | FinalInt) -> int:
@@ -124,6 +99,85 @@ def nesting_body_failure_f(x: FinalStr | FinalInt | bool) -> int:
             return 0
     else:
         return 0
+    
+## Example struct_fields
+## success
+class StructFieldsSuccessApple:
+    def __init__(self, a):
+        self.a = a
+
+def struct_fields_success_f(x: StructFieldsSuccessApple) -> int:
+    if type(x.a) is FinalInt:
+        return x.a
+    else:
+        return 0
+
+## failure
+class StructFieldsFailureApple:
+    def __init__(self, a):
+        self.a = a
+
+def struct_fields_failure_f(x: StructFieldsFailureApple) -> int:
+    if type(x.a) is FinalStr:
+        return x.a
+    else:
+        return 0
+
+## Example tuple_elements
+## success
+def tuple_elements_success_f(x: tuple[object, object]) -> int:
+    if type(x[0]) is FinalInt:
+        return x[0]
+    else:
+        return 0
+
+## failure
+def tuple_elements_failure_f(x: tuple[object, object]) -> int:
+    if type(x[0]) is FinalInt:
+        return x[0] + x[1]
+    else:
+        return 0
+
+## Example tuple_length
+## success
+def tuple_length_success_f(x: tuple[FinalInt, FinalInt] | tuple[FinalStr, FinalStr, FinalStr]) -> int:
+    if len(x) == 2:
+        return x[0] + x[1]
+    else:
+        return len(x[0])
+
+## failure
+def tuple_length_failure_f(x: tuple[FinalInt, FinalInt] | tuple[FinalStr, FinalStr, FinalStr]) -> int:
+    if len(x) == 2:
+        return x[0] + x[1]
+    else:
+        return x[0] + x[1]
+    
+## Example alias
+## success
+def alias_success_f(x: object) -> object:
+    y = type(x) is FinalStr
+    if y:
+        return len(x)
+    else:
+        return x
+
+## failure
+def alias_failure_f(x: object) -> object:
+    y = type(x) is FinalStr
+    if y:
+        return x + 1
+    else:
+        return x
+
+def alias_failure_g(x: object) -> object:
+    y = type(x) is FinalStr
+    y = True
+    if y:
+        return len(x)
+    else:
+        return x
+
 ## Example nesting_condition
 ## success
 def nesting_condition_success_f(x: object, y: object) -> int:
@@ -138,6 +192,27 @@ def nesting_condition_failure_f(x: object, y: object) -> int:
         return x + len(y)
     else:
         return 0
+    
+## Example merge_with_union
+## success
+def merge_with_union_success_f(x: object) -> str | int:
+    if type(x) is FinalStr:
+        x = x + "hello"
+    elif type(x) is FinalInt:
+        x = x + 1
+    else:
+        return 0
+    return x
+
+## failure
+def merge_with_union_failure_f(x: object) -> str | int:
+    if type(x) is FinalStr:
+        x = x + "hello"
+    elif type(x) is FinalInt:
+        x = x + 1
+    else:
+        return 0
+    return x + 1
 
 ## Example predicate_2way
 ## success
@@ -159,7 +234,6 @@ def predicate_2way_failure_g(x: FinalStr | FinalInt) -> int:
         return x + 1
     else:
         return x
-
 
 ## Example predicate_1way
 ## success
@@ -196,77 +270,3 @@ def predicate_checked_failure_f(x: FinalStr | FinalInt | bool) -> TypeIs[FinalSt
 
 def predicate_checked_failure_g(x: FinalStr | FinalInt | bool) -> TypeIs[FinalInt | bool]:
     return type(x) is FinalInt
-
-## Example object_properties
-## success
-class ObjectPropertiesSuccessApple:
-    def __init__(self, a):
-        self.a = a
-
-def object_properties_success_f(x: ObjectPropertiesSuccessApple) -> int:
-    if type(x.a) is FinalInt:
-        return x.a
-    else:
-        return 0
-
-## failure
-class ObjectPropertiesFailureApple:
-    def __init__(self, a):
-        self.a = a
-
-def object_properties_failure_f(x: ObjectPropertiesFailureApple) -> int:
-    if type(x.a) is FinalStr:
-        return x.a
-    else:
-        return 0
-
-## Example tuple_elements
-## success
-def tuple_elements_success_f(x: tuple[object, object]) -> int:
-    if type(x[0]) is FinalInt:
-        return x[0]
-    else:
-        return 0
-
-## failure
-def tuple_elements_failure_f(x: tuple[object, object]) -> int:
-    if type(x[0]) is FinalInt:
-        return x[0] + x[1]
-    else:
-        return 0
-
-## Example tuple_length
-## success
-def tuple_length_success_f(x: tuple[FinalInt, FinalInt] | tuple[FinalStr, FinalStr, FinalStr]) -> int:
-    if len(x) == 2:
-        return x[0] + x[1]
-    else:
-        return len(x[0])
-
-## failure
-def tuple_length_failure_f(x: tuple[FinalInt, FinalInt] | tuple[FinalStr, FinalStr, FinalStr]) -> int:
-    if len(x) == 2:
-        return x[0] + x[1]
-    else:
-        return x[0] + x[1]
-
-## Example merge_with_union
-## success
-def merge_with_union_success_f(x: object) -> str | int:
-    if type(x) is FinalStr:
-        x = x + "hello"
-    elif type(x) is FinalInt:
-        x = x + 1
-    else:
-        return 0
-    return x
-
-## failure
-def merge_with_union_failure_f(x: object) -> str | int:
-    if type(x) is FinalStr:
-        x = x + "hello"
-    elif type(x) is FinalInt:
-        x = x + 1
-    else:
-        return 0
-    return x + 1

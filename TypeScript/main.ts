@@ -35,36 +35,6 @@ function negative_failure_f(x: string | number | boolean): number {
   }
 }
 
-// Example alias
-// success
-function alias_success_f(x: unknown): unknown {
-  const y = typeof x === "string";
-  if (y) {
-    return x.length;
-  } else {
-    return x;
-  }
-}
-// failure
-function alias_failure_f(x: unknown): unknown {
-  const y = typeof x === "string";
-  if (y) {
-    return x.isNaN();
-  } else {
-    return x;
-  }
-}
-
-function alias_failure_g(x: unknown): unknown {
-  let y = typeof x === "string";
-  y = true;
-  if (y) {
-    return x.length;
-  } else {
-    return x;
-  }
-}
-
 // Example connectives
 // success
 function connectives_success_f(x: string | number): number {
@@ -142,6 +112,90 @@ function nesting_body_failure_f(x: string | number | boolean): number {
   }
 }
 
+// Example struct_fields
+// success
+function struct_fields_success_f(x: { a: unknown }): number {
+  if (typeof x.a === "number") {
+    return x.a;
+  } else {
+    return 0;
+  }
+}
+// failure
+function struct_fields_failure_f(x: { a: unknown }): number {
+  if (typeof x.a === "string") {
+    return x.a;
+  } else {
+    return 0;
+  }
+}
+
+// Example tuple_elements
+// success
+function tuple_elements_success_f(x: [unknown, unknown]): number {
+  if (typeof x[0] === "number") {
+    return x[0];
+  } else {
+    return 0;
+  }
+}
+// failure
+function tuple_elements_failure_f(x: [unknown, unknown]): number {
+  if (typeof x[0] === "number") {
+    return x[0] + x[1];
+  } else {
+    return 0;
+  }
+}
+
+// Example tuple_length
+// success
+function tuple_length_success_f(x: [number, number] | [string, string, string]): number {
+  if (x.length === 2) {
+    return x[0] + x[1];
+  } else {
+    return x[0].length;
+  }
+}
+// failure
+function tuple_length_failure_f(x: [number, number] | [string, string, string]): number {
+  if (x.length === 2) {
+    return x[0] + x[1];
+  } else {
+    return x[0] + x[1];
+  }
+}
+
+// Example alias
+// success
+function alias_success_f(x: unknown): unknown {
+  const y = typeof x === "string";
+  if (y) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+// failure
+function alias_failure_f(x: unknown): unknown {
+  const y = typeof x === "string";
+  if (y) {
+    return x.isNaN();
+  } else {
+    return x;
+  }
+}
+
+function alias_failure_g(x: unknown): unknown {
+  let y = typeof x === "string";
+  y = true;
+  if (y) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+
 // Example nesting_condition
 // success
 function nesting_condition_success_f(x: unknown, y: unknown): number {
@@ -158,6 +212,30 @@ function nesting_condition_failure_f(x: unknown, y: unknown): number {
   } else {
     return 0;
   }
+}
+
+// Example merge_with_union
+// success
+function merge_with_union_success_f(x: unknown): string | number {
+  if (typeof x === "string") {
+    x += "hello";
+  } else if (typeof x === "number") {
+    x += 1;
+  } else {
+    return 0;
+  }
+  return x;
+}
+// failure
+function merge_with_union_failure_f(x: unknown): string | number {
+  if (typeof x === "string") {
+    x += "hello";
+  } else if (typeof x === "number") {
+    x += 1;
+  } else {
+    return 0;
+  }
+  return x.isNaN();
 }
 
 // Example predicate_2way
@@ -231,82 +309,4 @@ function predicate_checked_failure_f(x: string | number | boolean): x is string 
 
 function predicate_checked_failure_g(x: string | number | boolean): x is number | boolean {
   return typeof x === "number";
-}
-
-// Example object_properties
-// success
-function object_properties_success_f(x: { a: unknown }): number {
-  if (typeof x.a === "number") {
-    return x.a;
-  } else {
-    return 0;
-  }
-}
-// failure
-function object_properties_failure_f(x: { a: unknown }): number {
-  if (typeof x.a === "string") {
-    return x.a;
-  } else {
-    return 0;
-  }
-}
-
-// Example tuple_elements
-// success
-function tuple_elements_success_f(x: [unknown, unknown]): number {
-  if (typeof x[0] === "number") {
-    return x[0];
-  } else {
-    return 0;
-  }
-}
-// failure
-function tuple_elements_failure_f(x: [unknown, unknown]): number {
-  if (typeof x[0] === "number") {
-    return x[0] + x[1];
-  } else {
-    return 0;
-  }
-}
-
-// Example tuple_length
-// success
-function tuple_length_success_f(x: [number, number] | [string, string, string]): number {
-  if (x.length === 2) {
-    return x[0] + x[1];
-  } else {
-    return x[0].length;
-  }
-}
-// failure
-function tuple_length_failure_f(x: [number, number] | [string, string, string]): number {
-  if (x.length === 2) {
-    return x[0] + x[1];
-  } else {
-    return x[0] + x[1];
-  }
-}
-
-// Example merge_with_union
-// success
-function merge_with_union_success_f(x: unknown): string | number {
-  if (typeof x === "string") {
-    x += "hello";
-  } else if (typeof x === "number") {
-    x += 1;
-  } else {
-    return 0;
-  }
-  return x;
-}
-// failure
-function merge_with_union_failure_f(x: unknown): string | number {
-  if (typeof x === "string") {
-    x += "hello";
-  } else if (typeof x === "number") {
-    x += 1;
-  } else {
-    return 0;
-  }
-  return x.isNaN();
 }

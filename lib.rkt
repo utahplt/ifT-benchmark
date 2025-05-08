@@ -26,7 +26,7 @@
 (define benchmark-output-transposed (make-parameter #f))
 (define benchmark-run-examples (make-parameter #f))
 
-(define core-benchmark-items '("positive" "negative" "alias" "connectives" "nesting_body" "nesting_condition" "predicate_2way" "predicate_1way" "predicate_checked" "object_properties" "tuple_elements" "tuple_length" "merge_with_union"))
+(define core-benchmark-items '("positive" "negative" "connectives" "nesting_body" "struct_fields" "tuple_elements" "tuple_length" "alias" "nesting_condition" "merge_with_union" "predicate_2way" "predicate_1way" "predicate_checked"))
 (define examples-benchmark-items '("filter" "flatten" "tree_node" "rainfall"))
 
 (define (with-current-directory dir thunk)
