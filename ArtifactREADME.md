@@ -31,16 +31,21 @@ docker build -t ift .
 docker run -it --rm ift
 ```
 
-Alternatively, to prevent compatibility issues, pre-built Docker images for [x64](https://github.com/utahplt/ifT-benchmark/releases/download/programming-10-2-artifact/ift-amd64.tar.gz) and [arm64](https://github.com/utahplt/ifT-benchmark/releases/download/programming-10-2-artifact/ift-aarch64.tar.gz) architectures are provided. Their SHA256 hashes are:
-- `ift-amd64.tar.gz`: `37f146038c7a12f0327ed4778d18c240a5fe369fa2954a1fa0c36cac73a06a11`
-- `ift-aarch64.tar.gz`: `e158aac0227d0443fa9a3507414fbd6e942c8f79134f231c5b998312aacb500e`
+Alternatively, to prevent compatibility issues, we provide the following pre-built Docker images:
+
+- x64
+  * image link: https://github.com/utahplt/ifT-benchmark/releases/download/programming-10-2-artifact/ift-amd64.tar.gz
+  * SHA256 checksum: `37f146038c7a12f0327ed4778d18c240a5fe369fa2954a1fa0c36cac73a06a11`
+- arm64
+  * image link: https://github.com/utahplt/ifT-benchmark/releases/download/programming-10-2-artifact/ift-aarch64.tar.gz
+  * SHA256 checksum: `e158aac0227d0443fa9a3507414fbd6e942c8f79134f231c5b998312aacb500e`
 
 You can import the pre-built Docker image from the provided link. This image contains all the necessary dependencies and configurations to run the benchmark suite.
 
 ```shell
 # Pull the pre-built Docker image (replace <image-link> with the actual link)
 curl -L -O <image-link>
-gunzip -c <image-name>.tar.gz | docker load
+gunzip -c <image-file> | docker load
 # Run the Docker container
 docker run -it --rm -v ift
 ```
