@@ -1,5 +1,11 @@
 # Artifact Evaluation for "If-T: A Benchmark for Type Narrowing"
 
+The URL to the artifact repository: https://github.com/utahplt/ifT-benchmark/tree/41c227d9d8ed279de9823d83750d9ad09e03282a
+
+The commit hash of the artifact: 41c227d9d8ed279de9823d83750d9ad09e03282a
+
+The most recent version of the paper is submitted along with this artifact on EasyChair.
+
 This document provides instructions for evaluating the artifact associated with the paper "If-T: A Benchmark for Type Narrowing". The artifact consists of the If-T benchmark suite, implementations for five type checkers (Typed Racket, TypeScript, Flow, mypy, Pyright), and scripts to run the benchmarks and collect results.
 
 ## Getting Started Guide
@@ -13,6 +19,7 @@ To use the Dockerfile, first clone the repository:
 ```shell
 git clone https://github.com/utahplt/ifT-benchmark.git
 cd ifT-benchmark
+git checkout 41c227d9d8ed279de9823d83750d9ad09e03282a
 ```
 
 Then, build the Docker image using the provided Dockerfile, and run the container.
@@ -24,14 +31,18 @@ docker build -t ift .
 docker run -it --rm ift
 ```
 
-Alternatively, you can import the pre-built Docker image from the provided link. This image contains all the necessary dependencies and configurations to run the benchmark suite.
+Alternatively, to prevent compatibility issues, pre-built Docker images for [x64](https://github.com/utahplt/ifT-benchmark/releases/download/programming-10-2-artifact/ift-amd64.tar.gz) and [arm64](https://github.com/utahplt/ifT-benchmark/releases/download/programming-10-2-artifact/ift-aarch64.tar.gz) architectures are provided. Their SHA256 hashes are:
+- `ift-amd64.tar.gz`: `37f146038c7a12f0327ed4778d18c240a5fe369fa2954a1fa0c36cac73a06a11`
+- `ift-aarch64.tar.gz`: `e158aac0227d0443fa9a3507414fbd6e942c8f79134f231c5b998312aacb500e`
+
+You can import the pre-built Docker image from the provided link. This image contains all the necessary dependencies and configurations to run the benchmark suite.
 
 ```shell
 # Pull the pre-built Docker image (replace <image-link> with the actual link)
 curl -L -O <image-link>
-docker load -i <image-name>.tar
+gunzip -c <image-name>.tar.gz | docker load
 # Run the Docker container
-docker run -it --rm -v ifT-benchmark
+docker run -it --rm -v ift
 ```
 
 ### Running the Benchmark
