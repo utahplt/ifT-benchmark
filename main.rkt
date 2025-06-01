@@ -29,7 +29,6 @@
           (examples-arguments ,(list "src/examples.js" "flow" "focus-check"))
           (command "npx")
           (pre-benchmark-func ,(lambda () (shell-command "touch" '() ".flowconfig")))
-          (pre-benchmark-func-dir ,(build-path (current-directory) "Flow"))
           (post-benchmark-func ,(lambda () (shell-command "npx" '("flow" "stop") "src/index.js")))
           (post-benchmark-func-dir ,(build-path (current-directory) "Flow")))
     (mypy (name "mypy")

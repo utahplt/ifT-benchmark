@@ -16,7 +16,6 @@
     (examples-arguments ,(list "src/examples.js" "flow" "focus-check"))
     (command "npx")
     (pre-benchmark-func ,(lambda () (shell-command "touch" '() ".flowconfig")))
-    (pre-benchmark-func-dir ,(current-directory))
     (post-benchmark-func ,(lambda () (shell-command "npx" '("flow" "stop") "src/index.js")))
     (post-benchmark-func-dir ,(current-directory))))
 
