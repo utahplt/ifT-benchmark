@@ -3,3 +3,5 @@
 .dockerignore
 
 .git
+
+*.tar.gz
