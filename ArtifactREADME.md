@@ -1,8 +1,9 @@
 # Artifact Evaluation for "If-T: A Benchmark for Type Narrowing"
 
-The URL to the artifact repository: https://github.com/utahplt/ifT-benchmark/tree/41c227d9d8ed279de9823d83750d9ad09e03282a
+The URL to the artifact repository: https://github.com/utahplt/ifT-benchmark/tree/82effbf42f01649c9d1fec25cc5cd3e2c519f5cb
 
-The commit hash of the artifact: 41c227d9d8ed279de9823d83750d9ad09e03282a
+The commit hash of the artifact:
+82effbf42f01649c9d1fec25cc5cd3e2c519f5cb
 
 The most recent version of the paper is submitted along with this artifact on EasyChair.
 
@@ -19,7 +20,7 @@ To use the Dockerfile, first clone the repository:
 ```shell
 git clone https://github.com/utahplt/ifT-benchmark.git
 cd ifT-benchmark
-git checkout 41c227d9d8ed279de9823d83750d9ad09e03282a
+git checkout 82effbf42f01649c9d1fec25cc5cd3e2c519f5cb
 ```
 
 Then, build the Docker image using the provided Dockerfile, and run the container.
@@ -35,10 +36,10 @@ Alternatively, to prevent compatibility issues, we provide the following pre-bui
 
 - x64
   * image link: https://github.com/utahplt/ifT-benchmark/releases/download/programming-10-2-artifact/ift-amd64.tar.gz
-  * SHA256 checksum: `37f146038c7a12f0327ed4778d18c240a5fe369fa2954a1fa0c36cac73a06a11`
+  * SHA256 checksum: `ae803d3a4a5c34732d2bddd6e1c75795263b6260925b1ec111ace82f3e3778a5`
 - arm64
   * image link: https://github.com/utahplt/ifT-benchmark/releases/download/programming-10-2-artifact/ift-aarch64.tar.gz
-  * SHA256 checksum: `e158aac0227d0443fa9a3507414fbd6e942c8f79134f231c5b998312aacb500e`
+  * SHA256 checksum: `5c7729c32e8cd1f6a0c5b16a06eb49139cc90b9148353cfdc8837738b9145cfc`
 
 You can import the pre-built Docker image from the provided link. This image contains all the necessary dependencies and configurations to run the benchmark suite.
 
