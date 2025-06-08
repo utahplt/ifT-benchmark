@@ -96,15 +96,22 @@ Very direct.
 
 > Q. Are any examples inexpressible? Why?
 
-`tree_node` in the failure case passes typechecking (incorrectly).
-This is because TypeScript trusts all user-defined predicates to match their types.
+Unlike TypeScript, where the `tree_node` failure case incorrectly passes typechecking due to trusted user-defined predicates, all examples (`filter`, `flatten`, `tree_node`, `rainfall`) are expressible in Sorbet. However, `filter_failure` required a stricter return type (`T::Array[Integer]`) instead of `T::Array[T.untyped]` to trigger a type error, as `T.untyped` is overly permissive in Sorbet. This highlights Sorbet’s lack of type predicates, which limits its ability to refine types within conditionals without explicit casts or type assertions.
 
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-- The `flatten` example has a slightly different implementation than the pseudocode from If-T, since the `empty?` predicate in the pseudocode checks both if the argument is an array and if it is empty, and this must be done in two separate steps in TypeScript.
-- The `rainfall` example uses type `unknown` instead of a `JSON` type, since every value in JavaScript (hence TypeScript) is representing a legitimate JSON value. Also, it has 2 extra null tests: on the object `day` and its field `rainfall`.
+- Well-expressed: The `rainfall` example is expressed effectively in Sorbet. It uses `T::Hash[Symbol, T.untyped]` to model JSON-like data and `T.let` for type narrowing, closely mirroring the If-T pseudocode. The failure case (`rainfall_failure`) triggers a clear type error by casting `rainfall` to `String`, demonstrating Sorbet’s ability to catch invalid operations.
+- Poorly-expressed: The `flatten` example is less elegant than the If-T pseudocode. Sorbet requires separate checks for `is_a?(Array)` and `length == 0`, unlike TypeScript’s `empty?` predicate, which combines both. Additionally, the use of `T.untyped` as the input type and multiple `T.let` assertions for type narrowing makes the implementation more verbose. The `filter` example also struggles with `T::Array[T.untyped]`, which is too permissive, requiring a return type adjustment to `T::Array[Integer]` to enforce errors.
+
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
-Very direct.
+The implementations are mostly direct but slightly more complex than the If-T pseudocode due to Sorbet’s static type system. Key differences include:
+
+- Explicit type narrowing with `T.let` and `T.cast` is needed in all examples to satisfy Sorbet’s strict mode, adding verbosity compared to the pseudocode’s implicit type assumptions.
+- The `tree_node` example requires recursive type checks with `T::Hash[Symbol, T.untyped]`, which is straightforward but involves more boilerplate than TypeScript’s predicates.
+- The `flatten` example’s recursive structure is direct, but the lack of a combined `empty?` predicate and the need for `T.let` assertions increase complexity.
+- The `rainfall` example is the most direct, with minimal divergence from the pseudocode, though it still requires explicit null checks and type assertions.
+
+Overall, Sorbet’s lack of type predicates and permissive `T.untyped` necessitate additional type annotations and checks, making the code less concise than the pseudocode or TypeScript equivalents.
