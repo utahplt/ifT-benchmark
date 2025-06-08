@@ -93,21 +93,27 @@ The implementation is direct for most benchmarks, using Ruby’s `if`/`else` and
 * `object_properties` uses Hashes instead of objects, as Ruby’s structs are less common.
 * `tuple_length` uses union types (`T.any([Integer, Integer], [String, String, String])`) to encode size distinctions, which is less direct but necessary for static typing.
 
+
 ## Advanced Examples
 
 > Q. Are any examples inexpressible? Why?
 
-No, all advanced examples are expressible in Sorbet.
+Unlike TypeScript, where the `tree_node` failure case incorrectly passes typechecking due to trusted user-defined predicates, all examples (`filter`, `flatten`, `tree_node`, `rainfall`) are expressible in Sorbet. However, `filter_failure` required a stricter return type (`T::Array[Integer]`) instead of `T::Array[T.untyped]` to trigger a type error, as `T.untyped` is overly permissive in Sorbet. This highlights Sorbet’s lack of type predicates, which limits its ability to refine types within conditionals without explicit casts or type assertions.
+
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-* **Well-expressed**: `merge_with_union` leverages Sorbet’s union types (`T.any(String, Integer)`) and `is_a?` checks to handle dynamic type merging, closely matching the pseudocode.
-* **Poorly-expressed**: `flatten` and `rainfall` are not implemented in this benchmark version but would require careful type annotations. `flatten` would need restricted union types to avoid `T.untyped`, and `rainfall` would use `Integer` instead of `Float` to avoid Ruby’s numeric complexities.
+- Well-expressed: The `rainfall` example is expressed effectively in Sorbet. It uses `T::Hash[Symbol, T.untyped]` to model JSON-like data and `T.let` for type narrowing, closely mirroring the If-T pseudocode. The failure case (`rainfall_failure`) triggers a clear type error by casting `rainfall` to `String`, demonstrating Sorbet’s ability to catch invalid operations.
+- Poorly-expressed: The `flatten` example is less elegant than the If-T pseudocode. Sorbet requires separate checks for `is_a?(Array)` and `length == 0`, unlike TypeScript’s `empty?` predicate, which combines both. Additionally, the use of `T.untyped` as the input type and multiple `T.let` assertions for type narrowing makes the implementation more verbose. The `filter` example also struggles with `T::Array[T.untyped]`, which is too permissive, requiring a return type adjustment to `T::Array[Integer]` to enforce errors.
+
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
-The implementation is fairly direct, with differences due to:
-1. Ruby’s Hash-based objects instead of structs for `object_properties`.
-2. Array-based tuples with union types for `tuple_length`.
-3. Stubs for predicates due to Sorbet’s limitations.
-4. Functional style in some cases (e.g., `connectives_success_g`) vs. imperative pseudocode.
+The implementations are mostly direct but slightly more complex than the If-T pseudocode due to Sorbet’s static type system. Key differences include:
+
+- Explicit type narrowing with `T.let` and `T.cast` is needed in all examples to satisfy Sorbet’s strict mode, adding verbosity compared to the pseudocode’s implicit type assumptions.
+- The `tree_node` example requires recursive type checks with `T::Hash[Symbol, T.untyped]`, which is straightforward but involves more boilerplate than TypeScript’s predicates.
+- The `flatten` example’s recursive structure is direct, but the lack of a combined `empty?` predicate and the need for `T.let` assertions increase complexity.
+- The `rainfall` example is the most direct, with minimal divergence from the pseudocode, though it still requires explicit null checks and type assertions.
+
+Overall, Sorbet’s lack of type predicates and permissive `T.untyped` necessitate additional type annotations and checks, making the code less concise than the pseudocode or TypeScript equivalents.
