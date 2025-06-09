@@ -192,75 +192,75 @@ end
 ## Example predicate_2way
 ## success
 sig { params(x: T.any(String, Integer)).returns(T::Boolean) }
-def predicate_2way_success_f(_x)
+def predicate_2way_success_f(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## success
 sig { params(x: T.any(String, Integer)).returns(Integer) }
-def predicate_2way_success_g(_x)
+def predicate_2way_success_g(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## failure
 sig { params(x: T.any(String, Integer)).returns(T::Boolean) }
-def predicate_2way_failure_f(_x)
+def predicate_2way_failure_f(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## failure
 sig { params(x: T.any(String, Integer)).returns(Integer) }
-def predicate_2way_failure_g(_x)
+def predicate_2way_failure_g(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## Example predicate_1way
 ## success
 sig { params(x: T.any(String, Integer)).returns(T::Boolean) }
-def predicate_1way_success_f(_x)
+def predicate_1way_success_f(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## success
 sig { params(x: T.any(String, Integer)).returns(Integer) }
-def predicate_1way_success_g(_x)
+def predicate_1way_success_g(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## failure
 sig { params(x: T.any(String, Integer)).returns(T::Boolean) }
-def predicate_1way_failure_f(_x)
+def predicate_1way_failure_f(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## failure
 sig { params(x: T.any(String, Integer)).returns(Integer) }
-def predicate_1way_failure_g(_x)
+def predicate_1way_failure_g(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## Example predicate_checked
 ## success
 sig { params(x: T.any(String, Integer, TrueClass, FalseClass)).returns(T::Boolean) }
-def predicate_checked_success_f(_x)
+def predicate_checked_success_f(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## success
 sig { params(x: T.any(String, Integer, TrueClass, FalseClass)).returns(T::Boolean) }
-def predicate_checked_success_g(_x)
+def predicate_checked_success_g(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## failure
 sig { params(x: T.any(String, Integer, TrueClass, FalseClass)).returns(T::Boolean) }
-def predicate_checked_failure_f(_x)
+def predicate_checked_failure_f(x)
   raise "Sorbet does not support type predicates"
 end
 
 ## failure
 sig { params(x: T.any(String, Integer, TrueClass, FalseClass)).returns(T::Boolean) }
-def predicate_checked_failure_g(_x)
+def predicate_checked_failure_g(x)
   raise "Sorbet does not support type predicates"
 end
 
@@ -279,7 +279,7 @@ end
 sig { params(x: { a: T.any(String, Integer) }).returns(Integer) }
 def object_properties_failure_f(x)
   if x[:a].is_a?(String)
-    x[:a].length # Expected error: String#length not assignable to Integer
+    T.let(x[:a].length, Integer) # Expected error: Cannot assign String#length to Integer
   else
     x[:a]
   end
@@ -323,7 +323,7 @@ def tuple_length_failure_f(x)
   if x.length == 2
     x[0] + x[1]
   else
-    x[0].length # Expected error: length not defined for String
+    T.let(x[0].length, Integer) # Expected error: Cannot assign String#length to Integer
   end
 end
 
