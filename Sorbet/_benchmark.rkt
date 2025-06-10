@@ -12,9 +12,9 @@
     (extension ".rb")
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
-    (arguments ,(list "srb" "tc" "main.rb"))
-    (examples-arguments ,(list "srb" "tc" "examples.rb"))
-    (command "bash")))
+    (arguments ,(list "main.rb" "tc"))
+    (examples-arguments ,(list "examples.rb" "tc"))
+    (command "srb")))
 
 (command-line
  #:program "_benchmark.rkt"

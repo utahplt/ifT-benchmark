@@ -67,7 +67,6 @@ def alias_failure_f(x)
   end
 end
 
-## failure
 sig { params(x: T.any(String, Integer)).returns(Integer) }
 def alias_failure_g(x)
   y = x.is_a?(String)
@@ -89,7 +88,6 @@ def connectives_success_f(x)
   end
 end
 
-## success
 sig { params(x: T.untyped).returns(Integer) }
 def connectives_success_g(x)
   if x.is_a?(String) || x.is_a?(Integer)
@@ -99,7 +97,6 @@ def connectives_success_g(x)
   end
 end
 
-## success
 sig { params(x: T.any(String, Integer, TrueClass, FalseClass)).returns(Integer) }
 def connectives_success_h(x)
   if !x.is_a?(TrueClass) && !x.is_a?(FalseClass) && !x.is_a?(Integer)
@@ -119,7 +116,6 @@ def connectives_failure_f(x)
   end
 end
 
-## failure
 sig { params(x: T.untyped).returns(Integer) }
 def connectives_failure_g(x)
   if x.is_a?(String) || x.is_a?(Integer)
@@ -129,7 +125,6 @@ def connectives_failure_g(x)
   end
 end
 
-## failure
 sig { params(x: T.any(String, Integer, TrueClass, FalseClass)).returns(Integer) }
 def connectives_failure_h(x)
   if !x.is_a?(TrueClass) && !x.is_a?(FalseClass) && !x.is_a?(Integer)
@@ -196,7 +191,6 @@ def predicate_2way_success_f(x)
   raise "Sorbet does not support type predicates"
 end
 
-## success
 sig { params(x: T.any(String, Integer)).returns(Integer) }
 def predicate_2way_success_g(x)
   raise "Sorbet does not support type predicates"
@@ -208,7 +202,6 @@ def predicate_2way_failure_f(x)
   raise "Sorbet does not support type predicates"
 end
 
-## failure
 sig { params(x: T.any(String, Integer)).returns(Integer) }
 def predicate_2way_failure_g(x)
   raise "Sorbet does not support type predicates"
@@ -221,7 +214,6 @@ def predicate_1way_success_f(x)
   raise "Sorbet does not support type predicates"
 end
 
-## success
 sig { params(x: T.any(String, Integer)).returns(Integer) }
 def predicate_1way_success_g(x)
   raise "Sorbet does not support type predicates"
@@ -233,7 +225,6 @@ def predicate_1way_failure_f(x)
   raise "Sorbet does not support type predicates"
 end
 
-## failure
 sig { params(x: T.any(String, Integer)).returns(Integer) }
 def predicate_1way_failure_g(x)
   raise "Sorbet does not support type predicates"
@@ -246,7 +237,6 @@ def predicate_checked_success_f(x)
   raise "Sorbet does not support type predicates"
 end
 
-## success
 sig { params(x: T.any(String, Integer, TrueClass, FalseClass)).returns(T::Boolean) }
 def predicate_checked_success_g(x)
   raise "Sorbet does not support type predicates"
@@ -258,7 +248,6 @@ def predicate_checked_failure_f(x)
   raise "Sorbet does not support type predicates"
 end
 
-## failure
 sig { params(x: T.any(String, Integer, TrueClass, FalseClass)).returns(T::Boolean) }
 def predicate_checked_failure_g(x)
   raise "Sorbet does not support type predicates"
