@@ -253,10 +253,10 @@ def predicate_checked_failure_g(x)
   raise "Sorbet does not support type predicates"
 end
 
-## Example object_properties
+## Example struct_fields
 ## success
 sig { params(x: { a: T.untyped }).returns(Integer) }
-def object_properties_success_f(x)
+def struct_fields_success_f(x)
   if x[:a].is_a?(Integer)
     x[:a]
   else
@@ -266,11 +266,11 @@ end
 
 ## failure
 sig { params(x: { a: T.any(String, Integer) }).returns(Integer) }
-def object_properties_failure_f(x)
+def struct_fields_failure_f(x)
   if x[:a].is_a?(String)
-    T.let(x[:a].length, Integer) # Expected error: Cannot assign String#length to Integer
+    x[:a] # Expected error: Expected Integer but found String
   else
-    x[:a]
+    0
   end
 end
 
