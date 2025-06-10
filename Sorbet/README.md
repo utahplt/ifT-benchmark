@@ -9,8 +9,8 @@ Sorbet adds static types to Ruby.
   - <https://sorbet.org/docs/gradual>
   - <https://sorbet.org/docs/from-typescript>
 * If-T version: **1.0**
-* Implementation: [./main.rb](./main.rb)
-* Raw command to run the benchmark: `srb tc main.rb`
+* Implementation: [./main.rb](./main.rb), [./examples.rb](./examples.rb)
+* Raw command to run the benchmark: `srb tc main.rb`, `srb tc examples.rb`
 
 ## Type System Basics
 
@@ -28,7 +28,7 @@ Sorbet adds static types to Ruby.
 
 `String`, `Integer`, `TrueClass`, and `FalseClass`
 
-These are standard Ruby classes, chosen for their simplicity and immutability, making them suitable for testing type narrowing in Sorbet.
+These are standard Ruby classes, chosen for their simplicity and immutability, making them suitable for testing type narrowing in Sorbet. Since Ruby allows subclassing (e.g., a user can define a subclass of `String`), Sorbet uses `is_a?` for type checks, which respects subclass relationships, avoiding issues seen in other languages (e.g., Python’s `type is` with `str` subclasses).
 
 > Q. What container types does this implementation use (for objects, tuples, etc)? Why?
 
@@ -65,26 +65,22 @@ Example: `T.cast(x, String)` ensures `x` is treated as `String`.
 
 > Q. What is the syntax for a symmetric (2-way) type-narrowing predicate?
 
-Sorbet does not support type-narrowing predicates (symmetric or otherwise). Functions returning `T::Boolean` (e.g., `x.is_a?(String)`) do not refine the argument’s type in the caller’s scope.
-
-Example: A function like `sig { params(x: T.any(String, Integer)).returns(T::Boolean) }` cannot refine `x` to `String` or `Integer` based on the return value.
-
-<https://sorbet.org/docs/from-typescript>
+N/A. Sorbet does not support type-narrowing predicates.
 
 > Q. If the language supports other type-narrowing predicates, describe them below.
 
-Sorbet lacks support for type-narrowing predicates, including one-way or checked predicates. The benchmark implements these as stubs with dummy returns (`true`, `0`) for success cases and type errors (e.g., `x.is_nan`) for failure cases to highlight this limitation.
+N/A. Sorbet does not support type-narrowing predicates.
 
 ## Benchmark Details
 
 > Q. Are any benchmarks inexpressible? Why?
 
-No, all benchmarks are expressible in Sorbet. However, predicate-related benchmarks (`predicate_2way`, `predicate_1way`, `predicate_checked`) are implemented as stubs due to Sorbet’s lack of type predicate support.
+Predicate-related benchmarks (`predicate_2way`, `predicate_1way`, `predicate_checked`) are not expressible in Sorbet due to the lack of type predicate support. All other benchmarks are fully expressible.
 
 > Q. Are any benchmarks expressed particularly well, or particularly poorly? Explain.
 
 * **Well-expressed**: `positive`, `negative`, `alias`, `connectives`, `nesting_body`, `nesting_condition` use straightforward `is_a?` checks and align closely with Ruby’s dynamic typing idioms, making them natural for Sorbet’s flow-sensitive typing.
-* **Poorly-expressed**: `predicate_2way`, `predicate_1way`, `predicate_checked` are stubs because Sorbet cannot express type predicates. Success cases return dummy values, and failure cases trigger artificial type errors (e.g., `x.is_nan`).
+* **Poorly-expressed**: `predicate_2way`, `predicate_1way`, `predicate_checked` are stubs due to the lack of type predicate support. Success cases return dummy values, and failure cases trigger artificial type errors (e.g., `x.is_nan`).
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
