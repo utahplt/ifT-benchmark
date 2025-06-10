@@ -5,6 +5,7 @@ To run the benchmark, you need to have the following tools installed:
 - [Racket](https://racket-lang.org/)
 - [Node.js and npm](https://nodejs.org/)
 - [Python and pip](https://www.python.org/)
+- [Ruby and gem](https://www.ruby-lang.org/)
 
 The tested versions are:
 
@@ -19,6 +20,9 @@ The tested versions are:
 | Flow         | 0.245.2 | See [`Flow/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Flow/package-lock.json)             |
 | Pyright      | 1.1.389 | See [`Pyright/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Pyright/package-lock.json)       |
 | mypy         | 1.13.0  | See [`mypy/requirements.txt`](https://github.com/utahplt/ot-benchmark/blob/main/mypy/requirements.txt)               |
+| Ruby         | 3.3.5   | Required for Sorbet; see [installation instructions](https://www.ruby-lang.org/en/downloads/)                        |
+| gem          | 3.3.5   | Bundled with Ruby                                                                                                    | 
+| Sorbet       | 0.5.12124| Installed via `gem install sorbet -v 0.5.11576`; see [Sorbet docs](https://sorbet.org/docs/setup)                   |
 
 First, clone this repository:
 
