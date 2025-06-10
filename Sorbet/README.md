@@ -86,7 +86,6 @@ Predicate-related benchmarks (`predicate_2way`, `predicate_1way`, `predicate_che
 
 The implementation is direct for most benchmarks, using Ruby’s `if`/`else` and `is_a?` to mirror If-T’s pseudocode. Exceptions:
 * Predicate benchmarks use stubs instead of predicate logic.
-* `object_properties` uses Hashes instead of objects, as Ruby’s structs are less common.
 * `tuple_length` uses union types (`T.any([Integer, Integer], [String, String, String])`) to encode size distinctions, which is less direct but necessary for static typing.
 
 
