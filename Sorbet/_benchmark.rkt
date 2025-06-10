@@ -8,13 +8,13 @@
 
 (define typechecker-parameters
   `((name ,current-typechecker-name)
-    (comment-char #\#)
+    (comment-char #\")
     (extension ".rb")
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
-    (arguments ,(list "tc" "main.rb"))
-    (examples-arguments ,(list "tc" "examples.rb"))
-    (command "srb")))
+    (arguments ,(list "srb" "tc" "main.rb"))
+    (examples-arguments ,(list "srb" "tc" "examples.rb"))
+    (command "bash")))
 
 (command-line
  #:program "_benchmark.rkt"
