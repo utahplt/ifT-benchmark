@@ -8,7 +8,7 @@
 
 (define typechecker-parameters
   `((name ,current-typechecker-name)
-    (comment-char #\")
+    (comment-char #\#)
     (extension ".rb")
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
