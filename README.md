@@ -551,7 +551,7 @@ The results of these examples are demonstrated below.
 |:----------|:------------:|:----------:|:----:|:----:|:-------:|:------:|
 | filter    | O            | O          | O    | O    | O       | O      |
 | flatten   | O            | O          | O    | O    | O       | O      |
-| tree_node | O            | x          | x    | x    | x       | O      |
+| tree_node | O            | x          | x    | x    | x       | x      |
 | rainfall  | O            | O          | O    | O    | O       | O      |
 
 ## Other Discussions

@@ -73,20 +73,12 @@ class TreeNodeSuccess
 
   sig { params(value: Integer, children: T.nilable(T::Array[TreeNodeSuccess])).void }
   def initialize(value:, children: nil)
-    @value = T.let(value, Integer)
-    @children = T.let(children, T.nilable(T::Array[TreeNodeSuccess]))
+    raise "Sorbet does not support type predicates"
   end
 
   sig { params(node: T.untyped).returns(T::Boolean) }
   def self.is_tree_node_success(node)
-    return false unless node.is_a?(T::Hash[Symbol, T.untyped]) && !node.nil?
-    return false unless T.let(node[:value], T.untyped).is_a?(Integer)
-    if node[:children]
-      return false unless T.let(node[:children], T.untyped).is_a?(T::Array)
-      node[:children].all? { |child| is_tree_node_success(child) }
-    else
-      true
-    end
+    raise "Sorbet does not support type predicates"
   end
 end
 
@@ -100,20 +92,12 @@ class TreeNodeFailure
 
   sig { params(value: Integer, children: T.nilable(T::Array[TreeNodeFailure])).void }
   def initialize(value:, children: nil)
-    @value = T.let(value, Integer)
-    @children = T.let(children, T.nilable(T::Array[TreeNodeFailure]))
+    raise "Sorbet does not support type predicates"
   end
 
   sig { params(node: T.untyped).returns(T::Boolean) }
   def self.is_tree_node_failure(node)
-    return false unless node.is_a?(T::Hash[Symbol, T.untyped]) && !node.nil?
-    return false unless T.let(node[:value], T.untyped).is_a?(Integer)
-    if node[:children]
-      T.let(node[:value], Integer).is_nan # Expected error: Method is_nan does not exist on Integer
-      true
-    else
-      true
-    end
+    raise "Sorbet does not support type predicates"
   end
 end
 
