@@ -57,9 +57,12 @@ Example: `if x.is_a?(String); x.length; else; 0; end`
 
 > Q. How do type casts work in this language?
 
-`T.let(x, T)` and `T.cast(x, T)` assign type `T` to `x`. `T.let` is used for local type annotations, while `T.cast` inserts runtime checks (in strict mode) to enforce the type. Both update the type environment statically.
+`T.let(x, T)` and `T.cast(x, T)` assign type `T` to `x`. Both update the type environment statically.
 
 Example: `T.cast(x, String)` ensures `x` is treated as `String`.
+
+- `T.let` is normally used for local type annotations. It does a static check and a runtime check.
+- `T.cast` inserts runtime checks (in strict mode) to enforce the type. It does only a runtime check, no static check.
 
 <https://sorbet.org/docs/type-assertions>
 
@@ -93,13 +96,17 @@ The implementation is direct for most benchmarks, using Ruby’s `if`/`else` and
 
 > Q. Are any examples inexpressible? Why?
 
-Unlike TypeScript, where the `tree_node` failure case incorrectly passes typechecking due to trusted user-defined predicates, all examples (`filter`, `flatten`, `tree_node`, `rainfall`) are expressible in Sorbet. However, `filter_failure` required a stricter return type (`T::Array[Integer]`) instead of `T::Array[T.untyped]` to trigger a type error, as `T.untyped` is overly permissive in Sorbet. This highlights Sorbet’s lack of type predicates, which limits its ability to refine types within conditionals without explicit casts or type assertions.
+`tree_node` is inexpressible because Sorbet does not have type predicates.
+
+`filter` is inexpressible, again because it requires a predicate, though we have implemented a simple version of `filter`.
 
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
 - Well-expressed: The `rainfall` example is expressed effectively in Sorbet. It uses `T::Hash[Symbol, T.untyped]` to model JSON-like data and `T.let` for type narrowing, closely mirroring the If-T pseudocode. The failure case (`rainfall_failure`) triggers a clear type error by casting `rainfall` to `String`, demonstrating Sorbet’s ability to catch invalid operations.
-- Poorly-expressed: The `flatten` example is less elegant than the If-T pseudocode. Sorbet requires separate checks for `is_a?(Array)` and `length == 0`, unlike TypeScript’s `empty?` predicate, which combines both. Additionally, the use of `T.untyped` as the input type and multiple `T.let` assertions for type narrowing makes the implementation more verbose. The `filter` example also struggles with `T::Array[T.untyped]`, which is too permissive, requiring a return type adjustment to `T::Array[Integer]` to enforce errors.
+- Poorly-expressed:
+  + The `flatten` example is less elegant than the If-T pseudocode. Sorbet requires separate checks for `is_a?(Array)` and `length == 0`, unlike TypeScript’s `empty?` predicate, which combines both. Additionally, the use of `T.untyped` as the input type and multiple `T.let` assertions for type narrowing makes the implementation more verbose.
+  + The `filter` example takes a boolean function instead of a type predicate. It also struggles with return type `T::Array[T.untyped]`, which is too permissive, requiring a return type adjustment to `T::Array[Integer]` to enforce errors.
 
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
