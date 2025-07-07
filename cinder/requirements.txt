@@ -1,2 +1,1 @@
 typing-extensions==4.12.2
-    # via mypy

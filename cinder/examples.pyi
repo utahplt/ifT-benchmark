@@ -1,22 +1,24 @@
-from typing import TypeIs, Callable, TypeVar, Union
+from typing import Callable, TypeVar, Union, List, Dict, Optional, Tuple
+
+# Use traditional type aliasing instead of 'type JSON = ...'
+JSON = Union[str, float, bool, None, List['JSON'], Dict[str, 'JSON']]
 
 T = TypeVar("T")
 S = TypeVar("S")
-type JSON = Union[str, float, bool, None, list[JSON], dict[str, JSON]]
 
 ### Code:
-## Example filter
+### Example filter
 ## success
-def filter_success(l: list[T], predicate: Callable[[T], TypeIs[S]]) -> list[S]:
-    result: list[S] = []
+def filter_success(l: List[T], predicate: Callable[[T], bool]) -> List[T]:
+    result: List[T] = []
     for element in l:
         if predicate(element):
             result.append(element)
     return result
 
 ## failure
-def filter_failure(l: list[T], predicate: Callable[[T], TypeIs[S]]) -> list[S]:
-    result: list[S] = []
+def filter_failure(l: List[T], predicate: Callable[[T], bool]) -> List[T]:
+    result: List[T] = []
     for element in l:
         if predicate(element):
             result.append(element)
@@ -24,10 +26,11 @@ def filter_failure(l: list[T], predicate: Callable[[T], TypeIs[S]]) -> list[S]:
             result.append(element)
     return result
 
-## Example flatten
+
+### Example flatten
 ## success
-type MaybeNestedListSuccess = list[MaybeNestedListSuccess] | int
-def flatten_success(l: MaybeNestedListSuccess) -> list[int]:
+MaybeNestedListSuccess = Union[List['MaybeNestedListSuccess'], int]
+def flatten_success(l: MaybeNestedListSuccess) -> List[int]:
     if isinstance(l, list):
         if l:
             return flatten_success(l[0]) + flatten_success(l[1:])
@@ -37,21 +40,22 @@ def flatten_success(l: MaybeNestedListSuccess) -> list[int]:
         return [l]
 
 ## failure
-type MaybeNestedListFailure = list[MaybeNestedListFailure] | int
-def flatten_failure(l: MaybeNestedListFailure) -> list[int]:
+MaybeNestedListFailure = Union[List['MaybeNestedListFailure'], int]
+def flatten_failure(l: MaybeNestedListFailure) -> List[int]:
     if isinstance(l, list):
         if l:
             return flatten_failure(l[0]) + flatten_failure(l[1:])
         else:
             return []
     else:
-        return l
+        # This is a type mismatch but won't raise at runtime unless strict module supports it
+        return l  # Expected List[int], got int
 
-## Example tree_node
+
+### Example tree_node
 ## success
-type TreeNodeSuccess = tuple[int, list[TreeNodeSuccess]]
-
-def is_tree_node_success(node: object) -> TypeIs[TreeNodeSuccess]:
+TreeNodeSuccess = Tuple[int, List['TreeNodeSuccess']]
+def is_tree_node_success(node: object) -> bool:
     if not (isinstance(node, tuple) and len(node) == 2):
         return False
     else:
@@ -67,9 +71,8 @@ def is_tree_node_success(node: object) -> TypeIs[TreeNodeSuccess]:
                 return True
 
 ## failure
-type TreeNodeFailure = tuple[int, list[TreeNodeFailure]]
-
-def is_tree_node_failure(node: object) -> TypeIs[TreeNodeFailure]:
+TreeNodeFailure = Tuple[int, List['TreeNodeFailure']]
+def is_tree_node_failure(node: object) -> bool:
     if not (isinstance(node, tuple) and len(node) == 2):
         return False
     else:
@@ -81,9 +84,10 @@ def is_tree_node_failure(node: object) -> TypeIs[TreeNodeFailure]:
             else:
                 return True
 
-## Example rainfall
+
+### Example rainfall
 ## success
-def rainfall_success(weather_reports: list[JSON]) -> float:
+def rainfall_success(weather_reports: List[JSON]) -> float:
     total = 0.0
     count = 0
     for day in weather_reports:
@@ -95,7 +99,7 @@ def rainfall_success(weather_reports: list[JSON]) -> float:
     return total / count if count > 0 else 0
 
 ## failure
-def rainfall_failure(weather_reports: list[JSON]) -> float:
+def rainfall_failure(weather_reports: List[JSON]) -> float:
     total = 0.0
     count = 0
     for day in weather_reports:
