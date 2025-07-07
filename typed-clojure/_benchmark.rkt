@@ -13,7 +13,7 @@
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
     (arguments ,(list "src/typed_clojure/main.clj" "lein run -m typed-clojure.main"))
-    (examples-arguments ,(list "src/typed_clojure/examples.clj" "typed-clojure.examples"))
+    (examples-arguments ,(list "src/typed_clojure/examples.clj" "lein run -m typed-clojure.examples"))
     (command "npx")))
 
 (command-line
