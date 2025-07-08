@@ -270,3 +270,90 @@ def predicate_checked_failure_f(x: FinalStr | FinalInt | bool) -> TypeIs[FinalSt
 
 def predicate_checked_failure_g(x: FinalStr | FinalInt | bool) -> TypeIs[FinalInt | bool]:
     return type(x) is FinalInt
+
+
+# =============================
+# 🧪 Test Runner: main()
+# =============================
+def main():
+    print("🚀 Running all tests...\n")
+    
+    # Map of test name -> (function, input(s))
+    test_cases = [
+        # Example positive
+        ("positive_success_f", positive_success_f, [FinalStr("hello"), 42]),
+        ("positive_failure_f", positive_failure_f, [FinalStr("hello"), 42]),
+
+        # Example negative
+        ("negative_success_f", negative_success_f, [FinalStr("a"), FinalInt(5)]),
+        ("negative_failure_f", negative_failure_f, [FinalStr("a"), FinalInt(5), True]),
+
+        # Example connectives
+        ("connectives_success_f", connectives_success_f, [FinalStr("a"), FinalInt(5)]),
+        ("connectives_success_g", connectives_success_g, [FinalStr("a"), FinalInt(5), True]),
+        ("connectives_success_h", connectives_success_h, [FinalStr("a"), FinalInt(5), True]),
+        ("connectives_failure_f", connectives_failure_f, [FinalStr("a"), FinalInt(5)]),
+        ("connectives_failure_g", connectives_failure_g, [FinalStr("a"), FinalInt(5), True]),
+        ("connectives_failure_h", connectives_failure_h, [FinalStr("a"), FinalInt(5), True]),
+
+        # Example nesting_body
+        ("nesting_body_success_f", nesting_body_success_f, [FinalStr("a"), FinalInt(5), True]),
+        ("nesting_body_failure_f", nesting_body_failure_f, [FinalStr("a"), FinalInt(5), True]),
+
+        # Example struct_fields
+        ("struct_fields_success_f", struct_fields_success_f, [StructFieldsSuccessApple(FinalInt(5))]),
+        ("struct_fields_failure_f", struct_fields_failure_f, [StructFieldsFailureApple(FinalStr("a"))]),
+
+        # Example tuple_elements
+        ("tuple_elements_success_f", tuple_elements_success_f, [(FinalInt(5), "b")]),
+        ("tuple_elements_failure_f", tuple_elements_failure_f, [(FinalInt(5), "b")]),
+
+        # Example tuple_length
+        ("tuple_length_success_f", tuple_length_success_f, [(FinalInt(1), FinalInt(2)), (FinalStr("a"), FinalStr("b"), FinalStr("c"))]),
+        ("tuple_length_failure_f", tuple_length_failure_f, [(FinalInt(1), FinalInt(2)), (FinalStr("a"), FinalStr("b"), FinalStr("c"))]),
+
+        # Example alias
+        ("alias_success_f", alias_success_f, [FinalStr("a"), 42]),
+        ("alias_failure_f", alias_failure_f, [FinalStr("a")]),
+        ("alias_failure_g", alias_failure_g, [FinalStr("a")]),
+
+        # Example nesting_condition
+        ("nesting_condition_success_f", nesting_condition_success_f, [FinalInt(5), FinalStr("x")]),
+        ("nesting_condition_failure_f", nesting_condition_failure_f, [FinalInt(5), FinalStr("x")]),
+
+        # Example merge_with_union
+        ("merge_with_union_success_f", merge_with_union_success_f, [FinalStr("a"), FinalInt(5), None]),
+        ("merge_with_union_failure_f", merge_with_union_failure_f, [FinalStr("a"), FinalInt(5), None]),
+
+        # Example predicate_2way
+        ("predicate_2way_success_g", predicate_2way_success_g, [FinalStr("a"), FinalInt(5)]),
+        ("predicate_2way_failure_g", predicate_2way_failure_g, [FinalStr("a"), FinalInt(5)]),
+
+        # Example predicate_1way
+        ("predicate_1way_success_g", predicate_1way_success_g, [FinalStr("a"), FinalInt(5)]),
+        ("predicate_1way_failure_g", predicate_1way_failure_g, [FinalStr("a"), FinalInt(5)]),
+
+        # Example predicate_checked
+        ("predicate_checked_success_g", predicate_checked_success_g, [FinalStr("a"), FinalInt(5), True]),
+        ("predicate_checked_failure_g", predicate_checked_failure_g, [FinalStr("a"), FinalInt(5), True]),
+    ]
+
+    passed = 0
+    failed = 0
+
+    for name, func, inputs in test_cases:
+        for i, inp in enumerate(inputs):
+            try:
+                result = func(inp)
+                print(f"✅ {name} (input {i+1}) → returned: {result}")
+                passed += 1
+            except Exception as e:
+                print(f"❌ {name} (input {i+1}) → raised: {e}")
+                failed += 1
+
+    print("\n📊 Summary:")
+    print(f"Passed: {passed}")
+    print(f"Failed: {failed}")
+
+if __name__ == "__main__":
+    main()

@@ -108,3 +108,67 @@ def rainfall_failure(weather_reports: List[JSON]) -> float:
             total += val
             count += 1
     return total / count if count > 0 else 0
+
+
+# =============================
+# 🧪 Test Runner: main()
+# =============================
+def main():
+    print("🚀 Running all tests...\n")
+
+    passed = 0
+    failed = 0
+
+    def run_test(name: str, func: Callable, *inputs):
+        nonlocal passed, failed
+        try:
+            result = func(*inputs)
+            print(f"✅ {name} → returned: {result}")
+            passed += 1
+        except Exception as e:
+            print(f"❌ {name} → raised: {e}")
+            failed += 1
+
+    # --- filter_success ---
+    pred_even = lambda x: x % 2 == 0
+    run_test("filter_success", filter_success, [1, 2, 3, 4], pred_even)
+
+    # --- filter_failure ---
+    pred_str = lambda x: isinstance(x, str)
+    run_test("filter_failure", filter_failure, ["a", 1, "b", 2], pred_str)
+
+    # --- flatten_success ---
+    run_test("flatten_success", flatten_success, [1, [2, [3, 4]], 5])
+
+    # --- flatten_failure ---
+    run_test("flatten_failure", flatten_failure, [1, [2, [3, 4]], 5])
+
+    # --- is_tree_node_success ---
+    tree = (1, [(2, []), (3, [(4, [])])])
+    run_test("is_tree_node_success", is_tree_node_success, tree)
+
+    bad_tree = (1, [2, (3, [])])
+    run_test("is_tree_node_success", is_tree_node_success, bad_tree)
+
+    # --- is_tree_node_failure ---
+    run_test("is_tree_node_failure", is_tree_node_failure, tree)
+    run_test("is_tree_node_failure", is_tree_node_failure, bad_tree)
+
+    # --- rainfall_success ---
+    weather_data = [
+        {"date": "2023-01-01", "rainfall": 10.5},
+        {"date": "2023-01-02", "rainfall": 0.0},
+        {"date": "2023-01-03", "rainfall": 5.2},
+    ]
+    run_test("rainfall_success", rainfall_success, weather_data)
+
+    # --- rainfall_failure ---
+    run_test("rainfall_failure", rainfall_failure, weather_data)
+
+    print("\n📊 Summary:")
+    print(f"Passed: {passed}")
+    print(f"Failed: {failed}")
+
+
+if __name__ == "__main__":
+    main()
