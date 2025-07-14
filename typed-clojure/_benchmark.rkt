@@ -3,8 +3,8 @@
 (require racket/cmdline)
 (require "../lib.rkt")
 
-(define current-typechecker-symbol 'sorbet)
-(define current-typechecker-name "Sorbet")
+(define current-typechecker-symbol 'Typed Clojure)
+(define current-typechecker-name "Typed Clojure")
 
 (define typechecker-parameters
   `((name ,current-typechecker-name)
@@ -12,8 +12,8 @@
     (extension ".rb")
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
-    (arguments ,(list "src/typed_clojure/main.clj" "lein run -m typed-clojure.main"))
-    (examples-arguments ,(list "src/typed_clojure/examples.clj" "lein run -m typed-clojure.examples"))
+    (arguments ,(list "src/typed_clojure/main.clj" ""))
+    (examples-arguments ,(list "src/typed_clojure/examples.clj" ""))
     (command "npx")))
 
 (command-line
