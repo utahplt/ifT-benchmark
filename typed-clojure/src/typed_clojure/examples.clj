@@ -5,27 +5,25 @@
 ;;; Code:
 ;; Example filter
 ;; success
-(t/ann filter-success
-       [(t/Vec t/Any) [t/Any :-> t/Bool] :-> (t/Vec t/Any)])
+(t/ann filter-success [(t/Vec t/Any) [t/Any :-> t/Bool] :-> (t/Vec t/Any)])
 (defn filter-success [array pred]
   (filterv pred array))
 
 ;; failure
-(t/ann filter-failure
-       [(t/Vec t/Any) [t/Any :-> t/Bool] :-> (t/Vec t/Any)])
+(t/ann filter-failure [(t/Vec t/Any) [t/Any :-> t/Bool] :-> (t/Vec t/Num)])
 (defn filter-failure [array pred]
   (t/ann-form
     (vec (for [value array]
            (if (pred value)
              value
-             (t/ann-form value t/Any)))) ; Type error: pushes unfiltered values
-    (t/Vec t/Any)))
+             "string"))) ; Type error: "string" doesn't match (t/Vec t/Num)
+    (t/Vec t/Num)))
 
 ;; Example flatten
 ;; success
-(t/ann ^:no-check maybe-nested-list-success
+(t/ann MaybeNestedListSuccess
        (t/Rec [x (t/U t/Num (t/Vec x))]))
-(t/ann flatten-success [maybe-nested-list-success :-> (t/Vec t/Num)])
+(t/ann flatten-success [MaybeNestedListSuccess :-> (t/Vec t/Num)])
 (defn flatten-success [l]
   (if (vector? l)
     (if (empty? l)
@@ -35,22 +33,22 @@
     [l]))
 
 ;; failure
-(t/ann ^:no-check maybe-nested-list-failure
+(t/ann MaybeNestedListFailure
        (t/Rec [x (t/U t/Num (t/Vec x))]))
-(t/ann flatten-failure [maybe-nested-list-failure :-> (t/Vec t/Num)])
+(t/ann flatten-failure [MaybeNestedListFailure :-> (t/Vec t/Num)])
 (defn flatten-failure [l]
   (if (vector? l)
     (if (empty? l)
       []
       (into (flatten-failure (first l))
             (flatten-failure (rest l))))
-    (t/ann-form l (t/Vec t/Num)))) ; Type error: l is number, not vector
+    (t/ann-form l (t/Vec t/Num)))) ; Type error: l is t/Num, not (t/Vec t/Num)
 
 ;; Example tree_node
 ;; success
-(t/ann ^:no-check tree-node-success
+(t/ann TreeNodeSuccess
        (t/Rec [x (t/Map t/Keyword (t/U t/Num (t/Option (t/Vec x))))]))
-(t/ann is-tree-node-success [t/Any :-> t/Bool])
+(t/ann is-tree-node-success [TreeNodeSuccess :-> t/Bool])
 (defn is-tree-node-success [node]
   (if (not (and (map? node) (some? node)))
     false
@@ -63,9 +61,9 @@
         true))))
 
 ;; failure
-(t/ann ^:no-check tree-node-failure
+(t/ann TreeNodeFailure
        (t/Rec [x (t/Map t/Keyword (t/U t/Num (t/Option (t/Vec x))))]))
-(t/ann is-tree-node-failure [t/Any :-> t/Bool])
+(t/ann is-tree-node-failure [TreeNodeFailure :-> t/Bool])
 (defn is-tree-node-failure [node]
   (if (not (and (map? node) (some? node)))
     false
@@ -90,4 +88,18 @@
         count (count valid-reports)]
     (if (pos? count)
       (/ total count)
+      0)))
+
+;; failure
+(t/ann rainfall-failure [(t/Vec t/Any) :-> t/Num])
+(defn rainfall-failure [weather-reports]
+  (let [valid-reports (filter (fn [day]
+                                (and (map? day)
+                                     (some? day)
+                                     (contains? day :rainfall)))
+                              weather-reports)
+        total (reduce + 0 (map :rainfall valid-reports)) ; Type error: :rainfall may not be a number
+        count (count valid-reports)]
+    (if (pos? count)
+      (t/ann-form (/ total count) t/Num)
       0)))
