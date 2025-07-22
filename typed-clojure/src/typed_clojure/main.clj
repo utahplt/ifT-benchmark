@@ -114,14 +114,15 @@
 
 ;; Example tuple_elements
 ;; success
-(t/ann tuple-elements-success-f [(t/Vec t/Any) :-> t/Num])
+(t/ann tuple-elements-success-f [(t/NonEmptyVec (t/U nil t/Num)) :-> t/Num])
 (defn tuple-elements-success-f [x]
-  (if (number? (nth x 0))
-    (nth x 0)
-    0))
+  (let [first-elem (nth x 0)]
+    (if (number? first-elem)
+      (t/ann-form first-elem t/Num)
+      0)))
 
 ;; failure
-(t/ann tuple-elements-failure-f [(t/Vec t/Any) :-> t/Num])
+(t/ann tuple-elements-failure-f [(t/NonEmptyVec (t/U nil t/Num)) :-> t/Num])
 (defn tuple-elements-failure-f [x]
   (if (number? (nth x 0))
     (t/ann-form (+ (nth x 0) (nth x 1)) t/Num) ; Type error: (nth x 1) could be non-number
@@ -129,24 +130,33 @@
 
 ;; Example tuple_length
 ;; success
-(t/ann tuple-length-success-f [(t/U (t/Vec t/Num) (t/Vec t/Str)) :-> t/Num])
+(t/ann tuple-length-success-f [(t/NonEmptyVec t/Num) :-> t/Num])
 (defn tuple-length-success-f [x]
   (if (= (count x) 2)
-    (+ (nth x 0) (nth x 1))
-    (count (nth x 0))))
+    (let [first-elem (nth x 0)
+          second-elem (nth x 1)]
+      (+ (t/ann-form first-elem t/Num) (t/ann-form second-elem t/Num)))
+    0))
 
 ;; failure
-(t/ann tuple-length-failure-f [(t/U (t/Vec t/Num) (t/Vec t/Str)) :-> t/Num])
+(t/ann tuple-length-failure-f [(t/U (t/NonEmptyVec t/Num) (t/NonEmptyVec t/Str)) :-> t/Num])
 (defn tuple-length-failure-f [x]
   (if (= (count x) 2)
     (+ (nth x 0) (nth x 1))
-    (t/ann-form (+ (nth x 0) (nth x 1)) t/Num))) ; Type error: x[0], x[1] could be strings
+    (+ (nth x 0) (nth x 1))))
 
 ;; Example alias
 ;; success
 (t/ann alias-success-f [t/Any :-> t/Any])
 (defn alias-success-f [x]
   (let [y (string? x)]
+    (if y
+      (count x)
+      x)))
+
+(t/ann alias-success-g [t/Any :-> t/Any])
+(defn alias-success-g [x]
+  (let [y (or (sequential? x) (string? x))]
     (if y
       (count x)
       x)))
@@ -159,7 +169,6 @@
       (t/ann-form (.isNaN x) t/Num) ; Type error: strings don't have .isNaN
       x)))
 
-;; failure
 (t/ann alias-failure-g [t/Any :-> t/Any])
 (defn alias-failure-g [x]
   (let [y true] ; Overwrites type check
@@ -202,65 +211,77 @@
 
 ;; Example predicate_2way
 ;; success
-(t/ann predicate-2way-success-f [(t/U t/Str t/Num) :-> t/Bool])
+(t/ann predicate-2way-success-f [(t/U t/Str t/Num) -> t/Bool
+                                 :filters {:then (is t/Str 0)
+                                           :else (! t/Str 0)}])
 (defn predicate-2way-success-f [x]
   (string? x))
 
-(t/ann predicate-2way-success-g [(t/U t/Str t/Num) :-> t/Num])
+(t/ann predicate-2way-success-g [(t/U t/Str t/Num) -> t/Num])
 (defn predicate-2way-success-g [x]
   (if (predicate-2way-success-f x)
     (count x)
     x))
 
 ;; failure
-(t/ann predicate-2way-failure-f [(t/U t/Str t/Num) :-> t/Bool])
+(t/ann predicate-2way-failure-f [(t/U t/Str t/Num) -> t/Bool
+                                 :filters {:then (is t/Str 0)}])
 (defn predicate-2way-failure-f [x]
   (string? x))
 
-(t/ann predicate-2way-failure-g [(t/U t/Str t/Num) :-> t/Num])
+(t/ann predicate-2way-failure-g [(t/U t/Str t/Num) -> t/Num])
 (defn predicate-2way-failure-g [x]
   (if (predicate-2way-failure-f x)
-    (t/ann-form (+ x 1) t/Num) ; Type error: x is string
+    (t/ann-form (+ x 1) t/Num) ; Type Error: x is string!
     x))
 
 ;; Example predicate_1way
 ;; success
-(t/ann predicate-1way-success-f [(t/U t/Str t/Num) :-> t/Bool])
+(t/ann predicate-1way-success-f [(t/U t/Str t/Num) -> t/Bool
+                                 :filters {:then (is t/Num 0)}])
 (defn predicate-1way-success-f [x]
   (and (number? x) (> x 0)))
 
-(t/ann predicate-1way-success-g [(t/U t/Str t/Num) :-> t/Num])
+(t/ann predicate-1way-success-g [(t/U t/Str t/Num) -> t/Num])
 (defn predicate-1way-success-g [x]
   (if (predicate-1way-success-f x)
     (+ x 1)
     0))
 
 ;; failure
-(t/ann predicate-1way-failure-f [(t/U t/Str t/Num) :-> t/Bool])
+(t/ann predicate-1way-failure-f [(t/U t/Str t/Num) -> t/Bool
+                                 :filters {:then (is t/Num 0)}])
 (defn predicate-1way-failure-f [x]
   (and (number? x) (> x 0)))
 
-(t/ann predicate-1way-failure-g [(t/U t/Str t/Num) :-> t/Num])
+(t/ann predicate-1way-failure-g [(t/U t/Str t/Num) -> t/Num])
 (defn predicate-1way-failure-g [x]
   (if (predicate-1way-failure-f x)
     (+ x 1)
-    (t/ann-form (count x) t/Num))) ; Type error: x could be string
+    (t/ann-form (count x) t/Num))) ; Error: x could still be number (not ruled out)
 
 ;; Example predicate_checked
 ;; success
-(t/ann predicate-checked-success-f [(t/U t/Str t/Num t/Bool) :-> t/Bool])
+(t/ann predicate-checked-success-f [(t/U t/Str t/Num t/Bool) -> t/Bool
+                                    :filters {:then (is t/Str 0)
+                                              :else (! t/Str 0)}])
 (defn predicate-checked-success-f [x]
   (string? x))
 
-(t/ann predicate-checked-success-g [(t/U t/Str t/Num t/Bool) :-> t/Bool])
+(t/ann predicate-checked-success-g [(t/U t/Str t/Num t/Bool) -> t/Bool
+                                    :filters {:then (! t/Str 0)
+                                              :else (is t/Str 0)}])
 (defn predicate-checked-success-g [x]
   (not (predicate-checked-success-f x)))
 
 ;; failure
-(t/ann predicate-checked-failure-f [(t/U t/Str t/Num t/Bool) :-> t/Bool])
+(t/ann predicate-checked-failure-f [(t/U t/Str t/Num t/Bool) -> t/Bool
+                                    :filters {:then (or (is t/Str 0) (is t/Num 0))
+                                              :else (and (! t/Str 0) (! t/Num 0))}])
 (defn predicate-checked-failure-f [x]
   (or (string? x) (number? x)))
 
-(t/ann predicate-checked-failure-g [(t/U t/Str t/Num t/Bool) :-> t/Bool])
+(t/ann predicate-checked-failure-g [(t/U t/Str t/Num t/Bool) -> t/Bool
+                                    :filters {:then (is t/Num 0)}])
 (defn predicate-checked-failure-g [x]
   (number? x))

@@ -524,21 +524,21 @@ Below is a table for all benchmark items as a quick reference.
 
 For language details: [SETUP.md](./SETUP.md)
 
-| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet |
-|:------------------|:------------:|:----------:|:----:|:----:|:-------:|:------:|
-| positive          | O            | O          | O    | O    | O       | O      |
-| negative          | O            | O          | O    | O    | O       | O      |
-| connectives       | O            | O          | O    | O    | O       | O      |
-| nesting_body      | O            | O          | O    | O    | O       | O      |
-| struct_fields     | O            | O          | O    | O    | O       | X      |
-| tuple_elements    | O            | O          | O    | O    | O       | O      |
-| tuple_length      | x            | O          | O    | O    | O       | X      |
-| alias             | O            | O          | x    | x    | O       | O      |
-| nesting_condition | O            | x          | x    | x    | x       | O      |
-| merge_with_union  | O            | O          | O    | x    | O       | O      |
-| predicate_2way    | O            | O          | O    | O    | O       | X      |
-| predicate_1way    | O            | x          | O    | O    | O       | X      |
-| predicate_checked | O            | O          | O    | O    | O       | X      |
+| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet | Typed Clojure |
+|:------------------|:------------:|:----------:|:----:|:----:|:-------:|:------:|:-------------:|
+| positive          | O            | O          | O    | O    | O       | O      | O             |
+| negative          | O            | O          | O    | O    | O       | O      | O             |
+| connectives       | O            | O          | O    | O    | O       | O      | O             |
+| nesting_body      | O            | O          | O    | O    | O       | O      | O             |
+| struct_fields     | O            | O          | O    | O    | O       | X      | O             |
+| tuple_elements    | O            | O          | O    | O    | O       | O      | O             |
+| tuple_length      | x            | O          | O    | O    | O       | X      | O             |
+| alias             | O            | O          | x    | x    | O       | O      | X             |
+| nesting_condition | O            | x          | x    | x    | x       | O      | O             |
+| merge_with_union  | O            | O          | O    | x    | O       | O      | O             |
+| predicate_2way    | O            | O          | O    | O    | O       | X      | O             |
+| predicate_1way    | O            | x          | O    | O    | O       | X      | O             |
+| predicate_checked | O            | O          | O    | O    | O       | X      | O             |
 
 `O` means passed, `x` means not passed.
 
