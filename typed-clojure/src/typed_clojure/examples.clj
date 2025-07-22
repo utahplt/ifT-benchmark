@@ -21,85 +21,114 @@
 
 ;; Example flatten
 ;; success
-(t/ann MaybeNestedListSuccess
-       (t/Rec [x (t/U t/Num (t/Vec x))]))
-(t/ann flatten-success [MaybeNestedListSuccess :-> (t/Vec t/Num)])
+(t/defalias IntTree
+  (t/U Integer (t/Seqable IntTree)))
+(t/defalias IntVector
+  (t/Vec Integer))
+(t/ann flatten-success [IntTree -> IntVector])
 (defn flatten-success [l]
-  (if (vector? l)
+  (if (sequential? l)
     (if (empty? l)
-      []
-      (into (flatten-success (first l))
-            (flatten-success (rest l))))
-    [l]))
+      (t/ann-form [] IntVector)
+      (let [first-part (flatten-success (first l))
+            rest-parts (flatten-success (next l))]
+        (t/ann-form (into first-part rest-parts) IntVector)))
+    (do
+      (assert (and (integer? l) (instance? Integer l)) "Expected an Integer in non-sequential case")
+      (t/ann-form [(t/ann-form l Integer)] IntVector))))
 
 ;; failure
-(t/ann MaybeNestedListFailure
-       (t/Rec [x (t/U t/Num (t/Vec x))]))
-(t/ann flatten-failure [MaybeNestedListFailure :-> (t/Vec t/Num)])
+(t/ann flatten-failure [IntTree -> IntVector])
 (defn flatten-failure [l]
-  (if (vector? l)
+  (if (sequential? l)
     (if (empty? l)
-      []
-      (into (flatten-failure (first l))
-            (flatten-failure (rest l))))
-    (t/ann-form l (t/Vec t/Num)))) ; Type error: l is t/Num, not (t/Vec t/Num)
+      (t/ann-form [] IntVector)
+      (let [first-part (t/ann-form (flatten-failure (first l)) IntVector)
+            rest-parts (t/ann-form (flatten-failure (next l)) IntVector)]
+        (t/ann-form (into first-part rest-parts) IntVector)))
+    (t/ann-form l Integer))) ; Expected error: Expected IntVector but found Integer
 
 ;; Example tree_node
 ;; success
-(t/ann TreeNodeSuccess
-       (t/Rec [x (t/Map t/Keyword (t/U t/Num (t/Option (t/Vec x))))]))
-(t/ann is-tree-node-success [TreeNodeSuccess :-> t/Bool])
-(defn is-tree-node-success [node]
-  (if (not (and (map? node) (some? node)))
+(t/defalias TreeNode
+  (t/HVec [t/Num (t/Seqable TreeNode)]))
+(t/ann tree-node? (t/Pred TreeNode))
+(defn tree-node? [node]
+  (if (not (and (vector? node) (= (count node) 2)))
     false
-    (if (not (number? (:value node)))
-      false
-      (if-let [children (:children node)]
-        (if (not (vector? children))
+    (let [[fst snd] node]
+      (if (not (number? fst))
+        false
+        (if (not (sequential? snd))
           false
-          (every? is-tree-node-success children))
-        true))))
+          (every? tree-node? snd))))))
 
 ;; failure
-(t/ann TreeNodeFailure
-       (t/Rec [x (t/Map t/Keyword (t/U t/Num (t/Option (t/Vec x))))]))
-(t/ann is-tree-node-failure [TreeNodeFailure :-> t/Bool])
-(defn is-tree-node-failure [node]
-  (if (not (and (map? node) (some? node)))
+(t/defalias TreeNode
+  (t/HVec [t/Num (t/Seqable TreeNode)]))
+(t/ann tree-node? (t/Pred TreeNode))
+(defn tree-node? [node]
+  (if (not (and (vector? node) (= (count node) 2)))
     false
-    (if (not (number? (:value node)))
-      false
-      (if-let [children (:children node)]
-        (t/ann-form (vector? children) t/Bool) ; Type error: incomplete child check
-        true))))
+    (let [[fst snd] node]
+      (if (not (number? fst))
+        false
+        (if (not (sequential? snd))
+          false
+          true)))))
 
 ;; Example rainfall
 ;; success
-(t/ann rainfall-success [(t/Vec t/Any) :-> t/Num])
+(t/defalias DayReport
+  (t/Map t/Keyword (t/U nil Double)))
+(t/defalias WeatherReport
+  (t/Seqable DayReport))
+(t/defalias ValidRainfall
+  (t/U nil Double))
+(t/defalias RainfallResult Double)
+(t/ann rainfall-success [WeatherReport -> RainfallResult])
 (defn rainfall-success [weather-reports]
-  (let [valid-reports (filter (fn [day]
-                                (and (map? day)
-                                     (some? day)
-                                     (contains? day :rainfall)
-                                     (number? (:rainfall day))
-                                     (<= 0 (:rainfall day) 999)))
-                              weather-reports)
-        total (reduce + 0 (map :rainfall valid-reports))
-        count (count valid-reports)]
-    (if (pos? count)
-      (/ total count)
-      0)))
+  (t/loop [reports :- WeatherReport, weather-reports
+           total   :- Double, 0.0
+           count   :- Long, (t/ann-form 0 Long)]
+    (if (empty? reports)
+      (if (> count 0)
+        (double (/ total count))
+        0.0)
+      (let [day (first reports)]
+        (if (and (map? day) (not (nil? day)))
+          (let [val (t/ann-form (get day :rainfall) (t/U nil Double))]
+            (if (and val (double? val))
+              (let [val-d (t/ann-form val Double)]
+                (if (<= 0.0 val-d 999.0)
+                  (recur (rest reports)
+                         (+ total val-d)
+                         (t/ann-form (inc count) Long))
+                  (recur (rest reports) total count)))
+              (recur (rest reports) total count)))
+          (recur (rest reports) total count))))))
 
 ;; failure
-(t/ann rainfall-failure [(t/Vec t/Any) :-> t/Num])
+(t/defalias DayReport
+  (t/Map t/Keyword (t/U nil Double)))
+(t/defalias WeatherReport
+  (t/Seqable DayReport))
+(t/defalias RainfallResult Double)
+(t/ann rainfall-failure [WeatherReport -> RainfallResult])
 (defn rainfall-failure [weather-reports]
-  (let [valid-reports (filter (fn [day]
-                                (and (map? day)
-                                     (some? day)
-                                     (contains? day :rainfall)))
-                              weather-reports)
-        total (reduce + 0 (map :rainfall valid-reports)) ; Type error: :rainfall may not be a number
-        count (count valid-reports)]
-    (if (pos? count)
-      (t/ann-form (/ total count) t/Num)
-      0)))
+  (t/loop [reports :- WeatherReport, weather-reports
+           total   :- Double, 0.0
+           count   :- Long, (t/ann-form 0 Long)]
+    (if (empty? reports)
+      (if (> count 0)
+        (double (/ total count))
+        0.0)
+      (let [day (first reports)]
+        (if (and (map? day) (not (nil? day)))
+          (let [val (t/ann-form (get day :rainfall) String)]
+            (if (not (nil? val))
+              (recur (rest reports)
+                     (t/ann-form (+ total val) Double) ; Type error: Adding String to Double
+                     (t/ann-form (inc count) Long))
+              (recur (rest reports) total count)))
+          (recur (rest reports) total count))))))
