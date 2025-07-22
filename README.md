@@ -547,12 +547,12 @@ For language details: [SETUP.md](./SETUP.md)
 [EXAMPLES.md](./EXAMPLES.md) contains more examples that are not included in the benchmark items. Those are real-world-like examples showing the use of type narrowing in various contexts. For more details about the examples, see [EXAMPLES.md](./EXAMPLES.md). For more details about the results, see the README.md file in the respective typechecker directories.
 The results of these examples are demonstrated below.
 
-| Benchmark | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet |
-|:----------|:------------:|:----------:|:----:|:----:|:-------:|:------:|
-| filter    | O            | O          | O    | O    | O       | O      |
-| flatten   | O            | O          | O    | O    | O       | O      |
-| tree_node | O            | x          | x    | x    | x       | x      |
-| rainfall  | O            | O          | O    | O    | O       | O      |
+| Benchmark | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet | Typed Clojure |
+|:----------|:------------:|:----------:|:----:|:----:|:-------:|:------:|:-------------:|
+| filter    | O            | O          | O    | O    | O       | O      | O             |
+| flatten   | O            | O          | O    | O    | O       | O      | O             |
+| tree_node | O            | x          | x    | x    | x       | x      | X             |
+| rainfall  | O            | O          | O    | O    | O       | O      | O             |
 
 ## Other Discussions
 
