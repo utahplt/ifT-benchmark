@@ -93,17 +93,23 @@
 
 ;; Example struct_fields
 ;; success
-(t/ann struct-fields-success-f [(t/Map t/Keyword t/Any) :-> t/Num])
+(t/defalias MyStruct
+  (t/HMap :mandatory {:a (t/U nil Number)}
+          :complete? true))
+(t/ann struct-fields-success-f [MyStruct -> t/Num])
 (defn struct-fields-success-f [x]
   (if (number? (:a x))
     (:a x)
     0))
 
 ;; failure
-(t/ann struct-fields-failure-f [(t/Map t/Keyword t/Any) :-> t/Num])
+(t/defalias MyStruct
+  (t/HMap :mandatory {:a (t/U nil Number)}
+          :complete? true))
+(t/ann struct-fields-failure-f [MyStruct -> t/Num])
 (defn struct-fields-failure-f [x]
   (if (string? (:a x))
-    (t/ann-form (:a x) t/Num) ; Type error: (:a x) is string
+    (t/ann-form (:a x) t/Num) ; Error: can't cast string to Num
     0))
 
 ;; Example tuple_elements
