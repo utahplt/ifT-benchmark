@@ -9,7 +9,7 @@
 (define typechecker-parameters
   `((name ,current-typechecker-name)
     (comment-char #\;)
-    (extension ".rb")
+    (extension ".clj")
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
     (arguments ,(list "src/typed_clojure/main.clj" ""))
