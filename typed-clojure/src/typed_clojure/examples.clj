@@ -5,12 +5,12 @@
 ;;; Code:
 ;; Example filter
 ;; success
-(t/ann filter-success [(t/Vec t/Any) [t/Any :-> t/Bool] :-> (t/Vec t/Any)])
+(t/ann filter-success (t/All [A] [(t/Vec A) [A :-> t/Bool] :-> (t/Vec A)]))
 (defn filter-success [array pred]
   (filterv pred array))
 
 ;; failure
-(t/ann filter-failure [(t/Vec t/Any) [t/Any :-> t/Bool] :-> (t/Vec t/Num)])
+(t/ann filter-success (t/All [A] [(t/Vec A) [A :-> t/Bool] :-> (t/Vec A)]))
 (defn filter-failure [array pred]
   (t/ann-form
     (vec (for [value array]
@@ -32,7 +32,7 @@
       (t/ann-form [] IntVector)
       (let [first-part (flatten-success (first l))
             rest-parts (flatten-success (next l))]
-        (t/ann-form (into first-part rest-parts) IntVector)))
+        (into first-part rest-parts)))
     (do
       (assert (and (integer? l) (instance? Integer l)) "Expected an Integer in non-sequential case")
       (t/ann-form [(t/ann-form l Integer)] IntVector))))
@@ -43,9 +43,9 @@
   (if (sequential? l)
     (if (empty? l)
       (t/ann-form [] IntVector)
-      (let [first-part (t/ann-form (flatten-failure (first l)) IntVector)
-            rest-parts (t/ann-form (flatten-failure (next l)) IntVector)]
-        (t/ann-form (into first-part rest-parts) IntVector)))
+      (let [first-part (flatten-success (first l))
+            rest-parts (flatten-success (next l))]
+        (into first-part rest-parts)))
     (t/ann-form l Integer))) ; Expected error: Expected IntVector but found Integer
 
 ;; Example tree_node
@@ -99,7 +99,7 @@
         (if (and (map? day) (not (nil? day)))
           (let [val (t/ann-form (get day :rainfall) (t/U nil Double))]
             (if (and val (double? val))
-              (let [val-d (t/ann-form val Double)]
+              (let [val-d val]
                 (if (<= 0.0 val-d 999.0)
                   (recur (rest reports)
                          (+ total val-d)
