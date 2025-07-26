@@ -533,7 +533,7 @@ For language details: [SETUP.md](./SETUP.md)
 | struct_fields     | O            | O          | O    | O    | O       | X      | O             |
 | tuple_elements    | O            | O          | O    | O    | O       | O      | O             |
 | tuple_length      | x            | O          | O    | O    | O       | X      | O             |
-| alias             | O            | O          | x    | x    | O       | O      | X             |
+| alias             | O            | O          | x    | x    | O       | O      | O             |
 | nesting_condition | O            | x          | x    | x    | x       | O      | O             |
 | merge_with_union  | O            | O          | O    | x    | O       | O      | O             |
 | predicate_2way    | O            | O          | O    | O    | O       | X      | O             |

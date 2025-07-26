@@ -5,14 +5,14 @@
 ;;; Code:
 ;; Example positive
 ;; success
-(t/ann positive-success-f [t/Any :-> t/Any])
+(t/ann positive-success-f [t/Any :-> (t/U t/Int t/Any)])
 (defn positive-success-f [x]
   (if (string? x)
     (count x)
     x))
 
 ;; failure
-(t/ann positive-failure-f [t/Any :-> t/Any])
+(t/ann positive-failure-f [t/Any :-> (t/U t/Int t/Any)])
 (defn positive-failure-f [x]
   (if (string? x)
     (t/ann-form (.isNaN x) t/Num) ; Type error: strings don't have .isNaN
@@ -118,14 +118,14 @@
 (defn tuple-elements-success-f [x]
   (let [first-elem (nth x 0)]
     (if (number? first-elem)
-      (t/ann-form first-elem t/Num)
+      first-elem
       0)))
 
 ;; failure
 (t/ann tuple-elements-failure-f [(t/NonEmptyVec (t/U nil t/Num)) :-> t/Num])
 (defn tuple-elements-failure-f [x]
   (if (number? (nth x 0))
-    (t/ann-form (+ (nth x 0) (nth x 1)) t/Num) ; Type error: (nth x 1) could be non-number
+    (+ (nth x 0) (nth x 1)) ; Type error: (nth x 1) could be non-number
     0))
 
 ;; Example tuple_length
@@ -135,7 +135,7 @@
   (if (= (count x) 2)
     (let [first-elem (nth x 0)
           second-elem (nth x 1)]
-      (+ (t/ann-form first-elem t/Num) (t/ann-form second-elem t/Num)))
+      (+ first-elem second-elem))
     0))
 
 ;; failure
@@ -143,33 +143,26 @@
 (defn tuple-length-failure-f [x]
   (if (= (count x) 2)
     (+ (nth x 0) (nth x 1))
-    (+ (nth x 0) (nth x 1))))
+    (+ (nth x 0) (nth x 1)))) ; Type error: with expected type: t/Num
 
 ;; Example alias
 ;; success
-(t/ann alias-success-f [t/Any :-> t/Any])
+(t/ann alias-success-f [t/Any :-> (t/U t/Int t/Any)])
 (defn alias-success-f [x]
   (let [y (string? x)]
     (if y
       (count x)
       x)))
 
-(t/ann alias-success-g [t/Any :-> t/Any])
-(defn alias-success-g [x]
-  (let [y (or (sequential? x) (string? x))]
-    (if y
-      (count x)
-      x)))
-
 ;; failure
-(t/ann alias-failure-f [t/Any :-> t/Any])
+(t/ann alias-failure-f [t/Any :-> (t/U t/Int t/Any)])
 (defn alias-failure-f [x]
   (let [y (string? x)]
     (if y
       (t/ann-form (.isNaN x) t/Num) ; Type error: strings don't have .isNaN
       x)))
 
-(t/ann alias-failure-g [t/Any :-> t/Any])
+(t/ann alias-failure-g [t/Any :-> (t/U t/Int t/Any)])
 (defn alias-failure-g [x]
   (let [y true] ; Overwrites type check
     (if y
@@ -193,20 +186,20 @@
 
 ;; Example merge_with_union
 ;; success
-(t/ann merge-with-union-success-f [t/Any :-> (t/U t/Str t/Num)])
+(t/ann merge-with-union-success-f [t/Any :-> (t/U t/Str t/Num t/Any)])
 (defn merge-with-union-success-f [x]
   (cond
     (string? x) (str x "hello")
     (number? x) (+ x 1)
-    :else 0))
+    :else x))
 
 ;; failure
-(t/ann merge-with-union-failure-f [t/Any :-> (t/U t/Str t/Num)])
+(t/ann merge-with-union-failure-f [t/Any :-> (t/U t/Str t/Num t/Any)])
 (defn merge-with-union-failure-f [x]
   (let [result (cond
                  (string? x) (str x "hello")
                  (number? x) (+ x 1)
-                 :else 0)]
+                 :else x)]
     (t/ann-form (.isNaN result) t/Bool))) ; Type error: result could be string
 
 ;; Example predicate_2way
