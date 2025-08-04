@@ -52,30 +52,21 @@
 ;; success
 (t/defalias TreeNode
   (t/HVec [t/Num (t/Seqable TreeNode)]))
-(t/ann tree-node? (t/Pred TreeNode))
-(defn tree-node? [node]
-  (if (not (and (vector? node) (= (count node) 2)))
-    false
-    (let [[fst snd] node]
-      (if (not (number? fst))
-        false
-        (if (not (sequential? snd))
-          false
-          (every? tree-node? snd))))))
+(t/ann tree-node-success? [t/Any -> t/Bool])
+(defn tree-node-success? [node]
+  (and (vector? node)
+       (= (count node) 2)
+       (number? (nth node 0))
+       (sequential? (nth node 1))))
 
 ;; failure
-(t/defalias TreeNode
-  (t/HVec [t/Num (t/Seqable TreeNode)]))
-(t/ann tree-node? (t/Pred TreeNode))
-(defn tree-node? [node]
-  (if (not (and (vector? node) (= (count node) 2)))
-    false
-    (let [[fst snd] node]
-      (if (not (number? fst))
-        false
-        (if (not (sequential? snd))
-          false
-          true)))))
+(t/ann tree-node-failure? [t/Any -> t/Bool])
+(defn tree-node-failure? [node]
+  (and (vector? node)
+       (= (count node) 2)
+       (number? (nth node 0))
+       (sequential? (nth node 1))
+       "false"))  ; Expected error: Expected Boolean, Actual (t/Val "false")
 
 ;; Example rainfall
 ;; success

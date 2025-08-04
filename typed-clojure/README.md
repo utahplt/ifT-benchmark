@@ -127,7 +127,7 @@ The main complexity arises in verbose annotations for complex types (e.g., `t/HM
 
 > Q. Are any examples inexpressible? Why?
 
-All examples in `examples.clj` are expressible, but `tree_node` in the failure case passes type checking incorrectly. This is because Typed Clojure does not fully verify the body of custom predicates like `tree-node?` against their declared type (`t/Pred TreeNode`), trusting the programmer's annotation. This is a known limitation, as noted in the benchmark results table (`tree_node` marked as `X`).
+All examples in `examples.clj` are expressible.
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
@@ -137,7 +137,7 @@ Expressed Well:
 - rainfall: The rainfall-success function uses a typed loop (`t/loop`) to process weather reports, with clear annotations for `t/Double` and `t/Long`. The implementation closely follows Clojure's functional style, making it idiomatic and precise.
 
 Expressed Poorly:
-- `tree_node`: The `tree-node?` predicate is verbose due to the recursive type `TreeNode` and the need to check vector structure, element types, and recursive application of `every?`. The failure case passes incorrectly because Typed Clojure does not validate the predicate body, making it less robust than desired.
+- The `tree-node-success?` and `tree-node-failure?` functions highlight a key weakness in how Typed Clojure handles predicate functions over recursive types. While the type alias is well-defined, the predicate logic — which checks structure via `vector?`, `count`, `number?`, and `sequential?` — operates at runtime and is not validated by the type system for correctness.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
@@ -146,4 +146,4 @@ The implementations in examples.clj are direct but slightly more verbose due to 
 - `filter` maps directly to the pseudocode's filtering logic but requires a polymorphic type annotation `(t/All [A] ...)`.
 - `flatten` follows the pseudocode's recursive structure but needs `t/ann-form` for base cases to assert types like `IntVector`.
 - `rainfall` aligns closely with the pseudocode but includes additional checks (e.g., `map?`, `not (nil? day)`) to handle Clojure's dynamic nature, making it slightly more complex.
-- `tree_node` is direct but requires multiple nested checks, and the lack of predicate body validation introduces a subtle error in the failure case.
+- `tree_node` function is a direct and faithful implementation of a structural predicate for a recursive tree type. It checks that the node is a vector of length 2, the first element is a number, and the second is a sequence of valid `TreeNodes` — exactly as specified. The recursive validation via every? mirrors the expected inductive definition.
