@@ -10,7 +10,7 @@
   (filterv pred array))
 
 ;; failure
-(t/ann filter-success (t/All [A] [(t/Vec A) [A :-> t/Bool] :-> (t/Vec A)]))
+(t/ann filter-failure (t/All [A] [(t/Vec A) [A :-> t/Bool] :-> (t/Vec A)]))
 (defn filter-failure [array pred]
   (t/ann-form
     (vec (for [value array]
