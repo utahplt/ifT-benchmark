@@ -188,10 +188,11 @@
 ;; success
 (t/ann merge-with-union-success-f [t/Any :-> (t/U t/Str t/Num t/Any)])
 (defn merge-with-union-success-f [x]
-  (cond
-    (string? x) (str x "hello")
-    (number? x) (+ x 1)
-    :else x))
+  (let [result (cond
+                 (string? x) (str x "hello")
+                 (number? x) (+ x 1)
+                 :else x)]
+    result))
 
 ;; failure
 (t/ann merge-with-union-failure-f [t/Any :-> (t/U t/Str t/Num t/Any)])
