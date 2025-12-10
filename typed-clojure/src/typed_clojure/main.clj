@@ -1,0 +1,281 @@
+(ns typed-clojure.main
+  (:require [typed.clojure :as t])
+  (:gen-class))
+
+;;; Code:
+;; Example positive
+;; success
+(t/ann positive-success-f [t/Any :-> (t/U t/Int t/Any)])
+(defn positive-success-f [x]
+  (if (string? x)
+    (count x)
+    x))
+
+;; failure
+(t/ann positive-failure-f [t/Any :-> (t/U t/Int t/Any)])
+(defn positive-failure-f [x]
+  (if (string? x)
+    (t/ann-form (.isNaN x) t/Num) ; Type error: strings don't have .isNaN
+    x))
+
+;; Example negative
+;; success
+(t/ann negative-success-f [(t/U t/Str t/Num) :-> t/Num])
+(defn negative-success-f [x]
+  (if (string? x)
+    (count x)
+    (+ x 1)))
+
+;; failure
+(t/ann negative-failure-f [(t/U t/Str t/Num t/Bool) :-> t/Num])
+(defn negative-failure-f [x]
+  (if (string? x)
+    (count x)
+    (t/ann-form (+ x 1) t/Num))) ; Type error: x could be boolean
+
+;; Example connectives
+;; success
+(t/ann connectives-success-f [(t/U t/Str t/Num) :-> t/Num])
+(defn connectives-success-f [x]
+  (if (not (number? x))
+    (count x)
+    0))
+
+(t/ann connectives-success-g [t/Any :-> t/Num])
+(defn connectives-success-g [x]
+  (if (or (string? x) (number? x))
+    (connectives-success-f x)
+    0))
+
+(t/ann connectives-success-h [(t/U t/Str t/Num t/Bool) :-> t/Num])
+(defn connectives-success-h [x]
+  (if (and (not (boolean? x)) (not (number? x)))
+    (count x)
+    0))
+
+;; failure
+(t/ann connectives-failure-f [(t/U t/Str t/Num) :-> t/Num])
+(defn connectives-failure-f [x]
+  (if (not (number? x))
+    (t/ann-form (+ x 1) t/Num) ; Type error: x could be string
+    0))
+
+(t/ann connectives-failure-g [t/Any :-> t/Num])
+(defn connectives-failure-g [x]
+  (if (or (string? x) (number? x))
+    (t/ann-form (+ x 1) t/Num) ; Type error: x could be string
+    0))
+
+(t/ann connectives-failure-h [(t/U t/Str t/Num t/Bool) :-> t/Num])
+(defn connectives-failure-h [x]
+  (if (and (not (boolean? x)) (not (number? x)))
+    (t/ann-form (+ x 1) t/Num) ; Type error: x is string
+    0))
+
+;; Example nesting_body
+;; success
+(t/ann nesting-body-success-f [(t/U t/Str t/Num t/Bool) :-> t/Num])
+(defn nesting-body-success-f [x]
+  (if (not (string? x))
+    (if (not (boolean? x))
+      (+ x 1)
+      0)
+    0))
+
+;; failure
+(t/ann nesting-body-failure-f [(t/U t/Str t/Num t/Bool) :-> t/Num])
+(defn nesting-body-failure-f [x]
+  (if (or (string? x) (number? x))
+    (if (or (number? x) (boolean? x))
+      (t/ann-form (count x) t/Num) ; Type error: x could be number
+      0)
+    0))
+
+;; Example struct_fields
+;; success
+(t/defalias MyStruct
+  (t/HMap :mandatory {:a (t/U nil Number)}
+          :complete? true))
+(t/ann struct-fields-success-f [MyStruct -> t/Num])
+(defn struct-fields-success-f [x]
+  (if (number? (:a x))
+    (:a x)
+    0))
+
+;; failure
+(t/defalias MyStruct
+  (t/HMap :mandatory {:a (t/U nil Number)}
+          :complete? true))
+(t/ann struct-fields-failure-f [MyStruct -> t/Num])
+(defn struct-fields-failure-f [x]
+  (if (string? (:a x))
+    (t/ann-form (:a x) t/Num) ; Error: can't cast string to Num
+    0))
+
+;; Example tuple_elements
+;; success
+(t/ann tuple-elements-success-f [(t/NonEmptyVec (t/U nil t/Num)) :-> t/Num])
+(defn tuple-elements-success-f [x]
+  (let [first-elem (nth x 0)]
+    (if (number? first-elem)
+      first-elem
+      0)))
+
+;; failure
+(t/ann tuple-elements-failure-f [(t/NonEmptyVec (t/U nil t/Num)) :-> t/Num])
+(defn tuple-elements-failure-f [x]
+  (if (number? (nth x 0))
+    (+ (nth x 0) (nth x 1)) ; Type error: (nth x 1) could be non-number
+    0))
+
+;; Example tuple_length
+;; success
+(t/ann tuple-length-success-f [(t/NonEmptyVec t/Num) :-> t/Num])
+(defn tuple-length-success-f [x]
+  (if (= (count x) 2)
+    (let [first-elem (nth x 0)
+          second-elem (nth x 1)]
+      (+ first-elem second-elem))
+    0))
+
+;; failure
+(t/ann tuple-length-failure-f [(t/U (t/NonEmptyVec t/Num) (t/NonEmptyVec t/Str)) :-> t/Num])
+(defn tuple-length-failure-f [x]
+  (if (= (count x) 2)
+    (+ (nth x 0) (nth x 1))
+    (+ (nth x 0) (nth x 1)))) ; Type error: with expected type: t/Num
+
+;; Example alias
+;; success
+(t/ann alias-success-f [t/Any :-> (t/U t/Int t/Any)])
+(defn alias-success-f [x]
+  (let [y (string? x)]
+    (if y
+      (count x)
+      x)))
+
+;; failure
+(t/ann alias-failure-f [t/Any :-> (t/U t/Int t/Any)])
+(defn alias-failure-f [x]
+  (let [y (string? x)]
+    (if y
+      (t/ann-form (.isNaN x) t/Num) ; Type error: strings don't have .isNaN
+      x)))
+
+(t/ann alias-failure-g [t/Any :-> (t/U t/Int t/Any)])
+(defn alias-failure-g [x]
+  (let [y true] ; Overwrites type check
+    (if y
+      (t/ann-form (count x) t/Any) ; Type error: x could be any type
+      x)))
+
+;; Example nesting_condition
+;; success
+(t/ann nesting-condition-success-f [t/Any t/Any :-> t/Num])
+(defn nesting-condition-success-f [x y]
+  (if (if (number? x) (string? y) false)
+    (+ x (count y))
+    0))
+
+;; failure
+(t/ann nesting-condition-failure-f [t/Any t/Any :-> t/Num])
+(defn nesting-condition-failure-f [x y]
+  (if (if (number? x) (string? y) (string? y))
+    (t/ann-form (+ x (count y)) t/Num) ; Type error: x could be non-number
+    0))
+
+;; Example merge_with_union
+;; success
+(t/ann merge-with-union-success-f [t/Any :-> (t/U t/Str t/Num t/Any)])
+(defn merge-with-union-success-f [x]
+  (let [result (cond
+                 (string? x) (str x "hello")
+                 (number? x) (+ x 1)
+                 :else x)]
+    result))
+
+;; failure
+(t/ann merge-with-union-failure-f [t/Any :-> (t/U t/Str t/Num t/Any)])
+(defn merge-with-union-failure-f [x]
+  (let [result (cond
+                 (string? x) (str x "hello")
+                 (number? x) (+ x 1)
+                 :else x)]
+    (t/ann-form (.isNaN result) t/Bool))) ; Type error: result could be string
+
+;; Example predicate_2way
+;; success
+(t/ann predicate-2way-success-f [(t/U t/Str t/Num) -> t/Bool
+                                 :filters {:then (is t/Str 0)
+                                           :else (! t/Str 0)}])
+(defn predicate-2way-success-f [x]
+  (string? x))
+
+(t/ann predicate-2way-success-g [(t/U t/Str t/Num) -> t/Num])
+(defn predicate-2way-success-g [x]
+  (if (predicate-2way-success-f x)
+    (count x)
+    x))
+
+;; failure
+(t/ann predicate-2way-failure-f [(t/U t/Str t/Num) -> t/Bool
+                                 :filters {:then (is t/Str 0)}])
+(defn predicate-2way-failure-f [x]
+  (string? x))
+
+(t/ann predicate-2way-failure-g [(t/U t/Str t/Num) -> t/Num])
+(defn predicate-2way-failure-g [x]
+  (if (predicate-2way-failure-f x)
+    (t/ann-form (+ x 1) t/Num) ; Type Error: x is string!
+    x))
+
+;; Example predicate_1way
+;; success
+(t/ann predicate-1way-success-f [(t/U t/Str t/Num) -> t/Bool
+                                 :filters {:then (is t/Num 0)}])
+(defn predicate-1way-success-f [x]
+  (and (number? x) (> x 0)))
+
+(t/ann predicate-1way-success-g [(t/U t/Str t/Num) -> t/Num])
+(defn predicate-1way-success-g [x]
+  (if (predicate-1way-success-f x)
+    (+ x 1)
+    0))
+
+;; failure
+(t/ann predicate-1way-failure-f [(t/U t/Str t/Num) -> t/Bool
+                                 :filters {:then (is t/Num 0)}])
+(defn predicate-1way-failure-f [x]
+  (and (number? x) (> x 0)))
+
+(t/ann predicate-1way-failure-g [(t/U t/Str t/Num) -> t/Num])
+(defn predicate-1way-failure-g [x]
+  (if (predicate-1way-failure-f x)
+    (+ x 1)
+    (t/ann-form (count x) t/Num))) ; Error: x could still be number (not ruled out)
+
+;; Example predicate_checked
+;; success
+(t/ann predicate-checked-success-f [(t/U t/Str t/Num t/Bool) -> t/Bool
+                                    :filters {:then (is t/Str 0)
+                                              :else (! t/Str 0)}])
+(defn predicate-checked-success-f [x]
+  (string? x))
+
+(t/ann predicate-checked-success-g [(t/U t/Str t/Num t/Bool) -> t/Bool
+                                    :filters {:then (! t/Str 0)
+                                              :else (is t/Str 0)}])
+(defn predicate-checked-success-g [x]
+  (not (predicate-checked-success-f x)))
+
+;; failure
+(t/ann predicate-checked-failure-f [(t/U t/Str t/Num t/Bool) -> t/Bool
+                                    :filters {:then (or (is t/Str 0) (is t/Num 0))
+                                              :else (and (! t/Str 0) (! t/Num 0))}])
+(defn predicate-checked-failure-f [x]
+  (or (string? x) (number? x)))
+
+(t/ann predicate-checked-failure-g [(t/U t/Str t/Num t/Bool) -> t/Bool
+                                    :filters {:then (is t/Num 0)}])
+(defn predicate-checked-failure-g [x]
+  (number? x))
