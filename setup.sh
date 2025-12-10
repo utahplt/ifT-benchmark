@@ -19,6 +19,10 @@ if ! command_exists python; then
     echo "Error: python is not installed. Please install Python first."
     exit 1
 fi
+if ! command_exists ruby; then
+    echo "Error: ruby is not installed. Please install Ruby first."
+    exit 1
+fi
 
 # Install TypeScript
 echo "Setting up TypeScript..."
@@ -69,5 +73,10 @@ else
     fi
 
 fi
+
+echo "Setting up Sorbet..."
+cd Sorbet
+bundle install
+cd ..
 
 echo "Setup complete!"

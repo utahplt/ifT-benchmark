@@ -62,9 +62,9 @@
             (extension ".rb")
             (file-base-path ,(build-path (current-directory) "Sorbet"))
             (examples-file-base-path ,(build-path (current-directory) "Sorbet"))
-            (arguments ,(list "main.rb" "tc"))
-            (examples-arguments ,(list "examples.rb" "tc"))
-            (command "srb"))))
+            (arguments ,(list "main.rb" "exec" "srb" "tc"))
+            (examples-arguments ,(list "examples.rb" "exec" "srb" "tc"))
+            (command "bundle"))))
 
 (define (get-benchmark-result-row type-checker-symbol)
   (when (benchmark-verbose)

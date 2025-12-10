@@ -9,20 +9,21 @@ To run the benchmark, you need to have the following tools installed:
 
 The tested versions are:
 
-| Tool         | Version | Notes                                                                                                                |
-|--------------|---------|----------------------------------------------------------------------------------------------------------------------|
-| Typed Racket | 8.15    | Bundled with [Racket 8.15](https://download.racket-lang.org/releases/8.15/)                                                                                             |
-| Node.js      | 22.11.0 | See `.node-version` file under relevant directories                                                                  |
-| npm          | 10.9.0  | Bundled with Node.js                                                                                                 |
-| Python       | 3.13.0  | See `.python-version` file under relevant directories                                                                |
-| pip          | 24.2    | Bundled with Python                                                                                                  |
-| TypeScript   | 5.6.3   | See [`TypeScript/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/TypeScript/package-lock.json) |
-| Flow         | 0.245.2 | See [`Flow/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Flow/package-lock.json)             |
-| Pyright      | 1.1.389 | See [`Pyright/package-lock.json`](https://github.com/utahplt/ot-benchmark/blob/main/Pyright/package-lock.json)       |
-| mypy         | 1.13.0  | See [`mypy/requirements.txt`](https://github.com/utahplt/ot-benchmark/blob/main/mypy/requirements.txt)               |
-| Ruby         | 3.3.5   | Required for Sorbet; see [installation instructions](https://www.ruby-lang.org/en/downloads/)                        |
-| gem          | 3.3.5   | Bundled with Ruby                                                                                                    | 
-| Sorbet       | 0.5.12124| Installed via `gem install sorbet -v 0.5.11576`; see [Sorbet docs](https://sorbet.org/docs/setup)                   |
+| Tool         | Version   | Notes                                                                                                                 |
+|--------------|-----------|-----------------------------------------------------------------------------------------------------------------------|
+| Typed Racket | 8.15      | Bundled with [Racket 8.15](https://download.racket-lang.org/releases/8.15/)                                           |
+| Node.js      | 22.11.0   | See `.node-version` file under relevant directories                                                                   |
+| npm          | 10.9.0    | Bundled with Node.js                                                                                                  |
+| Python       | 3.13.0    | See `.python-version` file under relevant directories                                                                 |
+| pip          | 24.2      | Bundled with Python                                                                                                   |
+| TypeScript   | 5.6.3     | See [`TypeScript/package-lock.json`](https://github.com/utahplt/ifT-benchmark/blob/main/TypeScript/package-lock.json) |
+| Flow         | 0.245.2   | See [`Flow/package-lock.json`](https://github.com/utahplt/ifT-benchmark/blob/main/Flow/package-lock.json)             |
+| Pyright      | 1.1.389   | See [`Pyright/package-lock.json`](https://github.com/utahplt/ifT-benchmark/blob/main/Pyright/package-lock.json)       |
+| mypy         | 1.13.0    | See [`mypy/requirements.txt`](https://github.com/utahplt/ifT-benchmark/blob/main/mypy/requirements.txt)               |
+| Ruby         | 3.4.7     | See [`Sorbet/.ruby-version`](https://github.com/utahplt/ifT-benchmark/blob/main/Sorbet/.ruby-version)                 |
+| Bundler      | 2.7.2     | Bundled with Ruby                                                                                                     |
+| gem          | 3.7.2     | Bundled with Ruby                                                                                                     |
+| Sorbet       | 0.6.12829 | See [`Sorbet/Gemfile.lock`](https://github.com/utahplt/ifT-benchmark/blob/main/Sorbet/Gemfile.lock)                   |
 
 First, clone this repository:
 

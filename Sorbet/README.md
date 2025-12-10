@@ -10,7 +10,7 @@ Sorbet adds static types to Ruby.
   - <https://sorbet.org/docs/from-typescript>
 * If-T version: **1.0**
 * Implementation: [./main.rb](./main.rb), [./examples.rb](./examples.rb)
-* Raw command to run the benchmark: `srb tc main.rb`, `srb tc examples.rb`
+* Raw command to run the benchmark: `srb tc main.rb`, `srb tc examples.rb` (or, using `bundler`: `bundle exec srb tc main.rb`, `bundle exec srb tc examples.rb`)
 
 ## Type System Basics
 
