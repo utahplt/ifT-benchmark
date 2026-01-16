@@ -530,15 +530,15 @@ For language details: [SETUP.md](./SETUP.md)
 | negative          | O            | O          | O    | O    | O       | O      |
 | connectives       | O            | O          | O    | O    | O       | O      |
 | nesting_body      | O            | O          | O    | O    | O       | O      |
-| struct_fields     | O            | O          | O    | O    | O       | X      |
+| struct_fields     | O            | O          | O    | O    | O       | x      |
 | tuple_elements    | O            | O          | O    | O    | O       | O      |
-| tuple_length      | x            | O          | O    | O    | O       | X      |
+| tuple_length      | x            | O          | O    | O    | O       | x      |
 | alias             | O            | O          | x    | x    | O       | O      |
 | nesting_condition | O            | x          | x    | x    | x       | O      |
 | merge_with_union  | O            | O          | O    | x    | O       | O      |
-| predicate_2way    | O            | O          | O    | O    | O       | X      |
-| predicate_1way    | O            | x          | O    | O    | O       | X      |
-| predicate_checked | O            | O          | O    | O    | O       | X      |
+| predicate_2way    | O            | O          | O    | O    | O       | x      |
+| predicate_1way    | O            | x          | O    | O    | O       | x      |
+| predicate_checked | O            | x          | O    | x    | x       | x      |
 
 `O` means passed, `x` means not passed.
 
