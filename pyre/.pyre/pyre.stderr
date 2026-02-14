@@ -1,0 +1,464 @@
+2025-06-23 16:26:47,126 [PID 33150] INFO No binary specified, looking for `pyre.bin` in PATH
+2025-06-23 16:26:47,126 [PID 33150] INFO Pyre binary is located at `/home/siva/.venvs/venv/bin/pyre.bin`
+2025-06-23 16:26:47,127 [PID 33150] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 3.
+2025-06-23 16:26:47,127 [PID 33150] INFO No typeshed specified, looking for it...
+2025-06-23 16:26:47,128 [PID 33150] INFO Found: `/home/siva/.venvs/venv/lib/pyre_check/typeshed`
+2025-06-23 16:26:47,128 [PID 33150] INFO Writing arguments into /tmp/pyre_arguments_2j06m59n.json...
+2025-06-23 16:26:47,129 [PID 33150] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/siva/Desktop/sor/ifT-benchmark/pyre/examples"
+    ]
+  },
+  "search_paths": [
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stdlib",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/boto",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/examples"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/siva/Desktop/sor/ifT-benchmark/pyre/.pyre",
+  "global_root": "/home/siva/Desktop/sor/ifT-benchmark/pyre",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 8
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 3,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2025-06-23 16:26:47,170 [PID 33150] INFO  Initializing shared memory (heap_size: 8589934592, dep_table_pow: 1, hash_table_pow: 26)
+2025-06-23 16:26:47,170 [PID 33150] INFO  Building module tracker...
+2025-06-23 16:26:47,211 [PID 33150] PERFORMANCE  Module tracker built: 0.038s
+2025-06-23 16:26:47,211 [PID 33150] PERFORMANCE  Full environment built: 0.039s
+2025-06-23 16:26:47,211 [PID 33150] INFO  Collecting all definitions...
+2025-06-23 16:26:47,211 [PID 33150] PERFORMANCE  Collected definitions (defines: 9): 0.007s
+2025-06-23 16:26:47,211 [PID 33150] INFO  Checking 9 functions...
+2025-06-23 16:26:47,576 [PID 33150] INFO  Processed 2 of 9 functions
+2025-06-23 16:26:47,597 [PID 33150] INFO  Processed 4 of 9 functions
+2025-06-23 16:26:47,608 [PID 33150] INFO  Processed 6 of 9 functions
+2025-06-23 16:26:47,669 [PID 33150] INFO  Processed 8 of 9 functions
+2025-06-23 16:26:47,680 [PID 33150] INFO  Processed 9 of 9 functions
+2025-06-23 16:26:47,680 [PID 33150] PERFORMANCE  Check_TypeCheck: 0.460s
+2025-06-23 16:26:47,680 [PID 33150] MEMORY  Shared memory size post-typecheck (size: 0)
+2025-06-23 16:26:47,680 [PID 33150] INFO  Postprocessing 1 sources...
+2025-06-23 16:26:47,680 [PID 33150] INFO  Postprocessed 1 of 1 sources
+2025-06-23 16:26:47,680 [PID 33150] PERFORMANCE  Check_Postprocessing: 0.001s
+2025-06-23 16:26:47,680 [PID 33150] PERFORMANCE  Check (request kind: FullCheck): 0.509s
+2025-06-23 16:26:47,691 [PID 33150] ERROR Found 4 type errors!
+2025-06-23 16:26:54,413 [PID 33244] INFO No binary specified, looking for `pyre.bin` in PATH
+2025-06-23 16:26:54,414 [PID 33244] INFO Pyre binary is located at `/home/siva/.venvs/venv/bin/pyre.bin`
+2025-06-23 16:26:54,415 [PID 33244] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 3.
+2025-06-23 16:26:54,415 [PID 33244] INFO No typeshed specified, looking for it...
+2025-06-23 16:26:54,415 [PID 33244] INFO Found: `/home/siva/.venvs/venv/lib/pyre_check/typeshed`
+2025-06-23 16:26:54,416 [PID 33244] INFO Writing arguments into /tmp/pyre_arguments_zyb3cybd.json...
+2025-06-23 16:26:54,417 [PID 33244] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+    ]
+  },
+  "search_paths": [
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stdlib",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/boto",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/siva/.venvs/venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/siva/Desktop/sor/ifT-benchmark/pyre/.pyre",
+  "global_root": "/home/siva/Desktop/sor/ifT-benchmark/pyre",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 8
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 3,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2025-06-23 16:26:54,449 [PID 33244] INFO  Initializing shared memory (heap_size: 8589934592, dep_table_pow: 1, hash_table_pow: 26)
+2025-06-23 16:26:54,460 [PID 33244] INFO  Building module tracker...
+2025-06-23 16:26:54,511 [PID 33244] PERFORMANCE  Module tracker built: 0.052s
+2025-06-23 16:26:54,512 [PID 33244] PERFORMANCE  Full environment built: 0.053s
+2025-06-23 16:26:54,512 [PID 33244] INFO  Collecting all definitions...
+2025-06-23 16:26:54,532 [PID 33244] PERFORMANCE  Collected definitions (defines: 44): 0.019s
+2025-06-23 16:26:54,532 [PID 33244] INFO  Checking 44 functions...
+2025-06-23 16:26:54,919 [PID 33244] INFO  Processed 8 of 44 functions
+2025-06-23 16:26:54,930 [PID 33244] INFO  Processed 16 of 44 functions
+2025-06-23 16:26:54,930 [PID 33244] INFO  Processed 24 of 44 functions
+2025-06-23 16:26:54,991 [PID 33244] INFO  Processed 32 of 44 functions
+2025-06-23 16:26:55,003 [PID 33244] INFO  Processed 40 of 44 functions
+2025-06-23 16:26:55,034 [PID 33244] INFO  Processed 44 of 44 functions
+2025-06-23 16:26:55,034 [PID 33244] PERFORMANCE  Check_TypeCheck: 0.497s
+2025-06-23 16:26:55,034 [PID 33244] MEMORY  Shared memory size post-typecheck (size: 0)
+2025-06-23 16:26:55,034 [PID 33244] INFO  Postprocessing 1 sources...
+2025-06-23 16:26:55,035 [PID 33244] INFO  Postprocessed 1 of 1 sources
+2025-06-23 16:26:55,035 [PID 33244] PERFORMANCE  Check_Postprocessing: 0.005s
+2025-06-23 16:26:55,035 [PID 33244] PERFORMANCE  Check (request kind: FullCheck): 0.577s
+2025-06-23 16:26:55,057 [PID 33244] ERROR Found 23 type errors!
+2025-06-23 23:03:28,782 [PID 12865] INFO No binary specified, looking for `pyre.bin` in PATH
+2025-06-23 23:03:28,783 [PID 12865] INFO Pyre binary is located at `/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/bin/pyre.bin`
+2025-06-23 23:03:28,783 [PID 12865] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 3.
+2025-06-23 23:03:28,784 [PID 12865] INFO No typeshed specified, looking for it...
+2025-06-23 23:03:28,784 [PID 12865] INFO Found: `/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed`
+2025-06-23 23:03:28,784 [PID 12865] INFO Writing arguments into /tmp/pyre_arguments_m6y1hl1i.json...
+2025-06-23 23:03:28,785 [PID 12865] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+    ]
+  },
+  "search_paths": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stdlib",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/boto",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/siva/Desktop/sor/ifT-benchmark/pyre/.pyre",
+  "global_root": "/home/siva/Desktop/sor/ifT-benchmark/pyre",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 8
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 3,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2025-06-23 23:03:28,805 [PID 12865] INFO  Initializing shared memory (heap_size: 8589934592, dep_table_pow: 1, hash_table_pow: 26)
+2025-06-23 23:03:28,805 [PID 12865] INFO  Building module tracker...
+2025-06-23 23:03:28,846 [PID 12865] PERFORMANCE  Module tracker built: 0.036s
+2025-06-23 23:03:28,847 [PID 12865] PERFORMANCE  Full environment built: 0.036s
+2025-06-23 23:03:28,847 [PID 12865] INFO  Collecting all definitions...
+2025-06-23 23:03:28,857 [PID 12865] PERFORMANCE  Collected definitions (defines: 44): 0.014s
+2025-06-23 23:03:28,857 [PID 12865] INFO  Checking 44 functions...
+2025-06-23 23:03:29,101 [PID 12865] INFO  Processed 8 of 44 functions
+2025-06-23 23:03:29,101 [PID 12865] INFO  Processed 16 of 44 functions
+2025-06-23 23:03:29,102 [PID 12865] INFO  Processed 24 of 44 functions
+2025-06-23 23:03:29,142 [PID 12865] INFO  Processed 32 of 44 functions
+2025-06-23 23:03:29,153 [PID 12865] INFO  Processed 40 of 44 functions
+2025-06-23 23:03:29,164 [PID 12865] INFO  Processed 44 of 44 functions
+2025-06-23 23:03:29,165 [PID 12865] PERFORMANCE  Check_TypeCheck: 0.305s
+2025-06-23 23:03:29,165 [PID 12865] MEMORY  Shared memory size post-typecheck (size: 0)
+2025-06-23 23:03:29,165 [PID 12865] INFO  Postprocessing 1 sources...
+2025-06-23 23:03:29,165 [PID 12865] INFO  Postprocessed 1 of 1 sources
+2025-06-23 23:03:29,165 [PID 12865] PERFORMANCE  Check_Postprocessing: 0.003s
+2025-06-23 23:03:29,166 [PID 12865] PERFORMANCE  Check (request kind: FullCheck): 0.359s
+2025-06-23 23:03:29,176 [PID 12865] ERROR Found 23 type errors!
+2025-06-23 23:03:41,281 [PID 12999] INFO No binary specified, looking for `pyre.bin` in PATH
+2025-06-23 23:03:41,281 [PID 12999] INFO Pyre binary is located at `/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/bin/pyre.bin`
+2025-06-23 23:03:41,282 [PID 12999] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 3.
+2025-06-23 23:03:41,291 [PID 12999] INFO No typeshed specified, looking for it...
+2025-06-23 23:03:41,291 [PID 12999] INFO Found: `/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed`
+2025-06-23 23:03:41,292 [PID 12999] INFO Writing arguments into /tmp/pyre_arguments_oa2ho4o4.json...
+2025-06-23 23:03:41,293 [PID 12999] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+    ]
+  },
+  "search_paths": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stdlib",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/boto",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/siva/Desktop/sor/ifT-benchmark/pyre/.pyre",
+  "global_root": "/home/siva/Desktop/sor/ifT-benchmark/pyre",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 8
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 3,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2025-06-23 23:03:41,315 [PID 12999] INFO  Initializing shared memory (heap_size: 8589934592, dep_table_pow: 1, hash_table_pow: 26)
+2025-06-23 23:03:41,325 [PID 12999] INFO  Building module tracker...
+2025-06-23 23:03:41,356 [PID 12999] PERFORMANCE  Module tracker built: 0.031s
+2025-06-23 23:03:41,356 [PID 12999] PERFORMANCE  Full environment built: 0.031s
+2025-06-23 23:03:41,356 [PID 12999] INFO  Collecting all definitions...
+2025-06-23 23:03:41,367 [PID 12999] PERFORMANCE  Collected definitions (defines: 44): 0.009s
+2025-06-23 23:03:41,367 [PID 12999] INFO  Checking 44 functions...
+2025-06-23 23:03:41,601 [PID 12999] INFO  Processed 8 of 44 functions
+2025-06-23 23:03:41,601 [PID 12999] INFO  Processed 16 of 44 functions
+2025-06-23 23:03:41,601 [PID 12999] INFO  Processed 24 of 44 functions
+2025-06-23 23:03:41,645 [PID 12999] INFO  Processed 32 of 44 functions
+2025-06-23 23:03:41,645 [PID 12999] INFO  Processed 40 of 44 functions
+2025-06-23 23:03:41,655 [PID 12999] INFO  Processed 44 of 44 functions
+2025-06-23 23:03:41,656 [PID 12999] PERFORMANCE  Check_TypeCheck: 0.289s
+2025-06-23 23:03:41,656 [PID 12999] MEMORY  Shared memory size post-typecheck (size: 0)
+2025-06-23 23:03:41,656 [PID 12999] INFO  Postprocessing 1 sources...
+2025-06-23 23:03:41,656 [PID 12999] INFO  Postprocessed 1 of 1 sources
+2025-06-23 23:03:41,656 [PID 12999] PERFORMANCE  Check_Postprocessing: 0.003s
+2025-06-23 23:03:41,656 [PID 12999] PERFORMANCE  Check (request kind: FullCheck): 0.335s
+2025-06-23 23:03:41,668 [PID 12999] ERROR Found 23 type errors!
+2025-06-23 23:04:11,203 [PID 13251] INFO No binary specified, looking for `pyre.bin` in PATH
+2025-06-23 23:04:11,204 [PID 13251] INFO Pyre binary is located at `/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/bin/pyre.bin`
+2025-06-23 23:04:11,205 [PID 13251] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 3.
+2025-06-23 23:04:11,205 [PID 13251] INFO No typeshed specified, looking for it...
+2025-06-23 23:04:11,205 [PID 13251] INFO Found: `/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed`
+2025-06-23 23:04:11,205 [PID 13251] INFO Writing arguments into /tmp/pyre_arguments_wmjito83.json...
+2025-06-23 23:04:11,206 [PID 13251] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+    ]
+  },
+  "search_paths": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stdlib",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/boto",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/siva/Desktop/sor/ifT-benchmark/pyre/.pyre",
+  "global_root": "/home/siva/Desktop/sor/ifT-benchmark/pyre",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 8
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 3,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2025-06-23 23:04:11,226 [PID 13251] INFO  Initializing shared memory (heap_size: 8589934592, dep_table_pow: 1, hash_table_pow: 26)
+2025-06-23 23:04:11,237 [PID 13251] INFO  Building module tracker...
+2025-06-23 23:04:11,268 [PID 13251] PERFORMANCE  Module tracker built: 0.037s
+2025-06-23 23:04:11,268 [PID 13251] PERFORMANCE  Full environment built: 0.037s
+2025-06-23 23:04:11,268 [PID 13251] INFO  Collecting all definitions...
+2025-06-23 23:04:11,280 [PID 13251] PERFORMANCE  Collected definitions (defines: 44): 0.011s
+2025-06-23 23:04:11,280 [PID 13251] INFO  Checking 44 functions...
+2025-06-23 23:04:11,587 [PID 13251] INFO  Processed 8 of 44 functions
+2025-06-23 23:04:11,587 [PID 13251] INFO  Processed 16 of 44 functions
+2025-06-23 23:04:11,587 [PID 13251] INFO  Processed 24 of 44 functions
+2025-06-23 23:04:11,628 [PID 13251] INFO  Processed 32 of 44 functions
+2025-06-23 23:04:11,628 [PID 13251] INFO  Processed 40 of 44 functions
+2025-06-23 23:04:11,650 [PID 13251] INFO  Processed 44 of 44 functions
+2025-06-23 23:04:11,650 [PID 13251] PERFORMANCE  Check_TypeCheck: 0.369s
+2025-06-23 23:04:11,650 [PID 13251] MEMORY  Shared memory size post-typecheck (size: 0)
+2025-06-23 23:04:11,650 [PID 13251] INFO  Postprocessing 1 sources...
+2025-06-23 23:04:11,662 [PID 13251] ERROR Found 23 type errors!
+2025-06-23 23:05:25,550 [PID 13804] INFO No binary specified, looking for `pyre.bin` in PATH
+2025-06-23 23:05:25,551 [PID 13804] INFO Pyre binary is located at `/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/bin/pyre.bin`
+2025-06-23 23:05:25,551 [PID 13804] INFO Could not determine the number of Pyre workers from configuration. Auto-set the value to 3.
+2025-06-23 23:05:25,551 [PID 13804] INFO No typeshed specified, looking for it...
+2025-06-23 23:05:25,552 [PID 13804] INFO Found: `/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed`
+2025-06-23 23:05:25,552 [PID 13804] INFO Writing arguments into /tmp/pyre_arguments_z8yq6rvd.json...
+2025-06-23 23:05:25,552 [PID 13804] DEBUG Arguments:
+{
+  "source_paths": {
+    "kind": "simple",
+    "paths": [
+      "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+    ]
+  },
+  "search_paths": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stdlib",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ExifRead",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/PyMySQL",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/PyYAML",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/aiofiles",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/boto",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/chevron",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/colorama",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ldap3",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/mysqlclient",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/paramiko",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/psycopg2",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/pycurl",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/python-dateutil",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/pytz",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/regex",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/requests",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/retry",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/tqdm",
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/venv/lib/pyre_check/typeshed/stubs/ujson"
+  ],
+  "excludes": [],
+  "checked_directory_allowlist": [
+    "/home/siva/Desktop/sor/ifT-benchmark/pyre/main"
+  ],
+  "checked_directory_blocklist": [],
+  "extensions": [],
+  "log_path": "/home/siva/Desktop/sor/ifT-benchmark/pyre/.pyre",
+  "global_root": "/home/siva/Desktop/sor/ifT-benchmark/pyre",
+  "debug": false,
+  "python_version": {
+    "major": 3,
+    "minor": 12,
+    "micro": 8
+  },
+  "system_platform": "linux",
+  "shared_memory": {},
+  "parallel": true,
+  "number_of_workers": 3,
+  "additional_logging_sections": [],
+  "show_error_traces": false,
+  "strict": false
+}
+2025-06-23 23:05:25,583 [PID 13804] INFO  Initializing shared memory (heap_size: 8589934592, dep_table_pow: 1, hash_table_pow: 26)
+2025-06-23 23:05:25,584 [PID 13804] INFO  Building module tracker...
+2025-06-23 23:05:25,614 [PID 13804] PERFORMANCE  Module tracker built: 0.037s
+2025-06-23 23:05:25,614 [PID 13804] PERFORMANCE  Full environment built: 0.038s
+2025-06-23 23:05:25,614 [PID 13804] INFO  Collecting all definitions...
+2025-06-23 23:05:25,635 [PID 13804] PERFORMANCE  Collected definitions (defines: 44): 0.014s
+2025-06-23 23:05:25,635 [PID 13804] INFO  Checking 44 functions...
+2025-06-23 23:05:25,879 [PID 13804] INFO  Processed 8 of 44 functions
+2025-06-23 23:05:25,893 [PID 13804] INFO  Processed 16 of 44 functions
+2025-06-23 23:05:25,893 [PID 13804] INFO  Processed 24 of 44 functions
+2025-06-23 23:05:25,934 [PID 13804] INFO  Processed 32 of 44 functions
+2025-06-23 23:05:25,934 [PID 13804] INFO  Processed 40 of 44 functions
+2025-06-23 23:05:25,954 [PID 13804] INFO  Processed 44 of 44 functions
+2025-06-23 23:05:25,955 [PID 13804] PERFORMANCE  Check_TypeCheck: 0.319s
+2025-06-23 23:05:25,955 [PID 13804] MEMORY  Shared memory size post-typecheck (size: 0)
+2025-06-23 23:05:25,955 [PID 13804] INFO  Postprocessing 1 sources...
+2025-06-23 23:05:25,955 [PID 13804] INFO  Postprocessed 1 of 1 sources
+2025-06-23 23:05:25,955 [PID 13804] PERFORMANCE  Check_Postprocessing: 0.002s
+2025-06-23 23:05:25,955 [PID 13804] PERFORMANCE  Check (request kind: FullCheck): 0.375s
+2025-06-23 23:05:25,966 [PID 13804] ERROR Found 23 type errors!
