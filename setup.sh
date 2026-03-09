@@ -76,6 +76,8 @@ fi
 cd ..
 
 echo "Setting up Sorbet..."
+# How to fix rbenv: version `x.x.x` is not installed
+# https://gist.github.com/esteedqueen/b605cdf78b0060299322033b6a60afc3
 cd Sorbet
 bundle install
 cd ..
