@@ -73,6 +73,7 @@ else
     fi
 
 fi
+cd ..
 
 echo "Setting up Sorbet..."
 cd Sorbet
