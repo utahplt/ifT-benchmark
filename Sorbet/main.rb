@@ -44,39 +44,6 @@ def negative_failure_f(x)
   end
 end
 
-## Example alias
-## success
-sig { params(x: T.untyped).returns(Integer) }
-def alias_success_f(x)
-  y = x.is_a?(String)
-  if y
-    x.length
-  else
-    0
-  end
-end
-
-## failure
-sig { params(x: T.untyped).returns(Integer) }
-def alias_failure_f(x)
-  y = x.is_a?(String)
-  if y
-    x.is_nan # Expected error: No method 'is_nan' on String
-  else
-    0
-  end
-end
-
-sig { params(x: T.any(String, Integer)).returns(Integer) }
-def alias_failure_g(x)
-  y = x.is_a?(String)
-  if y
-    x.length
-  else
-    x.length # Expected error: length not defined for Integer
-  end
-end
-
 ## Example connectives
 ## success
 sig { params(x: T.any(String, Integer)).returns(Integer) }
@@ -163,6 +130,102 @@ def nesting_body_failure_f(x)
   end
 end
 
+## Example struct_fields
+## success
+sig { params(x: { a: T.untyped }).returns(Integer) }
+def struct_fields_success_f(x)
+  if x[:a].is_a?(Integer)
+    x[:a]
+  else
+    0
+  end
+end
+
+## failure
+sig { params(x: { a: T.any(String, Integer) }).returns(Integer) }
+def struct_fields_failure_f(x)
+  if x[:a].is_a?(String)
+    x[:a] # Expected error: Expected Integer but found String
+  else
+    0
+  end
+end
+
+## Example tuple_elements
+## success
+sig { params(x: [T.untyped, T.untyped]).returns(Integer) }
+def tuple_elements_success_f(x)
+  if x[0].is_a?(Integer)
+    x[0]
+  else
+    0
+  end
+end
+
+## failure
+sig { params(x: [Integer, T.any(String, Integer)]).returns(Integer) }
+def tuple_elements_failure_f(x)
+  if x[0].is_a?(Integer)
+    x[1].length # Expected error: length not defined for Integer
+  else
+    0
+  end
+end
+
+## Example tuple_length
+## success
+sig { params(x: T.any([Integer, Integer], [String, String, String])).returns(Integer) }
+def tuple_length_success_f(x)
+  if x.length == 2
+    x[0] + x[1]
+  else
+    x[0].length
+  end
+end
+
+## failure
+sig { params(x: T.any([Integer, Integer], [String, String, String])).returns(Integer) }
+def tuple_length_failure_f(x)
+  if x.length == 2
+    x[0] + x[1]
+  else
+    T.let(x[0].length, Integer) # Expected error: Cannot assign String#length to Integer
+  end
+end
+
+## Example alias
+## success
+sig { params(x: T.untyped).returns(Integer) }
+def alias_success_f(x)
+  y = x.is_a?(String)
+  if y
+    x.length
+  else
+    0
+  end
+end
+
+## failure
+sig { params(x: T.untyped).returns(Integer) }
+def alias_failure_f(x)
+  y = x.is_a?(String)
+  if y
+    x.is_nan # Expected error: No method 'is_nan' on String
+  else
+    0
+  end
+end
+
+sig { params(x: T.any(String, Integer)).returns(Integer) }
+def alias_failure_g(x)
+  y = x.is_a?(String)
+  if y
+    x.length
+  else
+    x.length # Expected error: length not defined for Integer
+  end
+end
+
 ## Example nesting_condition
 ## success
 sig { params(x: T.untyped, y: T.untyped).returns(Integer) }
@@ -182,6 +245,33 @@ def nesting_condition_failure_f(x, y)
   else
     0
   end
+end
+
+## Example merge_with_union
+## success
+sig { params(x: T.untyped).returns(T.any(String, Integer)) }
+def merge_with_union_success_f(x)
+  if x.is_a?(String)
+    x += "hello"
+  elsif x.is_a?(Integer)
+    x += 1
+  else
+    return 0
+  end
+  x
+end
+
+## failure
+sig { params(x: T.untyped).returns(T.any(String, Integer)) }
+def merge_with_union_failure_f(x)
+  if x.is_a?(String)
+    x += "hello"
+  elsif x.is_a?(Integer)
+    x += 1
+  else
+    return 0
+  end
+  x.is_nan # Expected error: No method 'is_nan' on String | Integer
 end
 
 ## Example predicate_2way
@@ -253,92 +343,3 @@ def predicate_checked_failure_g(x)
   raise "Sorbet does not support type predicates"
 end
 
-## Example struct_fields
-## success
-sig { params(x: { a: T.untyped }).returns(Integer) }
-def struct_fields_success_f(x)
-  if x[:a].is_a?(Integer)
-    x[:a]
-  else
-    0
-  end
-end
-
-## failure
-sig { params(x: { a: T.any(String, Integer) }).returns(Integer) }
-def struct_fields_failure_f(x)
-  if x[:a].is_a?(String)
-    x[:a] # Expected error: Expected Integer but found String
-  else
-    0
-  end
-end
-
-## Example tuple_elements
-## success
-sig { params(x: [T.untyped, T.untyped]).returns(Integer) }
-def tuple_elements_success_f(x)
-  if x[0].is_a?(Integer)
-    x[0]
-  else
-    0
-  end
-end
-
-## failure
-sig { params(x: [Integer, T.any(String, Integer)]).returns(Integer) }
-def tuple_elements_failure_f(x)
-  if x[0].is_a?(Integer)
-    x[1].length # Expected error: length not defined for Integer
-  else
-    0
-  end
-end
-
-## Example tuple_length
-## success
-sig { params(x: T.any([Integer, Integer], [String, String, String])).returns(Integer) }
-def tuple_length_success_f(x)
-  if x.length == 2
-    x[0] + x[1]
-  else
-    x[0].length
-  end
-end
-
-## failure
-sig { params(x: T.any([Integer, Integer], [String, String, String])).returns(Integer) }
-def tuple_length_failure_f(x)
-  if x.length == 2
-    x[0] + x[1]
-  else
-    T.let(x[0].length, Integer) # Expected error: Cannot assign String#length to Integer
-  end
-end
-
-## Example merge_with_union
-## success
-sig { params(x: T.untyped).returns(T.any(String, Integer)) }
-def merge_with_union_success_f(x)
-  if x.is_a?(String)
-    x += "hello"
-  elsif x.is_a?(Integer)
-    x += 1
-  else
-    return 0
-  end
-  x
-end
-
-## failure
-sig { params(x: T.untyped).returns(T.any(String, Integer)) }
-def merge_with_union_failure_f(x)
-  if x.is_a?(String)
-    x += "hello"
-  elsif x.is_a?(Integer)
-    x += 1
-  else
-    return 0
-  end
-  x.is_nan # Expected error: No method 'is_nan' on String | Integer
-end
