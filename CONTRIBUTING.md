@@ -93,7 +93,7 @@ The `SETUP.md` file contains the setup instructions and relevant version informa
 
 Finally, when the test cases for the new type checker are ready, create a pull request with the new type checker. We will review the pull request and merge it if everything is in order.
 
-* Ideally, run the toplevel `main.rkt` to generate a full results table for the core benchmark and the example programs (see [SETUP.md](./SETUP.md#quick-run-commands). Post these tables in a comment on the pull request.
+* Ideally, run the toplevel `main.rkt` to generate a full results table for the core benchmark and the example programs (see [SETUP.md](./SETUP.md#quick-run-commands)). Post these tables in a comment on the pull request.
 * Alternatively, post just the results for your implementation. We can add the column to the main `README.md` file.
 
 
