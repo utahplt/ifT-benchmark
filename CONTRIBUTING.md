@@ -87,8 +87,10 @@ Most of the above mentioned values are also used in the `main.rkt` file. You sho
 
 #### Add setup instructions to `SETUP.md`
 
-The `SETUP.md` file contains the setup instructions and relevant version information for the type checkers, their host languages and dependencies.You should add the setup instructions for the new type checker to the `SETUP.md` file.
+The `SETUP.md` file contains the setup instructions and relevant version information for the type checkers, their host languages and dependencies. You should add the setup instructions for the new type checker to the `SETUP.md` file.
 
 #### Create a Pull Request
 
 Finally, when the test cases for the new type checker are ready, create a pull request with the new type checker. We will review the pull request and merge it if everything is in order.
+
+
