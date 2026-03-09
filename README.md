@@ -1,5 +1,7 @@
 # If T: Type Narrowing Benchmark
 
+[Version 1.0](https://github.com/utahplt/ifT-benchmark/releases)
+
 Benchmark for Type Narrowing (aka Occurrence Typing, aka Type Refinement).
 
 * [Click here to jump to Benchmark Results](#benchmark-results)
