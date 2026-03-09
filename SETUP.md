@@ -51,7 +51,7 @@ The usage of the benchmark tool is as follows:
 
 ```text
 $ racket main.rkt --help
-usage: main.rkt [ <option> ... ] [<type-checker>]
+usage: main.rkt [ <option> ... ] [<type-checker-name>]
 
 <option> is one of
 
@@ -59,6 +59,10 @@ usage: main.rkt [ <option> ... ] [<type-checker>]
      Print the output of the benchmarks to the console
   -f <output-format>, --format <output-format>
      Print the output of the benchmarks in the specified format. Options: plain, markdown, tex. Default: plain.
+  -t, --transpose
+     Transpose the output of the benchmarks
+  -e, --examples
+     Run the advanced examples
   --help, -h
      Show this help
   --
@@ -69,3 +73,10 @@ usage: main.rkt [ <option> ... ] [<type-checker>]
 ```
 
 When parameter `<type-checker>` is not provided, the benchmark will run all type checkers. Otherwise, it will run only the specified type checker.
+
+#### Quick Run Commands
+
+To run the benchmark and example programs with markdown output:
+* `racket main.rkt -f markdown`
+* `racket main.rkt -e -f markdown`
+

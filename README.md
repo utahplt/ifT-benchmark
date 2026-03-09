@@ -2,6 +2,8 @@
 
 Benchmark for Type Narrowing (aka Occurrence Typing, aka Type Refinement).
 
+* [Click here to jump to Benchmark Results](#benchmark-results)
+
 Type narrowing is a feature of static type systems that refines the type of a variable based on the result of type tests. Occurrences of the variable that appear after a type test have a more precise type.
 
 The benchmark is deeply inspired by the motivating examples from the following paper, which provides a formal model for type narrowing as realized in Typed Racket:
@@ -554,6 +556,8 @@ The results of these examples are demonstrated below.
 | flatten   | O            | O          | O    | O    | O       | O      |
 | tree_node | O            | x          | x    | x    | x       | x      |
 | rainfall  | O            | O          | O    | O    | O       | O      |
+
+
 
 ## Other Discussions
 
