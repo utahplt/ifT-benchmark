@@ -46,6 +46,7 @@ For some instances, see
     - [`merge_with_union`](#merge_with_union)
   - [Benchmark Items Table](#benchmark-items-table)
   - [Benchmark Results](#benchmark-results)
+  - [Example Programs](#example-programs)
   - [Other Discussions](#other-discussions)
     - [refinement invalidation](#refinement-invalidation)
     - [unknown to known length](#unknown-to-known-length)
@@ -542,7 +543,7 @@ For language details: [SETUP.md](./SETUP.md)
 
 `O` means passed, `x` means not passed.
 
-## More Examples
+## Example Programs
 
 [EXAMPLES.md](./EXAMPLES.md) contains more examples that are not included in the benchmark items. Those are real-world-like examples showing the use of type narrowing in various contexts. For more details about the examples, see [EXAMPLES.md](./EXAMPLES.md). For more details about the results, see the README.md file in the respective typechecker directories.
 The results of these examples are demonstrated below.

@@ -121,7 +121,8 @@ Fairly direct:
 * we introduce struct definitions for the object-properties benchmarks
 * `tuple_length` has a direct encoding and fails. However, it can be expressed indirectly (`cdr`, `null?`) and pass.
 
-#### Advanced Examples
+
+#### EXAMPLES.md : Example Programs
 
 > Q. Are any examples inexpressible? Why?
 

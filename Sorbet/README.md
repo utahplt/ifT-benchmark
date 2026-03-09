@@ -92,7 +92,7 @@ The implementation is direct for most benchmarks, using Ruby’s `if`/`else` and
 * `tuple_length` uses union types (`T.any([Integer, Integer], [String, String, String])`) to encode size distinctions, which is less direct but necessary for static typing.
 
 
-## Advanced Examples
+#### EXAMPLES.md : Example Programs
 
 > Q. Are any examples inexpressible? Why?
 
