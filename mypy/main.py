@@ -104,7 +104,7 @@ def nesting_body_failure_f(x: FinalStr | FinalInt | bool) -> int:
 ## success
 class StructFieldsSuccessApple:
     def __init__(self, a):
-        self.a = a
+        self.a: object = a
 
 def struct_fields_success_f(x: StructFieldsSuccessApple) -> int:
     if type(x.a) is FinalInt:
