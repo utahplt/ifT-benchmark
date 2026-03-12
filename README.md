@@ -219,7 +219,7 @@ define f(x: String | Number | Boolean) -> Number:
 
 ##### Description
 
-Partially refine the type of a struct, that is, when the predicate is applied to an struct field, refine the type of the field.
+Partially refine the type of an immutable struct, that is, when the predicate is applied to an struct field, refine the type of the field.
 
 ##### Examples
 
@@ -562,6 +562,26 @@ The results of these examples are demonstrated below.
 
 
 ## Other Discussions
+
+### mutation
+
+This benchmark assumes that all data is immutable.
+When data can be mutated, it is difficult to allow narrowing at all because safety depends
+on what control-flow is allowed and what (if any) code has concurrent access to the same data.
+
+For example in Python, it is in general unsound to assume that `self.parent` is not `None` for
+the following two additions, because the first field access (`self.parent.wins`) might in fact
+be a dynamic property access and it might overwrite `self.parent`:
+
+```
+if self.parent is not None:
+  total += self.parent.wins
+  total += self.parent.losses # may be unsound!
+```
+
+<https://github.com/facebookincubator/cinder/issues/145>
+
+
 
 ### refinement invalidation
 
