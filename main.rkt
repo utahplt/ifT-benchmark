@@ -104,9 +104,9 @@
                          (benchmark-output-transposed #t)]
    [("-e" "--examples") "Run the advanced examples"
                         (benchmark-run-examples #t)]
-   #:args ([type-checker-name null])
-   type-checker-name))
+   #:args type-checker-names
+   type-checker-names))
 
 (if (null? type-checker-arg)
     (run-benchmarks (map car typechecker-parameters-alist))
-    (run-benchmarks (list (string->symbol (string-downcase type-checker-arg)))))
+    (run-benchmarks (map (compose1 string->symbol string-downcase) type-checker-arg)))
