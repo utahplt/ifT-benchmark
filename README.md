@@ -435,7 +435,7 @@ define g(x: String | Number) -> Number:
 ###### Failure Expected
 
 ```text
-define helper(x: String | Number) -> x is String: // auxilliary helper function
+define helper(x: String | Number) -> x is String: // auxiliary helper function
     return x is String
 
 define g(x: String | Number) -> Number: // main test case
@@ -456,7 +456,7 @@ When a custom predicate is true, the type of the variable is refined to a more s
 ###### Success Expected
 
 ```text
-define helper(x: String | Number) -> implies x is Number: // auxilliary helper function
+define helper(x: String | Number) -> implies x is Number: // auxiliary helper function
     return x is Number and x > 0
 
 define g(x: String | Number) -> Number: // main test case
@@ -469,7 +469,7 @@ define g(x: String | Number) -> Number: // main test case
 ###### Failure Expected
 
 ```text
-define helper(x: String | Number) -> implies x is Number: // auxilliary helper function
+define helper(x: String | Number) -> implies x is Number: // auxiliary helper function
     return x is Number and x > 0
 
 define g(x: String | Number) -> Number: // main test case
@@ -490,7 +490,7 @@ The type checker checks that the body of a custom predicate really checks the ty
 ###### Success Expected
 
 ```text
-define helper(x: String | Number | Boolean) -> x is String: // auxilliary helper function
+define helper(x: String | Number | Boolean) -> x is String: // auxiliary helper function
     return x is String
 
 define g(x: String | Number | Boolean) -> x is Number | Boolean: // main test case
