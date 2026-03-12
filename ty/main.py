@@ -99,7 +99,7 @@ def nesting_body_failure_f(x: FinalStr | FinalInt | bool) -> int:
             return 0
     else:
         return 0
-    
+
 ## Example struct_fields
 ## success
 class StructFieldsSuccessApple:
@@ -108,7 +108,6 @@ class StructFieldsSuccessApple:
 
 def struct_fields_success_f(x: StructFieldsSuccessApple) -> int:
     if type(x.a) is FinalInt:
-        reveal_type(x.a)
         return x.a
     else:
         return 0
@@ -153,7 +152,7 @@ def tuple_length_failure_f(x: tuple[FinalInt, FinalInt] | tuple[FinalStr, FinalS
         return x[0] + x[1]
     else:
         return x[0] + x[1]
-    
+
 ## Example alias
 ## success
 def alias_success_f(x: object) -> object:
@@ -193,7 +192,7 @@ def nesting_condition_failure_f(x: object, y: object) -> int:
         return x + len(y)
     else:
         return 0
-    
+
 ## Example merge_with_union
 ## success
 def merge_with_union_success_f(x: object) -> str | int:

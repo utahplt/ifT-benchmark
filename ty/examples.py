@@ -1,10 +1,3 @@
-## TODO @ Carl
-## - struct_fields Fail (trouble with Unknown, does the benchmark need work?)
-## - tuple_length Success (known issue)
-## - alias Success (known issue)
-## - nesting_condition Success (actually passing, does the benchmark need work??)
-## - predicate_checked Failure (of course)
-
 from typing import TypeIs, Callable, TypeVar, Union
 
 T = TypeVar("T")
