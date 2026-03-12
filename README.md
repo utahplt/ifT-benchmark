@@ -536,7 +536,7 @@ For language details: [SETUP.md](./SETUP.md)
 | connectives       | O            | O          | O    | O    | O       | O      |
 | nesting_body      | O            | O          | O    | O    | O       | O      |
 | struct_fields     | O            | O          | O    | O    | O       | x      |
-| tuple_elements    | O            | O          | O    | O    | O       | O      |
+| tuple_elements    | O            | O          | O    | O    | O       | x      |
 | tuple_length      | x            | O          | O    | O    | O       | x      |
 | alias             | O            | O          | x    | x    | O       | O      |
 | nesting_condition | O            | x          | x    | x    | x       | O      |
@@ -554,10 +554,10 @@ The results of these examples are demonstrated below.
 
 | Benchmark | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet |
 |:----------|:------------:|:----------:|:----:|:----:|:-------:|:------:|
-| filter    | O            | O          | O    | O    | O       | O      |
+| filter    | O            | O          | O    | O    | O       | x      |
 | flatten   | O            | O          | O    | O    | O       | O      |
 | tree_node | O            | x          | x    | x    | x       | x      |
-| rainfall  | O            | O          | O    | O    | O       | O      |
+| rainfall  | O            | O          | O    | O    | O       | x      |
 
 
 

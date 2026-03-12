@@ -4,7 +4,7 @@ extend T::Sig
 ### Code:
 ## Example positive
 ## success
-sig { params(x: T.untyped).returns(Integer) }
+sig { params(x: Object).returns(Integer) }
 def positive_success_f(x)
   if x.is_a?(String)
     x.length
@@ -14,7 +14,7 @@ def positive_success_f(x)
 end
 
 ## failure
-sig { params(x: T.untyped).returns(Integer) }
+sig { params(x: Object).returns(Integer) }
 def positive_failure_f(x)
   if x.is_a?(String)
     x.is_nan # Expected error: No method 'is_nan' on String
@@ -55,7 +55,7 @@ def connectives_success_f(x)
   end
 end
 
-sig { params(x: T.untyped).returns(Integer) }
+sig { params(x: Object).returns(Integer) }
 def connectives_success_g(x)
   if x.is_a?(String) || x.is_a?(Integer)
     connectives_success_f(x)
@@ -83,7 +83,7 @@ def connectives_failure_f(x)
   end
 end
 
-sig { params(x: T.untyped).returns(Integer) }
+sig { params(x: Object).returns(Integer) }
 def connectives_failure_g(x)
   if x.is_a?(String) || x.is_a?(Integer)
     x.length # Expected error: length not defined for String | Integer
@@ -132,7 +132,7 @@ end
 
 ## Example struct_fields
 ## success
-sig { params(x: { a: T.untyped }).returns(Integer) }
+sig { params(x: { a: Object }).returns(Integer) }
 def struct_fields_success_f(x)
   if x[:a].is_a?(Integer)
     x[:a]
@@ -153,7 +153,7 @@ end
 
 ## Example tuple_elements
 ## success
-sig { params(x: [T.untyped, T.untyped]).returns(Integer) }
+sig { params(x: [Object, Object]).returns(Integer) }
 def tuple_elements_success_f(x)
   if x[0].is_a?(Integer)
     x[0]
@@ -195,7 +195,7 @@ end
 
 ## Example alias
 ## success
-sig { params(x: T.untyped).returns(Integer) }
+sig { params(x: Object).returns(Integer) }
 def alias_success_f(x)
   y = x.is_a?(String)
   if y
@@ -206,7 +206,7 @@ def alias_success_f(x)
 end
 
 ## failure
-sig { params(x: T.untyped).returns(Integer) }
+sig { params(x: Object).returns(Integer) }
 def alias_failure_f(x)
   y = x.is_a?(String)
   if y
@@ -228,7 +228,7 @@ end
 
 ## Example nesting_condition
 ## success
-sig { params(x: T.untyped, y: T.untyped).returns(Integer) }
+sig { params(x: Object, y: Object).returns(Integer) }
 def nesting_condition_success_f(x, y)
   if x.is_a?(Integer) ? y.is_a?(String) : false
     x + y.length
@@ -238,7 +238,7 @@ def nesting_condition_success_f(x, y)
 end
 
 ## failure
-sig { params(x: T.any(String, Integer), y: T.untyped).returns(Integer) }
+sig { params(x: T.any(String, Integer), y: Object).returns(Integer) }
 def nesting_condition_failure_f(x, y)
   if x.is_a?(Integer) ? y.is_a?(String) : y.is_a?(String)
     x.length # Expected error: length not defined for String | Integer
@@ -249,7 +249,7 @@ end
 
 ## Example merge_with_union
 ## success
-sig { params(x: T.untyped).returns(T.any(String, Integer)) }
+sig { params(x: Object).returns(T.any(String, Integer)) }
 def merge_with_union_success_f(x)
   if x.is_a?(String)
     x += "hello"
@@ -262,7 +262,7 @@ def merge_with_union_success_f(x)
 end
 
 ## failure
-sig { params(x: T.untyped).returns(T.any(String, Integer)) }
+sig { params(x: Object).returns(T.any(String, Integer)) }
 def merge_with_union_failure_f(x)
   if x.is_a?(String)
     x += "hello"

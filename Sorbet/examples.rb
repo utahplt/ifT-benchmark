@@ -4,34 +4,21 @@ extend T::Sig
 ### Code:
 ## Example filter
 ## success
-sig { params(array: T::Array[T.untyped], callbackfn: T.proc.params(value: T.untyped).returns(T::Boolean)).returns(T::Array[T.untyped]) }
+sig { params(array: T::Array[Object], callbackfn: T.proc.params(value: Object).returns(T::Boolean)).returns(T::Array[Integer]) }
 def filter_success(array, callbackfn)
-  result = T.let([], T::Array[T.untyped])
-  array.each do |value|
-    if callbackfn.call(value)
-      result << value
-    end
-  end
-  result
+  array.filter_map { |x| x if callbackfn(x) }
 end
 
 ## failure
-sig { params(array: T::Array[T.untyped], callbackfn: T.proc.params(value: T.untyped).returns(T::Boolean)).returns(T::Array[Integer]) }
+sig { params(array: T::Array[Object], callbackfn: T.proc.params(value: Object).returns(T::Boolean)).returns(T::Array[Integer]) }
 def filter_failure(array, callbackfn)
-  result = T.let([], T::Array[Integer])
-  array.each do |value|
-    if callbackfn.call(value)
-      result << T.cast(value, Integer)
-    else
-      result << "string" # Expected error: Cannot append String to T::Array[Integer]
-    end
-  end
-  result
+  # alt # array.grep(String)
+  array.filter_map { |x| x if x.is_a?(String) }
 end
 
 ## Example flatten
 ## success
-sig { params(l: T.untyped).returns(T::Array[Integer]) }
+sig { params(l: Object).returns(T::Array[Integer]) }
 def flatten_success(l)
   if l.is_a?(Array)
     if l.length == 0
@@ -47,7 +34,7 @@ def flatten_success(l)
 end
 
 ## failure
-sig { params(l: T.untyped).returns(T::Array[Integer]) }
+sig { params(l: Object).returns(T::Array[Integer]) }
 def flatten_failure(l)
   if l.is_a?(Array)
     if l.length == 0
@@ -76,7 +63,7 @@ class TreeNodeSuccess
     raise "Sorbet does not support type predicates"
   end
 
-  sig { params(node: T.untyped).returns(T::Boolean) }
+  sig { params(node: Object).returns(T::Boolean) }
   def self.is_tree_node_success(node)
     raise "Sorbet does not support type predicates"
   end
@@ -95,7 +82,7 @@ class TreeNodeFailure
     raise "Sorbet does not support type predicates"
   end
 
-  sig { params(node: T.untyped).returns(T::Boolean) }
+  sig { params(node: Object).returns(T::Boolean) }
   def self.is_tree_node_failure(node)
     raise "Sorbet does not support type predicates"
   end
@@ -103,14 +90,14 @@ end
 
 ## Example rainfall
 ## success
-sig { params(weather_reports: T::Array[T.untyped]).returns(Float) }
+sig { params(weather_reports: T::Array[Object]).returns(Float) }
 def rainfall_success(weather_reports)
   total = T.let(0.0, Float)
   count = T.let(0, Integer)
   weather_reports.each do |day|
-    if day.is_a?(T::Hash[Symbol, T.untyped]) && !day.nil?
+    if day.is_a?(T::Hash[Symbol, Object]) && !day.nil?
       if day.key?(:rainfall)
-        val = T.let(day[:rainfall], T.untyped)
+        val = T.let(day[:rainfall], Object)
         if val.is_a?(Float) && 0.0 <= val && val <= 999.0
           total += val
           count += 1
@@ -122,12 +109,12 @@ def rainfall_success(weather_reports)
 end
 
 ## failure
-sig { params(weather_reports: T::Array[T.untyped]).returns(Float) }
+sig { params(weather_reports: T::Array[Object]).returns(Float) }
 def rainfall_failure(weather_reports)
   total = T.let(0.0, Float)
   count = T.let(0, Integer)
   weather_reports.each do |day|
-    if day.is_a?(T::Hash[Symbol, T.untyped]) && !day.nil?
+    if day.is_a?(T::Hash[Symbol, Object]) && !day.nil?
       if day.key?(:rainfall)
         val = T.cast(day[:rainfall], String)
         total += val # Expected error: Expected Integer but found String
