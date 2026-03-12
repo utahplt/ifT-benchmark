@@ -16,9 +16,13 @@ Sorbet adds static types to Ruby.
 
 > Q. What is the top type in this language? What is the bottom type? What is the dynamic type? If these types do not exist, explain the alternatives.
 
-* Top = `T.anything`
+* Top = `Object`
 * Bottom = `T.noreturn`
 * Dynamic = `T.untyped`
+
+Technically, `T.anything` is the top type, but since it doesn't support the `.is_a?` method (only type case and casts), we use `Object` to get a more direct encoding for If-T.
+
+<https://sorbet.org/docs/anything>
 
 `T.untyped` is Sorbet’s dynamic type, used for values with unknown types, such as those from untyped Ruby code. It allows any operation but provides no type safety. Sorbet supports gradual typing, so `T.untyped` is common in mixed typed/untyped codebases.
 
@@ -32,8 +36,8 @@ These are standard Ruby classes, chosen for their simplicity and immutability, m
 
 > Q. What container types does this implementation use (for objects, tuples, etc)? Why?
 
-* Hash types for objects: `{ a: T.untyped }` or `{ a: T.any(String, Integer) }`
-* Array types for tuples: `[T.untyped, T.untyped]` or `[Integer, T.any(String, Integer)]`
+* Hash types for objects: `{ a: Object }` or `{ a: T.any(String, Integer) }`
+* Array types for tuples: `[Object, Object]` or `[Integer, T.any(String, Integer)]`
 * Union types for sized tuples: `T.any([Integer, Integer], [String, String, String])`
 
 Hashes represent key-value objects, common in Ruby. Arrays serve as tuples, with fixed or variable lengths. Union types model sized tuples by distinguishing lengths (e.g., 2 vs. 3 elements). These types are immutable in the context of the benchmark, ensuring type soundness.
@@ -98,15 +102,17 @@ The implementation is direct for most benchmarks, using Ruby’s `if`/`else` and
 
 `tree_node` is inexpressible because Sorbet does not have type predicates.
 
-`filter` is inexpressible, again because it requires a predicate, though we have implemented a simple version of `filter`.
+`filter` is inexpressible, again because it requires a predicate. That being said, Sorbet can handle direct `.is_a?` checks inside a `filter_map` call.
+
+<https://sorbet.org/docs/flow-sensitive#prefer-xsfilter_map----to-xsfilter--->
+
+`rainfall` fails because `.is_a?` cannot narrow an Object to a Hash.
 
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-- Well-expressed: The `rainfall` example is expressed effectively in Sorbet. It uses `T::Hash[Symbol, T.untyped]` to model JSON-like data and `T.let` for type narrowing, closely mirroring the If-T pseudocode. The failure case (`rainfall_failure`) triggers a clear type error by casting `rainfall` to `String`, demonstrating Sorbet’s ability to catch invalid operations.
 - Poorly-expressed:
-  + The `flatten` example is less elegant than the If-T pseudocode. Sorbet requires separate checks for `is_a?(Array)` and `length == 0`, unlike TypeScript’s `empty?` predicate, which combines both. Additionally, the use of `T.untyped` as the input type and multiple `T.let` assertions for type narrowing makes the implementation more verbose.
-  + The `filter` example takes a boolean function instead of a type predicate. It also struggles with return type `T::Array[T.untyped]`, which is too permissive, requiring a return type adjustment to `T::Array[Integer]` to enforce errors.
+  + The `flatten` example is less elegant than the If-T pseudocode. Sorbet requires separate checks for `is_a?(Array)` and `length == 0`, unlike TypeScript’s `empty?` predicate, which combines both. Additionally, the use of `Object` as the input type and multiple `T.let` assertions for type narrowing makes the implementation more verbose.
 
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
@@ -114,8 +120,8 @@ The implementation is direct for most benchmarks, using Ruby’s `if`/`else` and
 The implementations are mostly direct but slightly more complex than the If-T pseudocode due to Sorbet’s static type system. Key differences include:
 
 - Explicit type narrowing with `T.let` and `T.cast` is needed in all examples to satisfy Sorbet’s strict mode, adding verbosity compared to the pseudocode’s implicit type assumptions.
-- The `tree_node` example requires recursive type checks with `T::Hash[Symbol, T.untyped]`, which is straightforward but involves more boilerplate than TypeScript’s predicates.
+- The `tree_node` example requires recursive type checks with `T::Hash[Symbol, Object]`, which is straightforward but involves more boilerplate than TypeScript’s predicates.
 - The `flatten` example’s recursive structure is direct, but the lack of a combined `empty?` predicate and the need for `T.let` assertions increase complexity.
 - The `rainfall` example is the most direct, with minimal divergence from the pseudocode, though it still requires explicit null checks and type assertions.
 
-Overall, Sorbet’s lack of type predicates and permissive `T.untyped` necessitate additional type annotations and checks, making the code less concise than the pseudocode or TypeScript equivalents.
+Overall, Sorbet’s lack of type predicates necessitates additional type annotations and checks, making the code less concise than the pseudocode or TypeScript equivalents.
