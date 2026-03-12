@@ -7,7 +7,7 @@ Flow is a typechecker for JavaScript by Facebook.
   - <https://flow.org/en/docs/>
   - <https://github.com/facebook/flow>
   - <https://play.flow.com/>
-* If-T version: **1.0**
+* If-T version: **1.1**
 * Implementation: [./src/index.js](./src/index.js)
 * Raw command to run the benchmark: `touch .flowconfig && npx flow focus-check <path-to-file>`
 

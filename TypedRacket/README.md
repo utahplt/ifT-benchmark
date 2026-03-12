@@ -8,7 +8,7 @@ Typed Racket adds gradual types to Racket.
   - <https://github.com/racket/typed-racket>
   - <https://www2.ccs.neu.edu/racket/pubs/popl08-thf.pdf>
   - <https://www2.ccs.neu.edu/racket/pubs/icfp10-thf.pdf>
-* If-T version: **1.0**
+* If-T version: **1.1**
 * Implementation: [./main.rkt](./main.rkt)
 * Raw command to run the benchmark: `racket <path-to-file>`
 

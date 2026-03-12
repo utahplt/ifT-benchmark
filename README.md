@@ -1,6 +1,6 @@
 # If T: Type Narrowing Benchmark
 
-[Version 1.0](https://github.com/utahplt/ifT-benchmark/releases)
+[Version 1.1](https://github.com/utahplt/ifT-benchmark/releases)
 
 Benchmark for Type Narrowing (aka Occurrence Typing, aka Type Refinement).
 
@@ -420,11 +420,13 @@ When a custom predicate is true, the type of the variable is refined to a more s
 ###### Success Expected
 
 ```text
-define f(x: String | Number) -> x is String:
+define helper(x: String | Number) -> x is String:
+    // helper function: this is a custom predicate
     return x is String
 
 define g(x: String | Number) -> Number:
-    if f(x):
+    // main test function: this code uses a custom predicate
+    if helper(x):
         return String.length(x) // type of x is refined to String
     else:
         return x // type of x is refined to Number, namely (String | Number) - String
@@ -433,11 +435,11 @@ define g(x: String | Number) -> Number:
 ###### Failure Expected
 
 ```text
-define f(x: String | Number) -> x is String:
+define helper(x: String | Number) -> x is String: // auxilliary helper function
     return x is String
 
-define g(x: String | Number) -> Number:
-    if f(x):
+define g(x: String | Number) -> Number: // main test case
+    if helper(x):
         return x + 1 // type of x is refined to String, adding a number to a string is not allowed
     else:
         return x // type of x is refined to Number, namely (String | Number) - String
@@ -454,11 +456,11 @@ When a custom predicate is true, the type of the variable is refined to a more s
 ###### Success Expected
 
 ```text
-define f(x: String | Number) -> implies x is Number:
+define helper(x: String | Number) -> implies x is Number: // auxilliary helper function
     return x is Number and x > 0
 
-define g(x: String | Number) -> Number:
-    if f(x):
+define g(x: String | Number) -> Number: // main test case
+    if helper(x):
         return x + 1 // type of x is refined to Number
     else:
         return 0
@@ -467,11 +469,11 @@ define g(x: String | Number) -> Number:
 ###### Failure Expected
 
 ```text
-define f(x: String | Number) -> implies x is Number:
+define helper(x: String | Number) -> implies x is Number: // auxilliary helper function
     return x is Number and x > 0
 
-define g(x: String | Number) -> Number:
-    if f(x):
+define g(x: String | Number) -> Number: // main test case
+    if helper(x):
         return x + 1 // type of x is refined to Number
     else:
         return String.length(x) // type of x is not refined, thus not compatible with the return type
@@ -488,20 +490,20 @@ The type checker checks that the body of a custom predicate really checks the ty
 ###### Success Expected
 
 ```text
-define f(x: String | Number | Boolean) -> x is String:
+define helper(x: String | Number | Boolean) -> x is String: // auxilliary helper function
     return x is String
 
-define g(x: String | Number | Boolean) -> x is Number | Boolean:
-    return not f(x)
+define g(x: String | Number | Boolean) -> x is Number | Boolean: // main test case
+    return not helper(x)
 ```
 
 ###### Failure Expected
 
 ```text
-define f(x: String | Number | Boolean) -> x is String:
+define f(x: String | Number | Boolean) -> x is String: // main test case 1
     return x is String or x is Number // may return true when predicate is false
 
-define g(x: String | Number | Boolean) -> x is Number | Boolean:
+define g(x: String | Number | Boolean) -> x is Number | Boolean: // main test case 2
     return x is Number // may return false when predicate is true
 ```
 
