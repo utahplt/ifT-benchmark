@@ -1,0 +1,11 @@
+[project]
+name = "ot-benchmark-cinder"
+version = "0.1.0"
+description = "Benchmarking cinder's ability to type-check occurrence typing"
+requires-python = ">=3.13.0"
+
+[tool.cinder]
+include = ["*.py"]
+venvPath = "."
+venv = ".venv"
+reportUnusedImport = false
