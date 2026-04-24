@@ -277,7 +277,7 @@ end
 ## Example predicate_2way
 ## success
 sig { params(x: T.any(String, Integer)).returns(T::Boolean) }
-def predicate_2way_success_f(x)
+def predicate_2way_success_helper(x)
   raise "Sorbet does not support type predicates"
 end
 
@@ -288,7 +288,7 @@ end
 
 ## failure
 sig { params(x: T.any(String, Integer)).returns(T::Boolean) }
-def predicate_2way_failure_f(x)
+def predicate_2way_failure_helper(x)
   raise "Sorbet does not support type predicates"
 end
 
@@ -300,7 +300,7 @@ end
 ## Example predicate_1way
 ## success
 sig { params(x: T.any(String, Integer)).returns(T::Boolean) }
-def predicate_1way_success_f(x)
+def predicate_1way_success_helper(x)
   raise "Sorbet does not support type predicates"
 end
 
@@ -311,7 +311,7 @@ end
 
 ## failure
 sig { params(x: T.any(String, Integer)).returns(T::Boolean) }
-def predicate_1way_failure_f(x)
+def predicate_1way_failure_helper(x)
   raise "Sorbet does not support type predicates"
 end
 
@@ -323,7 +323,7 @@ end
 ## Example predicate_checked
 ## success
 sig { params(x: T.any(String, Integer, TrueClass, FalseClass)).returns(T::Boolean) }
-def predicate_checked_success_f(x)
+def predicate_checked_success_helper(x)
   raise "Sorbet does not support type predicates"
 end
 
