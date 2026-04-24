@@ -3,8 +3,8 @@
 (require racket/cmdline)
 (require "../lib.rkt")
 
-(define current-typechecker-symbol 'mypy)
-(define current-typechecker-name "mypy")
+(define current-typechecker-symbol 'ty)
+(define current-typechecker-name "ty")
 
 (define typechecker-parameters
   `((name ,current-typechecker-name)
@@ -12,19 +12,9 @@
     (extension ".py")
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
-    (arguments ,`(,"main.py"
-                  ,(lambda (input-file)
-                     (list "-c"
-                           (string-append-immutable
-                            "source .venv/bin/activate; mypy "
-                            (path->string input-file))))))
-    (examples-arguments ,`(,"examples.py"
-                           ,(lambda (input-file)
-                              (list "-c"
-                                    (string-append-immutable
-                                     "source .venv/bin/activate; mypy "
-                                     (path->string input-file))))))
-    (command "bash")))
+    (arguments ,(list "main.py" "run" "ty" "check"))
+    (examples-arguments ,(list "examples.py" "run" "ty" "check"))
+    (command "uv")))
 
 (command-line
  #:program "_benchmark.rkt"

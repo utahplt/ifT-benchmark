@@ -1,24 +1,19 @@
 ty
 ===
 
-
-TODO
-
-see comments: https://github.com/utahplt/ifT-benchmark/pull/33
-
-
-
-
-mypy is a typechecker for Python PEP 484 types.
+ty is a Python type checker by Astral, the creators of uv and Ruff.
 
 * Language resources:
-  - <https://www.mypy-lang.org/>
-  - <https://github.com/python/mypy>
-  - <https://mypy-play.net/?mypy=latest&python=3.12>
+  - <https://docs.astral.sh/ty/>
+  - <https://github.com/astral-sh/ty>
+  - <https://play.ty.dev/>
   - <https://peps.python.org/pep-0484/>
 * If-T version: **1.0**
 * Implementation: [./main.py](./main.py)
-* Raw command to run the benchmark: `source .venv/bin/activate && mypy <path-to-file>`
+* Raw command to run the benchmark: `uv run ty check <path-to-file>`
+  - First install `ty` via `uv add --dev ty`
+  - <https://docs.astral.sh/ty/installation/>
+
 
 #### Type System Basics
 
@@ -44,7 +39,7 @@ in type equality tests.
 
 > Q. What container types does this implementation use (for objects, tuples, etc)? Why?
 
-* Object types for objects: search for `class` in the code
+* Object types for objects/structs: search for `class` in the code
 * Tuple types for tuples: `tuple[T, ....]`
 
 Tuples can have any number of elements and are immutable.
@@ -105,33 +100,42 @@ Example: `def f(x: object) -> TypeGuard[str]:`
 
 > Q. Are any benchmarks inexpressible? Why?
 
-No, they are all expressible.
-
-Some fail to typecheck, though.
-
+None
 
 > Q. Are any benchmarks expressed particularly well, or particularly poorly? Explain.
 
-N/A
+`tuple_length_success`, `alias`, and `nesting_condition` all fail to typecheck due to known limitations. These will be fixed in future releases.
+
+`predicate_checked` fails to raise a type error, same as all other Python typecheckers currently.
 
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
-Very direct, though we introduce classes for the object benchmarks.
+Very direct, with two caveats:
+
+- We introduce `@final` subclasses of `str` and `int`, as explained at the top of this file.
+- We introduce classes for the struct benchmarks.
 
 
 #### EXAMPLES.md : Example Programs
 
 > Q. Are any examples inexpressible? Why?
 
-`tree_node_failure` incorrectly typechecks.
+None
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
+`tree_node_failure` does not raise a type error. Like all current Python typecheckers, `ty` does not check the internal truthfulness of TypeGuard or TypeIs predicates.
+
+`rainfall_failure` does not raise a type error because the alias `val` gets the `Any` type. This is due to a known limitation in handling recursive type aliases (April 2026).
+
+
+Two examples have code style changes:
+
 - The `flatten` example has a slightly different implementation than the pseudocode from If-T, since the `empty?` predicate in the pseudocode checks both if the argument is an array and if it is empty, and this must be done in two separate steps in Python.
 - The `TreeNode` example does not use `foldl` as the pseudocode from If-T does, since functions equivalent to `foldl` need to be imported from the `functools` module in Python, and this would add unnecessary complexity to the implementation.
-- The `filter` and `rainfall` examples aligns very closely with the pseudocode from If-T. `rainfall` initialize `total` to `0.0` instead of `0` to make mypy happy.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
 Very direct.
+

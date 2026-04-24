@@ -84,7 +84,7 @@ def is_tree_node_failure(node: object) -> TypeIs[TreeNodeFailure]:
 ## Example rainfall
 ## success
 def rainfall_success(weather_reports: list[JSON]) -> float:
-    total = 0.0
+    total = 0
     count = 0
     for day in weather_reports:
         if isinstance(day, dict) and "rainfall" in day:
@@ -96,7 +96,7 @@ def rainfall_success(weather_reports: list[JSON]) -> float:
 
 ## failure
 def rainfall_failure(weather_reports: list[JSON]) -> float:
-    total = 0.0
+    total = 0
     count = 0
     for day in weather_reports:
         if isinstance(day, dict) and "rainfall" in day:
