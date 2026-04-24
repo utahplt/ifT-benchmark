@@ -45,7 +45,7 @@ cd ..
 # Install mypy
 echo "Setting up mypy..."
 cd mypy
-# try to use uv to sync envirionment
+# try to use uv to sync environment
 if command -v uv 2&>1 >/dev/null; then
     uv sync
 else
