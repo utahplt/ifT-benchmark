@@ -82,4 +82,9 @@ cd Sorbet
 bundle install
 cd ..
 
+echo "Setting up Luau..."
+cd Luau
+# TODO
+cd ..
+
 echo "Setup complete!"

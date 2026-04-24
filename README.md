@@ -37,17 +37,17 @@ For some instances, see
   - [The Benchmark](#the-benchmark)
     - [`positive`](#positive)
     - [`negative`](#negative)
-    - [`alias`](#alias)
     - [`connectives`](#connectives)
     - [`nesting_body`](#nesting_body)
-    - [`nesting_condition`](#nesting_condition)
-    - [`predicate_2way`](#predicate_2way)
-    - [`predicate_1way`](#predicate_1way)
-    - [`predicate_checked`](#predicate_checked)
     - [`struct_fields`](#struct_fields)
     - [`tuple_elements`](#tuple_elements)
     - [`tuple_length`](#tuple_length)
+    - [`alias`](#alias)
+    - [`nesting_condition`](#nesting_condition)
     - [`merge_with_union`](#merge_with_union)
+    - [`predicate_2way`](#predicate_2way)
+    - [`predicate_1way`](#predicate_1way)
+    - [`predicate_checked`](#predicate_checked)
   - [Benchmark Items Table](#benchmark-items-table)
   - [Benchmark Results](#benchmark-results)
   - [Example Programs](#example-programs)
@@ -531,21 +531,21 @@ Below is a table for all benchmark items as a quick reference.
 
 For language details: [SETUP.md](./SETUP.md)
 
-| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet |
-|:------------------|:------------:|:----------:|:----:|:----:|:-------:|:------:|
-| positive          | O            | O          | O    | O    | O       | O      |
-| negative          | O            | O          | O    | O    | O       | O      |
-| connectives       | O            | O          | O    | O    | O       | O      |
-| nesting_body      | O            | O          | O    | O    | O       | O      |
-| struct_fields     | O            | O          | O    | O    | O       | x      |
-| tuple_elements    | O            | O          | O    | O    | O       | O      |
-| tuple_length      | x            | O          | O    | O    | O       | x      |
-| alias             | O            | O          | x    | x    | O       | O      |
-| nesting_condition | O            | x          | x    | x    | x       | O      |
-| merge_with_union  | O            | O          | O    | x    | O       | O      |
-| predicate_2way    | O            | O          | O    | O    | O       | x      |
-| predicate_1way    | O            | x          | O    | O    | O       | x      |
-| predicate_checked | O            | x          | O    | x    | x       | x      |
+| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet | Luau   |
+|:------------------|:------------:|:----------:|:----:|:----:|:-------:|:------:|:------:|
+| positive          | O            | O          | O    | O    | O       | O      | O      |
+| negative          | O            | O          | O    | O    | O       | O      | O      |
+| connectives       | O            | O          | O    | O    | O       | O      | O      |
+| nesting_body      | O            | O          | O    | O    | O       | O      | O      |
+| struct_fields     | O            | O          | O    | O    | O       | x      | O      |
+| tuple_elements    | O            | O          | O    | O    | O       | O      | O      |
+| tuple_length      | x            | O          | O    | O    | O       | x      | x      |
+| alias             | O            | O          | x    | x    | O       | O      | x      |
+| nesting_condition | O            | x          | x    | x    | x       | O      | x      |
+| merge_with_union  | O            | O          | O    | x    | O       | O      | x      |
+| predicate_2way    | O            | O          | O    | O    | O       | x      | x      |
+| predicate_1way    | O            | x          | O    | O    | O       | x      | x      |
+| predicate_checked | O            | x          | O    | x    | x       | x      | x      |
 
 `O` means passed, `x` means not passed.
 
