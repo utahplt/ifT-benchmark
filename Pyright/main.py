@@ -115,7 +115,7 @@ def struct_fields_success_f(x: StructFieldsSuccessApple) -> int:
 ## failure
 class StructFieldsFailureApple:
     def __init__(self, a):
-        self.a = a
+        self.a: object = a
 
 def struct_fields_failure_f(x: StructFieldsFailureApple) -> int:
     if type(x.a) is FinalStr:
