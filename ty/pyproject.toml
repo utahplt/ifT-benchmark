@@ -1,0 +1,9 @@
+[project]
+name = "ot-benchmark-ty"
+version = "0.1.0"
+description = "Benchmarking ty's ability to type-check occurrence typing"
+requires-python = ">=3.13"
+dependencies = [
+    "ty>=0.0.22",
+]
+
