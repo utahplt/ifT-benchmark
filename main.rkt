@@ -49,6 +49,11 @@
                                            "source .venv/bin/activate; mypy "
                                            (path->string input-file))))))
           (command "bash"))
+    (luau (comment-char #\-)
+          (extension ".luau")
+          (file-base-path ,(build-path (current-directory) "Luau"))
+          (arguments ,(list (build-path "main.luau")))
+          (command "luau-analyze"))
     (pyright (name "Pyright")
              (comment-char #\#)
              (extension ".py")

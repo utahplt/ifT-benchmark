@@ -24,6 +24,7 @@ The tested versions are:
 | Bundler      | 2.7.2     | Bundled with Ruby                                                                                                     |
 | gem          | 3.7.2     | Bundled with Ruby                                                                                                     |
 | Sorbet       | 0.6.12829 | See [`Sorbet/Gemfile.lock`](https://github.com/utahplt/ifT-benchmark/blob/main/Sorbet/Gemfile.lock)                   |
+| Luau         | 0.657     | https://github.com/luau-lang/luau/releases/tag/0.657                                                                  |
 
 First, clone this repository:
 
