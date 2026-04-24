@@ -35,36 +35,6 @@ function negative_failure_f(x: string | number | boolean): number {
   }
 }
 
-// Example alias
-// success
-function alias_success_f(x: unknown): unknown {
-  const y = typeof x === "string";
-  if (y) {
-    return x.length;
-  } else {
-    return x;
-  }
-}
-// failure
-function alias_failure_f(x: unknown): unknown {
-  const y = typeof x === "string";
-  if (y) {
-    return x.isNaN();
-  } else {
-    return x;
-  }
-}
-
-function alias_failure_g(x: unknown): unknown {
-  let y = typeof x === "string";
-  y = true;
-  if (y) {
-    return x.length;
-  } else {
-    return x;
-  }
-}
-
 // Example connectives
 // success
 function connectives_success_f(x: string | number): number {
@@ -142,100 +112,9 @@ function nesting_body_failure_f(x: string | number | boolean): number {
   }
 }
 
-// Example nesting_condition
+// Example struct_fields
 // success
-function nesting_condition_success_f(x: unknown, y: unknown): number {
-  if (typeof x === "number" ? typeof y === "string" : false) {
-    return x + (y as string).length; // TypeScript fails to refine type of x here
-  } else {
-    return 0;
-  }
-}
-// failure
-function nesting_condition_failure_f(x: unknown, y: unknown): number {
-  if (typeof x === "number" ? typeof y === "string" : typeof y === "string") {
-    return x + (y as string).length;
-  } else {
-    return 0;
-  }
-}
-
-// Example predicate_2way
-// success
-function predicate_2way_success_f(x: string | number): x is string {
-  return typeof x === "string";
-}
-
-function predicate_2way_success_g(x: string | number): number {
-  if (predicate_2way_success_f(x)) {
-    return x.length;
-  } else {
-    return x;
-  }
-}
-
-// failure
-function predicate_2way_failure_f(x: string | number): x is string {
-  return typeof x === "string";
-}
-
-function predicate_2way_failure_g(x: string | number): number {
-  if (predicate_2way_failure_f(x)) {
-    return x + 1;
-  } else {
-    return x;
-  }
-}
-
-// Example predicate_1way
-// success
-function predicate_1way_success_f(x: string | number): x is number {
-  return typeof x === "number" && x > 0;
-}
-
-function predicate_1way_success_g(x: string | number): number {
-  if (predicate_1way_success_f(x)) {
-    return x + 1;
-  } else {
-    return 0;
-  }
-}
-
-// failure
-function predicate_1way_failure_f(x: string | number): x is number {
-  return typeof x === "number" && x > 0;
-}
-
-function predicate_1way_failure_g(x: string | number): number {
-  if (predicate_1way_failure_f(x)) {
-    return x + 1;
-  } else {
-    return x.length;
-  }
-}
-
-// Example predicate_checked
-// success
-function predicate_checked_success_f(x: string | number | boolean): x is string {
-  return typeof x === "string";
-}
-
-function predicate_checked_success_g(x: string | number | boolean): x is number | boolean {
-  return !predicate_checked_success_f(x);
-}
-
-// failure
-function predicate_checked_failure_f(x: string | number | boolean): x is string {
-  return typeof x === "string" || typeof x === "number";
-}
-
-function predicate_checked_failure_g(x: string | number | boolean): x is number | boolean {
-  return typeof x === "number";
-}
-
-// Example object_properties
-// success
-function object_properties_success_f(x: { a: unknown }): number {
+function struct_fields_success_f(x: { a: unknown }): number {
   if (typeof x.a === "number") {
     return x.a;
   } else {
@@ -243,7 +122,7 @@ function object_properties_success_f(x: { a: unknown }): number {
   }
 }
 // failure
-function object_properties_failure_f(x: { a: unknown }): number {
+function struct_fields_failure_f(x: { a: unknown }): number {
   if (typeof x.a === "string") {
     return x.a;
   } else {
@@ -287,6 +166,54 @@ function tuple_length_failure_f(x: [number, number] | [string, string, string]):
   }
 }
 
+// Example alias
+// success
+function alias_success_f(x: unknown): unknown {
+  const y = typeof x === "string";
+  if (y) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+// failure
+function alias_failure_f(x: unknown): unknown {
+  const y = typeof x === "string";
+  if (y) {
+    return x.isNaN();
+  } else {
+    return x;
+  }
+}
+
+function alias_failure_g(x: unknown): unknown {
+  let y = typeof x === "string";
+  y = true;
+  if (y) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+
+// Example nesting_condition
+// success
+function nesting_condition_success_f(x: unknown, y: unknown): number {
+  if (typeof x === "number" ? typeof y === "string" : false) {
+    return x + (y as string).length; // TypeScript fails to refine type of x here
+  } else {
+    return 0;
+  }
+}
+// failure
+function nesting_condition_failure_f(x: unknown, y: unknown): number {
+  if (typeof x === "number" ? typeof y === "string" : typeof y === "string") {
+    return x + (y as string).length;
+  } else {
+    return 0;
+  }
+}
+
 // Example merge_with_union
 // success
 function merge_with_union_success_f(x: unknown): string | number {
@@ -309,4 +236,77 @@ function merge_with_union_failure_f(x: unknown): string | number {
     return 0;
   }
   return x.isNaN();
+}
+
+// Example predicate_2way
+// success
+function predicate_2way_success_helper(x: string | number): x is string {
+  return typeof x === "string";
+}
+
+function predicate_2way_success_g(x: string | number): number {
+  if (predicate_2way_success_helper(x)) {
+    return x.length;
+  } else {
+    return x;
+  }
+}
+
+// failure
+function predicate_2way_failure_helper(x: string | number): x is string {
+  return typeof x === "string";
+}
+
+function predicate_2way_failure_g(x: string | number): number {
+  if (predicate_2way_failure_helper(x)) {
+    return x + 1;
+  } else {
+    return x;
+  }
+}
+
+// Example predicate_1way
+// success
+function predicate_1way_success_helper(x: string | number): x is number {
+  return typeof x === "number" && x > 0;
+}
+
+function predicate_1way_success_g(x: string | number): number {
+  if (predicate_1way_success_helper(x)) {
+    return x + 1;
+  } else {
+    return 0;
+  }
+}
+
+// failure
+function predicate_1way_failure_helper(x: string | number): x is number {
+  return typeof x === "number" && x > 0;
+}
+
+function predicate_1way_failure_g(x: string | number): number {
+  if (predicate_1way_failure_helper(x)) {
+    return x + 1;
+  } else {
+    return x.length;
+  }
+}
+
+// Example predicate_checked
+// success
+function predicate_checked_success_helper(x: string | number | boolean): x is string {
+  return typeof x === "string";
+}
+
+function predicate_checked_success_g(x: string | number | boolean): x is number | boolean {
+  return !predicate_checked_success_helper(x);
+}
+
+// failure
+function predicate_checked_failure_f(x: string | number | boolean): x is string {
+  return typeof x === "string" || typeof x === "number";
+}
+
+function predicate_checked_failure_g(x: string | number | boolean): x is number | boolean {
+  return typeof x === "number";
 }

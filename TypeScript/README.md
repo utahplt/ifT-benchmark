@@ -7,9 +7,9 @@ TypeScript is a typechecker for JavaScript by Microsoft.
   - <https://www.typescriptlang.org/>
   - <https://github.com/microsoft/TypeScript>
   - <https://www.typescriptlang.org/play>
-* If-T version: **1.0**
+* If-T version: **1.1**
 * Implementation: [./main.ts](./main.ts)
-
+* Raw command to run the benchmark: `tsc --noEmit --target es2023 <path-to-file>`
 
 #### Type System Basics
 
@@ -36,7 +36,7 @@ These are simple, final base types in TypeScript.
 * Array types for tuples: `[type, ...]`
 
 Both these types describe mutable data, but TypeScript still allows type narrowing on
-their elements. 
+their elements.
 
 
 #### Type Narrowing
@@ -92,20 +92,19 @@ N/A
 Very direct.
 
 
-#### Advanced Examples
+#### EXAMPLES.md : Example Programs
 
 > Q. Are any examples inexpressible? Why?
 
-_FILL in here_
+`tree_node` in the failure case passes typechecking (incorrectly).
+This is because TypeScript trusts all user-defined predicates to match their types.
 
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-_FILL in here_
-
+- The `flatten` example has a slightly different implementation than the pseudocode from If-T, since the `empty?` predicate in the pseudocode checks both if the argument is an array and if it is empty, and this must be done in two separate steps in TypeScript.
+- The `rainfall` example uses type `unknown` instead of a `JSON` type, since every value in JavaScript (hence TypeScript) is representing a legitimate JSON value. Also, it has 2 extra null tests: on the object `day` and its field `rainfall`.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
-_FILL in here_
-
-
+Very direct.

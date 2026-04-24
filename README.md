@@ -1,6 +1,10 @@
 # If T: Type Narrowing Benchmark
 
+[Version 1.1](https://github.com/utahplt/ifT-benchmark/releases)
+
 Benchmark for Type Narrowing (aka Occurrence Typing, aka Type Refinement).
+
+* [Click here to jump to Benchmark Results](#benchmark-results)
 
 Type narrowing is a feature of static type systems that refines the type of a variable based on the result of type tests. Occurrences of the variable that appear after a type test have a more precise type.
 
@@ -46,6 +50,7 @@ For some instances, see
     - [`merge_with_union`](#merge_with_union)
   - [Benchmark Items Table](#benchmark-items-table)
   - [Benchmark Results](#benchmark-results)
+  - [Example Programs](#example-programs)
   - [Other Discussions](#other-discussions)
     - [refinement invalidation](#refinement-invalidation)
     - [unknown to known length](#unknown-to-known-length)
@@ -58,7 +63,7 @@ For some instances, see
 
 ## How to Run the Benchmark
 
-See [HowToRun.md](HowToRun.md).
+See [SETUP.md](SETUP.md).
 
 ## The Benchmark
 
@@ -214,7 +219,7 @@ define f(x: String | Number | Boolean) -> Number:
 
 ##### Description
 
-Partially refine the type of a struct, that is, when the predicate is applied to an struct field, refine the type of the field.
+Partially refine the type of an immutable struct, that is, when the predicate is applied to an struct field, refine the type of the field.
 
 ##### Examples
 
@@ -415,11 +420,13 @@ When a custom predicate is true, the type of the variable is refined to a more s
 ###### Success Expected
 
 ```text
-define f(x: String | Number) -> x is String:
+define helper(x: String | Number) -> x is String:
+    // helper function: this is a custom predicate
     return x is String
 
 define g(x: String | Number) -> Number:
-    if f(x):
+    // main test function: this code uses a custom predicate
+    if helper(x):
         return String.length(x) // type of x is refined to String
     else:
         return x // type of x is refined to Number, namely (String | Number) - String
@@ -428,11 +435,11 @@ define g(x: String | Number) -> Number:
 ###### Failure Expected
 
 ```text
-define f(x: String | Number) -> x is String:
+define helper(x: String | Number) -> x is String: // auxiliary helper function
     return x is String
 
-define g(x: String | Number) -> Number:
-    if f(x):
+define g(x: String | Number) -> Number: // main test case
+    if helper(x):
         return x + 1 // type of x is refined to String, adding a number to a string is not allowed
     else:
         return x // type of x is refined to Number, namely (String | Number) - String
@@ -449,11 +456,11 @@ When a custom predicate is true, the type of the variable is refined to a more s
 ###### Success Expected
 
 ```text
-define f(x: String | Number) -> implies x is Number:
+define helper(x: String | Number) -> implies x is Number: // auxiliary helper function
     return x is Number and x > 0
 
-define g(x: String | Number) -> Number:
-    if f(x):
+define g(x: String | Number) -> Number: // main test case
+    if helper(x):
         return x + 1 // type of x is refined to Number
     else:
         return 0
@@ -462,11 +469,11 @@ define g(x: String | Number) -> Number:
 ###### Failure Expected
 
 ```text
-define f(x: String | Number) -> implies x is Number:
+define helper(x: String | Number) -> implies x is Number: // auxiliary helper function
     return x is Number and x > 0
 
-define g(x: String | Number) -> Number:
-    if f(x):
+define g(x: String | Number) -> Number: // main test case
+    if helper(x):
         return x + 1 // type of x is refined to Number
     else:
         return String.length(x) // type of x is not refined, thus not compatible with the return type
@@ -483,20 +490,20 @@ The type checker checks that the body of a custom predicate really checks the ty
 ###### Success Expected
 
 ```text
-define f(x: String | Number | Boolean) -> x is String:
+define helper(x: String | Number | Boolean) -> x is String: // auxiliary helper function
     return x is String
 
-define g(x: String | Number | Boolean) -> x is Number | Boolean:
-    return not f(x)
+define g(x: String | Number | Boolean) -> x is Number | Boolean: // main test case
+    return not helper(x)
 ```
 
 ###### Failure Expected
 
 ```text
-define f(x: String | Number | Boolean) -> x is String:
+define f(x: String | Number | Boolean) -> x is String: // main test case 1
     return x is String or x is Number // may return true when predicate is false
 
-define g(x: String | Number | Boolean) -> x is Number | Boolean:
+define g(x: String | Number | Boolean) -> x is Number | Boolean: // main test case 2
     return x is Number // may return false when predicate is true
 ```
 
@@ -524,25 +531,59 @@ Below is a table for all benchmark items as a quick reference.
 
 For language details: [SETUP.md](./SETUP.md)
 
-| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright | Luau |
-|:------------------|:------------:|:----------:|:----:|:----:|:-------:|:----:|
-| positive          | O            | O          | O    | O    | O       | O    |
-| negative          | O            | O          | O    | O    | O       | O    |
-| connectives       | O            | O          | O    | O    | O       | O    |
-| nesting_body      | O            | O          | O    | O    | O       | O    |
-| struct_fields     | O            | O          | O    | O    | O       | O    |
-| tuple_elements    | O            | O          | O    | O    | O       | O    |
-| tuple_length      | x            | O          | O    | O    | O       | x    |
-| alias             | O            | O          | x    | x    | O       | x    |
-| nesting_condition | O            | x          | x    | x    | x       | x    |
-| merge_with_union  | O            | O          | O    | x    | O       | x    |
-| predicate_2way    | O            | O          | O    | O    | O       | x    |
-| predicate_1way    | O            | x          | O    | O    | O       | x    |
-| predicate_checked | O            | O          | O    | O    | O       | x    |
+| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet |
+|:------------------|:------------:|:----------:|:----:|:----:|:-------:|:------:|
+| positive          | O            | O          | O    | O    | O       | O      |
+| negative          | O            | O          | O    | O    | O       | O      |
+| connectives       | O            | O          | O    | O    | O       | O      |
+| nesting_body      | O            | O          | O    | O    | O       | O      |
+| struct_fields     | O            | O          | O    | O    | O       | x      |
+| tuple_elements    | O            | O          | O    | O    | O       | O      |
+| tuple_length      | x            | O          | O    | O    | O       | x      |
+| alias             | O            | O          | x    | x    | O       | O      |
+| nesting_condition | O            | x          | x    | x    | x       | O      |
+| merge_with_union  | O            | O          | O    | x    | O       | O      |
+| predicate_2way    | O            | O          | O    | O    | O       | x      |
+| predicate_1way    | O            | x          | O    | O    | O       | x      |
+| predicate_checked | O            | x          | O    | x    | x       | x      |
 
 `O` means passed, `x` means not passed.
 
+## Example Programs
+
+[EXAMPLES.md](./EXAMPLES.md) contains more examples that are not included in the benchmark items. Those are real-world-like examples showing the use of type narrowing in various contexts. For more details about the examples, see [EXAMPLES.md](./EXAMPLES.md). For more details about the results, see the README.md file in the respective typechecker directories.
+The results of these examples are demonstrated below.
+
+| Benchmark | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet |
+|:----------|:------------:|:----------:|:----:|:----:|:-------:|:------:|
+| filter    | O            | O          | O    | O    | O       | O      |
+| flatten   | O            | O          | O    | O    | O       | O      |
+| tree_node | O            | x          | x    | x    | x       | x      |
+| rainfall  | O            | O          | O    | O    | O       | O      |
+
+
+
 ## Other Discussions
+
+### mutation
+
+This benchmark assumes that all data is immutable.
+When data can be mutated, it is difficult to allow narrowing at all because safety depends
+on what control-flow is allowed and what (if any) code has concurrent access to the same data.
+
+For example in Python, it is in general unsound to assume that `self.parent` is not `None` for
+the following two additions, because the first field access (`self.parent.wins`) might in fact
+be a dynamic property access and it might overwrite `self.parent`:
+
+```
+if self.parent is not None:
+  total += self.parent.wins
+  total += self.parent.losses # may be unsound!
+```
+
+<https://github.com/facebookincubator/cinder/issues/145>
+
+
 
 ### refinement invalidation
 

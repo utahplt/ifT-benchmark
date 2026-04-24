@@ -8,9 +8,9 @@ Typed Racket adds gradual types to Racket.
   - <https://github.com/racket/typed-racket>
   - <https://www2.ccs.neu.edu/racket/pubs/popl08-thf.pdf>
   - <https://www2.ccs.neu.edu/racket/pubs/icfp10-thf.pdf>
-* If-T version: **1.0**
+* If-T version: **1.1**
 * Implementation: [./main.rkt](./main.rkt)
-
+* Raw command to run the benchmark: `racket <path-to-file>`
 
 #### Type System Basics
 
@@ -119,26 +119,23 @@ N/A
 
 Fairly direct:
 * we introduce struct definitions for the object-properties benchmarks
-* there are lots more parentheses because it's Racket
-
-TODO length=2 vs null? cdr cdr
+* `tuple_length` has a direct encoding and fails. However, it can be expressed indirectly (`cdr`, `null?`) and pass.
 
 
-#### Advanced Examples
+#### EXAMPLES.md : Example Programs
 
 > Q. Are any examples inexpressible? Why?
 
-_FILL in here_
-
+No, they are all expressible.
 
 > Q. Are any examples expressed particularly well, or particularly poorly? Explain.
 
-_FILL in here_
+The `flatten` example is expressed in a restricted way. In the pseudocode, the type of the parameter of `flatten` is `Any`, and returns `Listof(Any \ Listof(Any))`. However, Typed Racket cannot directly express non-top-level type subtraction (`! T` is a special case). So, instead we use two base types instead of `Any`.
 
+The `rainfall` example returns a `Real` instead of a `Number` because the `Number` type of Typed Racket includes complex numbers, which do not support the `<=` operator.
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode from If-T?
 
-_FILL in here_
-
-
-
+The implementation is fairly direct. The main difference is:
+1. `filter` uses a functional style in the Typed Racket implementation, while the pseudocode uses a more imperative style.
+2. the type of the parameter of `flatten` is more restricted in the Typed Racket implementation.

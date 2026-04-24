@@ -3,21 +3,18 @@
 (require racket/cmdline)
 (require "../lib.rkt")
 
-(define current-typechecker-symbol 'flow)
-(define current-typechecker-name "Flow")
+(define current-typechecker-symbol 'sorbet)
+(define current-typechecker-name "Sorbet")
 
 (define typechecker-parameters
   `((name ,current-typechecker-name)
-    (comment-char #\/)
-    (extension ".js")
+    (comment-char #\#)
+    (extension ".rb")
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
-    (arguments ,(list "src/index.js" "flow" "focus-check"))
-    (examples-arguments ,(list "src/examples.js" "flow" "focus-check"))
-    (command "npx")
-    (pre-benchmark-func ,(lambda () (shell-command "touch" '() ".flowconfig")))
-    (post-benchmark-func ,(lambda () (shell-command "npx" '("flow" "stop") "src/index.js")))
-    (post-benchmark-func-dir ,(current-directory))))
+    (arguments ,(list "main.rb" "exec" "srb" "tc"))
+    (examples-arguments ,(list "examples.rb" "exec" "srb" "tc"))
+    (command "bundle")))
 
 (command-line
  #:program "_benchmark.rkt"

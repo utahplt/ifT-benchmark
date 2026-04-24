@@ -3,7 +3,7 @@
 (define deps '("base" "gtp-util"))
 (define build-deps '("gtp-util"))
 (define pkg-desc "Benchmark for Type Narrowing")
-(define version "0.1")
+(define version "1.1")
 (define pkg-authors '(ben "hanwen.guo@utah.edu"))
 (define scribblings '())
 (define compile-omit-paths '("Flow" "Pyright" "TypeScript" "TypedRacket" "mypy"))
