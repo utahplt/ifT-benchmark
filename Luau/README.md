@@ -94,15 +94,25 @@ Example: `"Hello" .. "World"`
 
 > Q. Are any examples inexpressible? Why?
 
-TODO
+`filter` and `tree_node` are inexpressible because they require user-defined
+predicates.
+
 
 > Q. Are any examples expressed particularly well, or particularly poorly?
 > Explain.
 
-TODO
+We express `filter` with a function that returns a sum type
+(`Result<Success, Error>`) instead of a proper type narrowing predicate.
+
+`flatten` expects a list that contains integers or lists. Instead of integers,
+it would be better to expect anything that is not a list.
+
+Surprisingly, `rainfall` is unable to take an element from a `List<unknown>`
+and narrow the element to have a `table` type.
+
 
 > Q. How direct (or complex) is the implementation compared to the pseudocode
 > from If-T?
 
-TODO
+Direct, aside from the `filter` issue noted above.
 

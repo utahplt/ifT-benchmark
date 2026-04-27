@@ -13,7 +13,7 @@
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
     (arguments ,(list "main.luau"))
-    (examples-arguments ,(list "examples.py"))
+    (examples-arguments ,(list "examples.luau"))
     (command "luau-analyze")))
 
 (command-line
