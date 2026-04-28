@@ -3,7 +3,7 @@
 (require racket/cmdline)
 (require "../lib.rkt")
 
-(define current-typechecker-symbol 'Typed Clojure)
+(define current-typechecker-symbol '|Typed Clojure|)
 (define current-typechecker-name "Typed Clojure")
 
 (define typechecker-parameters
@@ -14,7 +14,7 @@
     (examples-file-base-path ,(current-directory))
     (arguments ,(list "src/typed_clojure/main.clj" ""))
     (examples-arguments ,(list "src/typed_clojure/examples.clj" ""))
-    (command "npx")))
+    (command "npx"))) ;; TODO
 
 (command-line
  #:program "_benchmark.rkt"

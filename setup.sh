@@ -87,4 +87,9 @@ cd Luau
 # TODO
 cd ..
 
+echo "Setting up Typed Clojure..."
+cd typed-clojure
+# TODO
+cd ..
+
 echo "Setup complete!"
