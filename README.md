@@ -531,6 +531,21 @@ Below is a table for all benchmark items as a quick reference.
 
 For language details: [SETUP.md](./SETUP.md)
 
+| Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet | Typed Clojure |
+|:------------------|:------------:|:----------:|:----:|:----:|:-------:|:------:|:-------------:|
+| positive          | O            | O          | O    | O    | O       | O      | O             |
+| negative          | O            | O          | O    | O    | O       | O      | O             |
+| connectives       | O            | O          | O    | O    | O       | O      | O             |
+| nesting_body      | O            | O          | O    | O    | O       | O      | O             |
+| struct_fields     | O            | O          | O    | O    | O       | X      | O             |
+| tuple_elements    | O            | O          | O    | O    | O       | O      | O             |
+| tuple_length      | x            | O          | O    | O    | O       | X      | O             |
+| alias             | O            | O          | x    | x    | O       | O      | O             |
+| nesting_condition | O            | x          | x    | x    | x       | O      | O             |
+| merge_with_union  | O            | O          | O    | x    | O       | O      | O             |
+| predicate_2way    | O            | O          | O    | O    | O       | X      | O             |
+| predicate_1way    | O            | x          | O    | O    | O       | X      | O             |
+| predicate_checked | O            | O          | O    | O    | O       | X      | O             |
 | Benchmark         | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet | Luau   |
 |:------------------|:------------:|:----------:|:----:|:----:|:-------:|:------:|:------:|
 | positive          | O            | O          | O    | O    | O       | O      | O      |
@@ -554,6 +569,12 @@ For language details: [SETUP.md](./SETUP.md)
 [EXAMPLES.md](./EXAMPLES.md) contains more examples that are not included in the benchmark items. Those are real-world-like examples showing the use of type narrowing in various contexts. For more details about the examples, see [EXAMPLES.md](./EXAMPLES.md). For more details about the results, see the README.md file in the respective typechecker directories.
 The results of these examples are demonstrated below.
 
+| Benchmark | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet | Typed Clojure |
+|:----------|:------------:|:----------:|:----:|:----:|:-------:|:------:|:-------------:|
+| filter    | O            | O          | O    | O    | O       | O      | O             |
+| flatten   | O            | O          | O    | O    | O       | O      | O             |
+| tree_node | O            | x          | x    | x    | x       | x      | O             |
+| rainfall  | O            | O          | O    | O    | O       | O      | O             |
 | Benchmark | Typed Racket | TypeScript | Flow | mypy | Pyright | Sorbet | Luau |
 |:----------|:------------:|:----------:|:----:|:----:|:-------:|:------:|:----:|
 | filter    | O            | O          | O    | O    | O       | O      | O    |
