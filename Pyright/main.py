@@ -104,7 +104,7 @@ def nesting_body_failure_f(x: FinalStr | FinalInt | bool) -> int:
 ## success
 class StructFieldsSuccessApple:
     def __init__(self, a):
-        self.a = a
+        self.a: object = a
 
 def struct_fields_success_f(x: StructFieldsSuccessApple) -> int:
     if type(x.a) is FinalInt:
@@ -115,7 +115,7 @@ def struct_fields_success_f(x: StructFieldsSuccessApple) -> int:
 ## failure
 class StructFieldsFailureApple:
     def __init__(self, a):
-        self.a = a
+        self.a: object = a
 
 def struct_fields_failure_f(x: StructFieldsFailureApple) -> int:
     if type(x.a) is FinalStr:
@@ -216,53 +216,53 @@ def merge_with_union_failure_f(x: object) -> str | int:
 
 ## Example predicate_2way
 ## success
-def predicate_2way_success_f(x: FinalStr | FinalInt) -> TypeIs[FinalStr]:
+def predicate_2way_success_helper(x: FinalStr | FinalInt) -> TypeIs[FinalStr]:
     return type(x) is FinalStr
 
 def predicate_2way_success_g(x: FinalStr | FinalInt) -> int:
-    if predicate_2way_success_f(x):
+    if predicate_2way_success_helper(x):
         return len(x)
     else:
         return x
 
 ## failure
-def predicate_2way_failure_f(x: FinalStr | FinalInt) -> TypeIs[FinalStr]:
+def predicate_2way_failure_helper(x: FinalStr | FinalInt) -> TypeIs[FinalStr]:
     return type(x) is FinalStr
 
 def predicate_2way_failure_g(x: FinalStr | FinalInt) -> int:
-    if predicate_2way_failure_f(x):
+    if predicate_2way_failure_helper(x):
         return x + 1
     else:
         return x
 
 ## Example predicate_1way
 ## success
-def predicate_1way_success_f(x: FinalStr | FinalInt) -> TypeGuard[int]:
+def predicate_1way_success_helper(x: FinalStr | FinalInt) -> TypeGuard[int]:
     return type(x) is FinalInt and x > 0
 
 def predicate_1way_success_g(x: FinalStr | FinalInt) -> int:
-    if predicate_1way_success_f(x):
+    if predicate_1way_success_helper(x):
         return x + 1
     else:
         return 0
 
 ## failure
-def predicate_1way_failure_f(x: FinalStr | FinalInt) -> TypeGuard[int]:
+def predicate_1way_failure_helper(x: FinalStr | FinalInt) -> TypeGuard[int]:
     return type(x) is FinalInt and x > 0
 
 def predicate_1way_failure_g(x: FinalStr | FinalInt) -> int:
-    if predicate_1way_failure_f(x):
+    if predicate_1way_failure_helper(x):
         return x + 1
     else:
         return len(x)
 
 ## Example predicate_checked
 ## success
-def predicate_checked_success_f(x: FinalStr | FinalInt | bool) -> TypeIs[FinalStr]:
+def predicate_checked_success_helper(x: FinalStr | FinalInt | bool) -> TypeIs[FinalStr]:
     return type(x) is FinalStr
 
 def predicate_checked_success_g(x: FinalStr | FinalInt | bool) -> TypeIs[FinalInt | bool]:
-    return not predicate_checked_success_f(x)
+    return not predicate_checked_success_helper(x)
 
 ## failure
 def predicate_checked_failure_f(x: FinalStr | FinalInt | bool) -> TypeIs[FinalStr]:

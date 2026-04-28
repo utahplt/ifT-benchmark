@@ -19,6 +19,10 @@ if ! command_exists python; then
     echo "Error: python is not installed. Please install Python first."
     exit 1
 fi
+if ! command_exists ruby; then
+    echo "Error: ruby is not installed. Please install Ruby first."
+    exit 1
+fi
 
 # Install TypeScript
 echo "Setting up TypeScript..."
@@ -41,7 +45,7 @@ cd ..
 # Install mypy
 echo "Setting up mypy..."
 cd mypy
-# try to use uv to sync envirionment
+# try to use uv to sync environment
 if command -v uv 2&>1 >/dev/null; then
     uv sync
 else
@@ -69,5 +73,18 @@ else
     fi
 
 fi
+cd ..
+
+echo "Setting up Sorbet..."
+# How to fix rbenv: version `x.x.x` is not installed
+# https://gist.github.com/esteedqueen/b605cdf78b0060299322033b6a60afc3
+cd Sorbet
+bundle install
+cd ..
+
+echo "Setting up Luau..."
+cd Luau
+# TODO
+cd ..
 
 echo "Setup complete!"

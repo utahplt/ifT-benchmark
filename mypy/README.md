@@ -8,7 +8,7 @@ mypy is a typechecker for Python PEP 484 types.
   - <https://github.com/python/mypy>
   - <https://mypy-play.net/?mypy=latest&python=3.12>
   - <https://peps.python.org/pep-0484/>
-* If-T version: **1.0**
+* If-T version: **1.1**
 * Implementation: [./main.py](./main.py)
 * Raw command to run the benchmark: `source .venv/bin/activate && mypy <path-to-file>`
 
@@ -112,7 +112,7 @@ N/A
 Very direct, though we introduce classes for the object benchmarks.
 
 
-#### Advanced Examples
+#### EXAMPLES.md : Example Programs
 
 > Q. Are any examples inexpressible? Why?
 

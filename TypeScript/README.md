@@ -7,7 +7,7 @@ TypeScript is a typechecker for JavaScript by Microsoft.
   - <https://www.typescriptlang.org/>
   - <https://github.com/microsoft/TypeScript>
   - <https://www.typescriptlang.org/play>
-* If-T version: **1.0**
+* If-T version: **1.1**
 * Implementation: [./main.ts](./main.ts)
 * Raw command to run the benchmark: `tsc --noEmit --target es2023 <path-to-file>`
 
@@ -92,7 +92,7 @@ N/A
 Very direct.
 
 
-#### Advanced Examples
+#### EXAMPLES.md : Example Programs
 
 > Q. Are any examples inexpressible? Why?
 

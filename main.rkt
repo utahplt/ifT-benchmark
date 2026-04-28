@@ -49,6 +49,12 @@
                                            "source .venv/bin/activate; mypy "
                                            (path->string input-file))))))
           (command "bash"))
+    (luau (comment-char #\-)
+          (extension ".luau")
+          (file-base-path ,(build-path (current-directory) "Luau"))
+          (arguments ,(list "main.luau"))
+          (examples-arguments ,(list "examples.luau"))
+          (command "luau-analyze"))
     (pyright (name "Pyright")
              (comment-char #\#)
              (extension ".py")
@@ -62,9 +68,9 @@
             (extension ".rb")
             (file-base-path ,(build-path (current-directory) "Sorbet"))
             (examples-file-base-path ,(build-path (current-directory) "Sorbet"))
-            (arguments ,(list "main.rb" "tc"))
-            (examples-arguments ,(list "examples.rb" "tc"))
-            (command "srb"))))
+            (arguments ,(list "main.rb" "exec" "srb" "tc"))
+            (examples-arguments ,(list "examples.rb" "exec" "srb" "tc"))
+            (command "bundle"))))
 
 (define (get-benchmark-result-row type-checker-symbol)
   (when (benchmark-verbose)
@@ -104,9 +110,9 @@
                          (benchmark-output-transposed #t)]
    [("-e" "--examples") "Run the advanced examples"
                         (benchmark-run-examples #t)]
-   #:args ([type-checker-name null])
-   type-checker-name))
+   #:args type-checker-names
+   type-checker-names))
 
 (if (null? type-checker-arg)
     (run-benchmarks (map car typechecker-parameters-alist))
-    (run-benchmarks (list (string->symbol (string-downcase type-checker-arg)))))
+    (run-benchmarks (map (compose1 string->symbol string-downcase) type-checker-arg)))

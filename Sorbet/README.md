@@ -8,9 +8,9 @@ Sorbet adds static types to Ruby.
   - <https://github.com/sorbet/sorbet>
   - <https://sorbet.org/docs/gradual>
   - <https://sorbet.org/docs/from-typescript>
-* If-T version: **1.0**
+* If-T version: **1.1**
 * Implementation: [./main.rb](./main.rb), [./examples.rb](./examples.rb)
-* Raw command to run the benchmark: `srb tc main.rb`, `srb tc examples.rb`
+* Raw command to run the benchmark: `srb tc main.rb`, `srb tc examples.rb` (or, using `bundler`: `bundle exec srb tc main.rb`, `bundle exec srb tc examples.rb`)
 
 ## Type System Basics
 
@@ -92,7 +92,7 @@ The implementation is direct for most benchmarks, using Ruby’s `if`/`else` and
 * `tuple_length` uses union types (`T.any([Integer, Integer], [String, String, String])`) to encode size distinctions, which is less direct but necessary for static typing.
 
 
-## Advanced Examples
+#### EXAMPLES.md : Example Programs
 
 > Q. Are any examples inexpressible? Why?
 

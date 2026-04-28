@@ -33,3 +33,6 @@ node_modules/
 
 # Optional cache directory for TypeScript
 *.tsbuildinfo
+
+# Racket
+compiled/

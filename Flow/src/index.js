@@ -242,12 +242,12 @@ function merge_with_union_failure_f(x: mixed): string | number {
 
 // Example predicate_2way
 // success
-function predicate_2way_success_f(x: string | number): x is string {
+function predicate_2way_success_helper(x: string | number): x is string {
   return typeof x === "string";
 }
 
 function predicate_2way_success_g(x: string | number): number {
-  if (predicate_2way_success_f(x)) {
+  if (predicate_2way_success_helper(x)) {
     return x.length;
   } else {
     return x;
@@ -255,12 +255,12 @@ function predicate_2way_success_g(x: string | number): number {
 }
 
 // failure
-function predicate_2way_failure_f(x: string | number): x is string {
+function predicate_2way_failure_helper(x: string | number): x is string {
   return typeof x === "string";
 }
 
 function predicate_2way_failure_g(x: string | number): number {
-  if (predicate_2way_failure_f(x)) {
+  if (predicate_2way_failure_helper(x)) {
     return x + 1;
   } else {
     return x;
@@ -269,12 +269,12 @@ function predicate_2way_failure_g(x: string | number): number {
 
 // Example predicate_1way
 // success
-function predicate_1way_success_f(x: string | number): implies x is number {
+function predicate_1way_success_helper(x: string | number): implies x is number {
   return typeof x === "number" && x > 0;
 }
 
 function predicate_1way_success_g(x: string | number): number {
-  if (predicate_1way_success_f(x)) {
+  if (predicate_1way_success_helper(x)) {
     return x + 1;
   } else {
     return 0;
@@ -282,12 +282,12 @@ function predicate_1way_success_g(x: string | number): number {
 }
 
 // failure
-function predicate_1way_failure_f(x: string | number): implies x is number {
+function predicate_1way_failure_helper(x: string | number): implies x is number {
   return typeof x === "number" && x > 0;
 }
 
 function predicate_1way_failure_g(x: string | number): number {
-  if (predicate_1way_failure_f(x)) {
+  if (predicate_1way_failure_helper(x)) {
     return x + 1;
   } else {
     return x.length;
@@ -296,12 +296,12 @@ function predicate_1way_failure_g(x: string | number): number {
 
 // Example predicate_checked
 // success
-function predicate_checked_success_f(x: string | number | boolean): x is string {
+function predicate_checked_success_helper(x: string | number | boolean): x is string {
   return typeof x === "string";
 }
 
 function predicate_checked_success_g(x: string | number | boolean): x is number | boolean {
-  return !predicate_checked_success_f(x);
+  return !predicate_checked_success_helper(x);
 }
 
 // failure

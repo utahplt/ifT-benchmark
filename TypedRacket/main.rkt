@@ -179,55 +179,55 @@
 
 ;; Example predicate_2way
 ;; success
-(: predicate-2way-success-f (-> (U String Number) Boolean : String))
-(define (predicate-2way-success-f x)
+(: predicate-2way-success-helper (-> (U String Number) Boolean : String))
+(define (predicate-2way-success-helper x)
   (string? x))
 
 (define (predicate-2way-success-g [x : (U String Number)]) : Number
-  (if (predicate-2way-success-f x)
+  (if (predicate-2way-success-helper x)
       (string-length x)
       x))
 
 ;; failure
-(: predicate-2way-failure-f (-> (U String Number) Boolean : String))
-(define (predicate-2way-failure-f x)
+(: predicate-2way-failure-helper (-> (U String Number) Boolean : String))
+(define (predicate-2way-failure-helper x)
   (string? x))
 
 (define (predicate-2way-failure-g [x : (U String Number)]) : Number
-  (if (predicate-2way-failure-f x)
+  (if (predicate-2way-failure-helper x)
       (+ 1 x)
       x))
 
 ;; Example predicate_1way
 ;; success
-(: predicate-1way-success-f (-> (U String Integer) Boolean : #:+ Integer))
-(define (predicate-1way-success-f x)
+(: predicate-1way-success-helper (-> (U String Integer) Boolean : #:+ Integer))
+(define (predicate-1way-success-helper x)
   (and (number? x) (> x 0)))
 
 (define (predicate-1way-success-g [x : (U String Integer)]) : Integer
-  (if (predicate-1way-success-f x)
+  (if (predicate-1way-success-helper x)
       (+ 1 x)
       0))
 
 ;; failure
-(: predicate-1way-failure-f (-> (U String Integer) Boolean : #:+ Integer))
-(define (predicate-1way-failure-f x)
+(: predicate-1way-failure-helper (-> (U String Integer) Boolean : #:+ Integer))
+(define (predicate-1way-failure-helper x)
   (and (number? x) (> x 0)))
 
 (define (predicate-1way-failure-g [x : (U String Integer)]) : Integer
-  (if (predicate-1way-failure-f x)
+  (if (predicate-1way-failure-helper x)
       (+ 1 x)
       (string-length x)))
 
 ;; Example predicate_checked
 ;; success
-(: predicate-checked-success-f (-> (U String Number Boolean) Boolean : String))
-(define (predicate-checked-success-f x)
+(: predicate-checked-success-helper (-> (U String Number Boolean) Boolean : String))
+(define (predicate-checked-success-helper x)
   (string? x))
 
 (: predicate-checked-success-g (-> (U String Number Boolean) Boolean : (U Number Boolean)))
 (define (predicate-checked-success-g x)
-  (not (predicate-checked-success-f x)))
+  (not (predicate-checked-success-helper x)))
 
 ;; failure
 (: predicate-checked-failure-f (-> (U String Number Boolean) Boolean : String))

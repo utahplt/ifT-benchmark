@@ -3,18 +3,18 @@
 (require racket/cmdline)
 (require "../lib.rkt")
 
-(define current-typechecker-symbol 'sorbet)
-(define current-typechecker-name "Sorbet")
+(define current-typechecker-symbol 'Luau)
+(define current-typechecker-name "Luau")
 
 (define typechecker-parameters
   `((name ,current-typechecker-name)
-    (comment-char #\#)
-    (extension ".rb")
+    (comment-char #\-)
+    (extension ".luau")
     (file-base-path ,(current-directory))
     (examples-file-base-path ,(current-directory))
-    (arguments ,(list "main.rb" "exec" "srb" "tc"))
-    (examples-arguments ,(list "examples.rb" "exec" "srb" "tc"))
-    (command "bundle")))
+    (arguments ,(list "main.luau"))
+    (examples-arguments ,(list "examples.luau"))
+    (command "luau-analyze")))
 
 (command-line
  #:program "_benchmark.rkt"

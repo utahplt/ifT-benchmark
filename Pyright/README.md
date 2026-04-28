@@ -9,7 +9,7 @@ through the Pylance plugin.
   - <https://github.com/microsoft/pyright>
   - <https://pyright-play.net/>
   - <https://peps.python.org/pep-0484/>
-* If-T version: **1.0**
+* If-T version: **1.1**
 * Implementation: [./main.py](./main.py)
 * Raw command to run the benchmark: `npx pyright <path-to-file>`
 
@@ -113,7 +113,7 @@ N/A
 Very direct, though we introduce classes for the object benchmarks.
 
 
-#### Advanced Examples
+#### EXAMPLES.md : Example Programs
 
 > Q. Are any examples inexpressible? Why?
 
