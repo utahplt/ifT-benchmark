@@ -23,6 +23,10 @@ if ! command_exists ruby; then
     echo "Error: ruby is not installed. Please install Ruby first."
     exit 1
 fi
+if ! command_exists mlsem; then
+    echo "Error: mlsem is not installed. Please install MLsem first and ensure it is on PATH."
+    exit 1
+fi
 
 # Install TypeScript
 echo "Setting up TypeScript..."

@@ -6,6 +6,7 @@ To run the benchmark, you need to have the following tools installed:
 - [Node.js and npm](https://nodejs.org/)
 - [Python and pip](https://www.python.org/)
 - [Ruby and gem](https://www.ruby-lang.org/)
+- [MLsem](https://github.com/E-Sh4rk/MLsem)
 
 The tested versions are:
 
@@ -25,6 +26,7 @@ The tested versions are:
 | gem          | 3.7.2     | Bundled with Ruby                                                                                                     |
 | Sorbet       | 0.6.12829 | See [`Sorbet/Gemfile.lock`](https://github.com/utahplt/ifT-benchmark/blob/main/Sorbet/Gemfile.lock)                   |
 | Luau         | 0.717     | https://github.com/luau-lang/luau/releases/tag/0.717                                                                  |
+| MLsem        | v1.0.1-51-g868afd7 | Must be installed separately as `mlsem` on `PATH`                                                            |
 
 First, clone this repository:
 
@@ -80,4 +82,3 @@ When parameter `<type-checker>` is not provided, the benchmark will run all type
 To run the benchmark and example programs with markdown output:
 * `racket main.rkt -f markdown`
 * `racket main.rkt -e -f markdown`
-
