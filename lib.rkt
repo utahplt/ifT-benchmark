@@ -51,27 +51,38 @@
               (reverse lines)
               (loop (cons line lines))))))))
 
-(define (split-header lines comment-char)
-  (let ([header-body-split (string-append-immutable (make-string 3 comment-char) " Code:")])
+(define (marker-prefix comment-char comment-prefix repeat-count)
+  (if comment-prefix
+      comment-prefix
+      (make-string repeat-count comment-char)))
+
+(define (marker-start comment-char comment-prefix repeat-count label)
+  (string-append-immutable
+   (marker-prefix comment-char comment-prefix repeat-count)
+   " "
+   label))
+
+(define (split-header lines comment-char comment-prefix)
+  (let ([header-body-split (marker-start comment-char comment-prefix 3 "Code:")])
     (let loop ([header '()] [lines lines])
       (if (or (null? lines) (string-prefix? (car lines) header-body-split))
           (values (reverse header) lines)
           (loop (cons (car lines) header) (cdr lines))))))
 
-(define (split-body lines comment-char)
-  (let ([body-footer-split (string-append-immutable (make-string 3 comment-char) " End")])
+(define (split-body lines comment-char comment-prefix)
+  (let ([body-footer-split (marker-start comment-char comment-prefix 3 "End")])
     (let loop ([body '()] [lines lines])
       (if (or (null? lines) (string-prefix? (car lines) body-footer-split))
           (values (reverse body) lines)
           (loop (cons (car lines) body) (cdr lines))))))
 
-(define (split-file lines comment-char)
-  (let-values ([(header-lines body-lines) (split-header lines comment-char)])
-    (let-values ([(body-lines footer-lines) (split-body (cdr body-lines) comment-char)])
+(define (split-file lines comment-char comment-prefix)
+  (let-values ([(header-lines body-lines) (split-header lines comment-char comment-prefix)])
+    (let-values ([(body-lines footer-lines) (split-body (cdr body-lines) comment-char comment-prefix)])
       (values header-lines body-lines footer-lines))))
 
-(define (split-test-cases-pre body-lines comment-char)
-  (let ([test-case-start (string-append-immutable (make-string 2 comment-char) " Example")])
+(define (split-test-cases-pre body-lines comment-char comment-prefix)
+  (let ([test-case-start (marker-start comment-char comment-prefix 2 "Example")])
     (let loop ([test-cases '()] [test-case '()] [lines body-lines])
       (if (null? lines)
           (reverse (cons (reverse test-case) test-cases))
@@ -84,26 +95,25 @@
                (cdr lines))
               (loop test-cases (cons (car lines) test-case) (cdr lines)))))))
 
-(define (split-test-case test-case-pre comment-char)
+(define (split-test-case test-case-pre comment-char comment-prefix)
   (let ([first-line (car test-case-pre)]
         [following-lines (cdr test-case-pre)])
-    (define comment-start (make-string 2 comment-char))
+    (define comment-start (marker-prefix comment-char comment-prefix 2))
     (define test-case-name
       (cadr (regexp-match
              (regexp
               (string-append-immutable
-               comment-start
+               "^"
+               (regexp-quote comment-start)
                " Example ([0-9a-zA-Z_]+)"))
              first-line)))
     (define (split-by-marker lst)
       (define (helper lst selector res-lists)
         (cond
           [(null? lst) (cons (reverse (car res-lists)) (reverse (cdr res-lists)))]
-          [(regexp-match (regexp (string-append-immutable comment-start " success"))
-                         (car lst))
+          [(string-prefix? (car lst) (marker-start comment-char comment-prefix 2 "success"))
            (helper (cdr lst) 'success res-lists)]
-          [(regexp-match (regexp (string-append-immutable comment-start " failure"))
-                         (car lst))
+          [(string-prefix? (car lst) (marker-start comment-char comment-prefix 2 "failure"))
            (helper (cdr lst) 'failure res-lists)]
           [else (helper
                  (cdr lst) selector
@@ -115,9 +125,9 @@
       (helper lst 'whatever (cons '() '())))
     `(,test-case-name ,@(split-by-marker following-lines))))
 
-(define (split-test-cases body-lines comment-char)
-  (let ([test-cases-pre (split-test-cases-pre body-lines comment-char)])
-    (map (lambda (tcp) (split-test-case tcp comment-char)) test-cases-pre)))
+(define (split-test-cases body-lines comment-char comment-prefix)
+  (let ([test-cases-pre (split-test-cases-pre body-lines comment-char comment-prefix)])
+    (map (lambda (tcp) (split-test-case tcp comment-char comment-prefix)) test-cases-pre)))
 
 (define (join-lines lines)
   (string-join lines "\n"))
@@ -166,6 +176,7 @@
        test-cases))
 
 (define (run-benchmark-item file-base-path command arguments comment-char extension
+                            #:comment-prefix [comment-prefix #f]
                             #:pre-benchmark-func [pre-func #f] #:pre-benchmark-func-dir [pre-dir (find-system-path 'temp-dir)]
                             #:post-benchmark-func [post-func #f] #:post-benchmark-func-dir [post-dir (find-system-path 'temp-dir)])
   (when pre-func
@@ -176,8 +187,8 @@
       (lambda ()
         (let* ([file-name-to-read (car arguments)]
                [lines (read-file-into-lines file-name-to-read)])
-          (let-values ([(header-lines body-lines footer-lines) (split-file lines comment-char)])
-            (let ([test-cases (split-test-cases body-lines comment-char)])
+          (let-values ([(header-lines body-lines footer-lines) (split-file lines comment-char comment-prefix)])
+            (let ([test-cases (split-test-cases body-lines comment-char comment-prefix)])
               (run-test-cases test-cases header-lines footer-lines command (cdr arguments) extension)))))))
   (when post-func
     (with-current-directory post-dir
@@ -188,6 +199,7 @@
   (when (benchmark-verbose)
     (displayln (format "Running benchmark for ~a" (cadr (assoc 'name tc-params)))))
   (let* ([comment-char (cadr (assoc 'comment-char tc-params))]
+         [comment-prefix (cadr (or (assoc 'comment-prefix tc-params) '(#f #f)))]
          [extension (cadr (assoc 'extension tc-params))]
          [base-path-key (if (benchmark-run-examples) 'examples-file-base-path 'file-base-path)]
          [file-base-path (cadr (assoc base-path-key tc-params))]
@@ -199,6 +211,7 @@
          [pre-benchmark-func-dir (cadr (or (assoc 'pre-benchmark-func-dir tc-params) `(#f ,(find-system-path 'temp-dir))))]
          [post-benchmark-func-dir (cadr (or (assoc 'post-benchmark-func-dir tc-params) `(#f ,(find-system-path 'temp-dir))))])
     (run-benchmark-item file-base-path command arguments comment-char extension
+                        #:comment-prefix comment-prefix
                         #:pre-benchmark-func pre-benchmark-func
                         #:post-benchmark-func post-benchmark-func
                         #:pre-benchmark-func-dir pre-benchmark-func-dir
