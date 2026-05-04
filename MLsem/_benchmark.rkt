@@ -1,18 +1,20 @@
 #lang racket
 
 (require racket/cmdline)
+(require racket/runtime-path)
 (require "../lib.rkt")
 
 (define current-typechecker-symbol 'mlsem)
 (define current-typechecker-name "MLsem")
+(define-runtime-path mlsem-dir ".")
 
 (define typechecker-parameters
   `((name ,current-typechecker-name)
     (comment-char #\()
     (comment-prefix "(*")
     (extension ".ml")
-    (file-base-path ,(current-directory))
-    (examples-file-base-path ,(current-directory))
+    (file-base-path ,mlsem-dir)
+    (examples-file-base-path ,mlsem-dir)
     (arguments ,(list "main.ml" "check-mlsem.rkt"))
     (examples-arguments ,(list "examples.ml" "check-mlsem.rkt"))
     (command "racket")))
